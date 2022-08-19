@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "StackNavigator.app"
-               BlueprintName = "StackNavigator"
-               ReferencedContainer = "container:StackNavigator.xcodeproj">
+               BuildableName = "Project.app"
+               BlueprintName = "Project"
+               ReferencedContainer = "container:Project.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "StackNavigatorTests.xctest"
-               BlueprintName = "StackNavigatorTests"
-               ReferencedContainer = "container:StackNavigator.xcodeproj">
+               BuildableName = "ProjectTests.xctest"
+               BlueprintName = "ProjectTests"
+               ReferencedContainer = "container:Project.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "StackNavigator.app"
-            BlueprintName = "StackNavigator"
-            ReferencedContainer = "container:StackNavigator.xcodeproj">
+            BuildableName = "Project.app"
+            BlueprintName = "Project"
+            ReferencedContainer = "container:Project.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "StackNavigator.app"
-            BlueprintName = "StackNavigator"
-            ReferencedContainer = "container:StackNavigator.xcodeproj">
+            BuildableName = "Project.app"
+            BlueprintName = "Project"
+            ReferencedContainer = "container:Project.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
