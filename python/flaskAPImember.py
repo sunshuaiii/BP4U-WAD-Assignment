@@ -2,20 +2,19 @@ import sqlite3
 from flask import Flask, jsonify, request, abort
 from argparse import ArgumentParser
 
-
 DB = 'bp4u.sqlite'
 
-# not finished
 def get_row_as_dict(row):
     row_dict = {
         'id': row[0],
-        'name': row[1],
-        'email': row[2],
-        'phone': row[3],
-        'address': row[4],
-        'postcode': row[5],
-        'city': row[6],
-        'state': row[7],
+        'username': row[1],
+        'fname': row[2],
+        'lname': row[3],
+        'password': row[4],
+        'email': row[5],
+        'phone': row[6],
+        'address': row[7],
+        'reg_date': row[8],
     }
 
     return row_dict
@@ -24,11 +23,11 @@ def get_row_as_dict(row):
 app = Flask(__name__)
 
 
-@app.route('/api/members', methods=['GET'])
+@app.route('/api/member', methods=['GET'])
 def index():
     db = sqlite3.connect(DB)
     cursor = db.cursor()
-    cursor.execute('SELECT * FROM members ORDER BY name')
+    cursor.execute('SELECT * FROM member ORDER BY member_id')
     rows = cursor.fetchall()
 
     print(rows)
@@ -43,11 +42,11 @@ def index():
     return jsonify(rows_as_dict), 200
 
 
-@app.route('/api/members/<int:member>', methods=['GET'])
+@app.route('/api/member/<int:member>', methods=['GET'])
 def show(member):
     db = sqlite3.connect(DB)
     cursor = db.cursor()
-    cursor.execute('SELECT * FROM members WHERE id=?', (str(member),))
+    cursor.execute('SELECT * FROM member WHERE member_id=?', (str(member),))
     row = cursor.fetchone()
     db.close()
 
@@ -58,26 +57,26 @@ def show(member):
         return jsonify(None), 200
 
 
-@app.route('/api/members', methods=['POST'])
+@app.route('/api/member', methods=['POST'])
 def store():
     if not request.json:
         abort(404)
 
     new_member = (
-        request.json['name'],
+        request.json['username'],
+        request.json['fname'],
+        request.json['lname'],
+        request.json['password'],
         request.json['email'],
         request.json['phone'],
         request.json['address'],
-        request.json['postcode'],
-        request.json['city'],
-        request.json['state'],
     )
 
     db = sqlite3.connect(DB)
     cursor = db.cursor()
 
     cursor.execute('''
-        INSERT INTO members(name,email,phone,address,postcode,city,state)
+        INSERT INTO member(member_username,member_first_name,member_last_name,member_password,member_email,member_phone,member_address)
         VALUES(?,?,?,?,?,?,?)
     ''', new_member)
 
@@ -95,7 +94,7 @@ def store():
     return jsonify(response), 201
 
 
-@app.route('/api/members/<int:member>', methods=['PUT'])
+@app.route('/api/member/<int:member>', methods=['PUT'])
 def update(member):
     if not request.json:
         abort(400)
@@ -107,13 +106,13 @@ def update(member):
         abort(400)
 
     update_member = (
-        request.json['name'],
+        request.json['username'],
+        request.json['fname'],
+        request.json['lname'],
+        request.json['password'],
         request.json['email'],
         request.json['phone'],
         request.json['address'],
-        request.json['postcode'],
-        request.json['city'],
-        request.json['state'],
         str(member),
     )
 
@@ -121,9 +120,9 @@ def update(member):
     cursor = db.cursor()
 
     cursor.execute('''
-        UPDATE members SET
-            name=?,email=?,phone=?,address=?,postcode=?,city=?,state=?
-        WHERE id=?
+        UPDATE member SET
+            member_username=?,member_first_name=?,member_last_name=?,member_password=?,member_email=?,member_phone=?,member_address=?
+        WHERE member_id=?
     ''', update_member)
 
     db.commit()
@@ -138,7 +137,7 @@ def update(member):
     return jsonify(response), 201
 
 
-@app.route('/api/members/<int:member>', methods=['DELETE'])
+@app.route('/api/member/<int:member>', methods=['DELETE'])
 def delete(member):
     if not request.json:
         abort(400)
@@ -152,7 +151,7 @@ def delete(member):
     db = sqlite3.connect(DB)
     cursor = db.cursor()
 
-    cursor.execute('DELETE FROM members WHERE id=?', (str(member),))
+    cursor.execute('DELETE FROM member WHERE member_id=?', (str(member),))
 
     db.commit()
 
@@ -165,6 +164,12 @@ def delete(member):
 
     return jsonify(response), 201
 
+def api_response():
+    from flask import jsonify
+    if request.method == 'POST':
+        return jsonify(**request.json)
+
+        
 
 if __name__ == '__main__':
     parser = ArgumentParser()
@@ -172,4 +177,5 @@ if __name__ == '__main__':
     args = parser.parse_args()
     port = args.port
 
+    app.debug = True
     app.run(host='0.0.0.0', port=port)
