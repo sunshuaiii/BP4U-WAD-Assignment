@@ -208,19 +208,19 @@ cursor.execute('''
 ''')
 cursor.execute('''
     INSERT INTO order_details(order_member_id,order_shipping_address,order_courier,order_shipping_fee,order_total,order_status,order_creation_date,order_payment_id)
-    VALUES(10002, '22 Jalan Olive', 'GDEX', 5, 87.50, 'DELIVERED','2022-02-23', 50001)
+    VALUES(10002, '22 Jalan Olive', 'GDEX', 5, 87.50, 'DELIVERED','2022-02-23', 50002)
 ''')
 cursor.execute('''
     INSERT INTO order_details(order_member_id,order_shipping_address,order_courier,order_shipping_fee,order_total,order_status,order_creation_date,order_payment_id)
-    VALUES(10003, '33 Jalan Joker', 'GDEX', 30, 480.96, 'SHIPPED OUT','2022-03-24', 50001)
+    VALUES(10003, '33 Jalan Joker', 'GDEX', 30, 480.96, 'SHIPPED OUT','2022-03-24', 50003)
 ''')
 cursor.execute('''
     INSERT INTO order_details(order_member_id,order_shipping_address,order_courier,order_shipping_fee,order_total,order_status,order_creation_date,order_payment_id)
-    VALUES(10004, '44 Jalan Jerry', 'GDEX', 10, 465.00, 'PAID','2022-04-25', 50001)
+    VALUES(10004, '44 Jalan Jerry', 'GDEX', 10, 465.00, 'PAID','2022-04-25', 50004)
 ''')
 cursor.execute('''
-    INSERT INTO order_details(order_member_id,order_shipping_address,order_courier,order_shipping_fee,order_total,order_status,order_creation_date,order_payment_id)
-    VALUES(10005, '55 Jalan Monday', 'GDEX', 10, 325.00, 'TO PAY','2022-05-26', 50001)
+    INSERT INTO order_details(order_member_id,order_shipping_address,order_courier,order_shipping_fee,order_total,order_status,order_creation_date)
+    VALUES(10005, '55 Jalan Monday', 'GDEX', 10, 325.00, 'TO PAY','2022-05-26')
 ''')
 
 
