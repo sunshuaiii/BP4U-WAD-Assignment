@@ -41,7 +41,7 @@ db.execute('''CREATE TABLE IF NOT EXISTS order_details(
     order_courier TEXT NOT NULL,
     order_shipping_fee REAL NOT NULL,
     order_total REAL NOT NULL,
-    order_status TEXT CHECK( order_status IN ('To Pay','Paid','Shipped Out','Delivered') ) NOT NULL DEFAULT 'To Pay',
+    order_status TEXT CHECK( order_status IN ('To Pay','Paid','Shipped Out','Delivered',) ) NOT NULL DEFAULT 'To Pay',
     order_creation_date DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
     FOREIGN KEY(order_member_id) REFERENCES member(member_id)
 )''')   
@@ -63,9 +63,10 @@ db.execute('''CREATE TABLE IF NOT EXISTS payment(
     payment_order_id INTEGER NOT NULL DEFAULT 0,
     payment_amount REAL NOT NULL,
     payment_provider TEXT NOT NULL,
-    payment_status TEXT CHECK( payment_status IN ('Pending', 'Accepted','Declined') ) NOT NULL DEFAULT 'Pending',
-    payment_creation_date DATETIME,
+    payment_status TEXT CHECK( payment_status IN ('Accepted','Declined') ) NOT NULL DEFAULT 'Pending',
+    payment_creation_date DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
     FOREIGN KEY(payment_order_id) REFERENCES order_details(order_id)
+
 )''')   
 
 db.execute('ALTER TABLE order_details ADD COLUMN order_payment_id INTEGER REFERENCES payment(payment_id)')

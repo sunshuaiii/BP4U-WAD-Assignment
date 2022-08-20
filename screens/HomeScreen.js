@@ -3,6 +3,8 @@ import {View, Text, StyleSheet, TouchableHighlight} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import {FloatingAction} from 'react-native-floating-action';
 
+
+// not done
 let common = require('../CommonData');
 let SQLite = require('react-native-sqlite-storage');
 
@@ -130,6 +132,7 @@ export default class HomeScreen extends Component {
     );
   }
 }
+
 
 const styles = StyleSheet.create({
   container: {
