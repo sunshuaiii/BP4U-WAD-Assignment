@@ -4,12 +4,14 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createDrawerNavigator, DrawerActions} from '@react-navigation/drawer';
 import {createStackNavigator} from '@react-navigation/stack';
+
 import CustomDrawer from './components/CustomDrawer';
 import SettingsScreen from './screens/SettingsScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import HomeScreen from './screens/HomeScreen.js';
 import CartScreen from './screens/CartScreen';
 import HistoryScreen from './screens/HistoryScreen.js';
+
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Octicons from 'react-native-vector-icons/Octicons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
