@@ -1,5 +1,5 @@
 ##
-# Execute this script once to create the database & table
+# Execute this script once to create the database & tables
 # as well as populating it with initial data
 #
 
@@ -95,16 +95,76 @@ db.execute('''CREATE TABLE IF NOT EXISTS cart_item(
 # test data
 cursor = db.cursor()
 
+### MEMBER TABLE (TOTAL 10 RECORDS)
 cursor.execute('''
     INSERT INTO member(member_id,member_username,member_first_name,member_last_name,member_password,member_email,member_phone,member_address,member_reg_date)
     VALUES(10001, 'john123', 'John', 'Smith', 'john123', 'john@gmail.com', '012-9345412','84 Jalan Hang Jebat', '2022-03-01')
 ''')
 
+
+### PRODUCT TABLE (TOTAL 15 RECORDS)
 cursor.execute('''
     INSERT INTO product(product_id,product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
-    VALUES(20001, 'BORN PINK EXCLUSIVE BOX SET - BLACK VERSION', 149.99, 0.5, 10000, 0, 'D:\Downloads\bornpink.png', 'BLACKPINK 2nd Full Album','2022-08-19', 'Album')
+    VALUES(20001, 'BORN PINK EXCLUSIVE BOX SET - BLACK VERSION', 149.99, 0.5, 10000, 0, 'D:\Downloads\bornpink.png', 'BLACKPINK 2nd Full Album','2022-08-19', 'ALBUM')
+''')
+cursor.execute('''
+    INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
+    VALUES('BORN PINK EXCLUSIVE BOX SET – PINK VERSION', 149.99, 0.5, 10000, 0, 'D:\Downloads\bornpink2.png', 'BLACKPINK 2nd Full Album','2022-08-19', 'ALBUM')
+''')
+cursor.execute('''
+    INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
+    VALUES('THE ALBUM – VERSION 1', 150.99, 1.0, 20000, 0.25, 'D:\Downloads\album.png', 'BLACKPINK 1st Full Album','2020-11-20', 'ALBUM')
+''')
+cursor.execute('''
+    INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
+    VALUES('THE ALBUM – VERSION 2', 150.99, 1.0, 20000, 0.25, 'D:\Downloads\album2.png', 'BLACKPINK 1st Full Album','2020-11-20', 'ALBUM')
+''')
+cursor.execute('''
+    INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
+    VALUES('THE ALBUM – VERSION 3', 150.99, 1.0, 20000, 0.25, 'D:\Downloads\album3.png', 'BLACKPINK 1st Full Album','2020-11-20', 'ALBUM')
+''')
+cursor.execute('''
+    INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
+    VALUES('JISOO x MARIE CLAIRE KOREA', 89.99, 2.5, 10000, 0.10, 'D:\Downloads\mag.png', 'JISOO collaboration with Dior Beauty,'2022-07-15', 'MAGAZINE')
+''')
+cursor.execute('''
+    INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
+    VALUES('JENNIE x HIGHCUT', 79.99, 2.0, 10000, 0.15, 'D:\Downloads\mag2.png', 'HIGHCUT MAGAZINE','2018-11-15', 'MAGAZINE')
+''')
+cursor.execute('''
+    INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
+    VALUES('JISOO ROSE x VOGUE KOREA', 99.99, 2.5, 10000, 0, 'D:\Downloads\mag3.png', 'JISOO and ROSE featured in Vogue Korea','2018-11-19', 'MAGAZINE')
+''')
+cursor.execute('''
+    INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
+    VALUES('LISA PHOTOBOOK LIMITED EDITION', 149.99, 2.5, 500, 0, 'D:\Downloads\mag4.png', 'PHOTOBOOK BY LISA','2020-03-27', 'MAGAZINE')
+''')
+cursor.execute('''
+    INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
+    VALUES('BLACKPINK HOW YOU LIKE THAT PHOTOBOOK', 149.99, 2.5, 800, 0, 'D:\Downloads\mag5.png', 'SPECIAL EDITION PHOTOBOOK','2020-07-27', 'MAGAZINE')
+''')
+cursor.execute('''
+    INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
+    VALUES('THE ALBUM NECKLACE', 125.00, 0.5, 2000, 0.30, 'D:\Downloads\necklace.png', 'BLACKPINK THE ALBUM Crown Necklace','2021-01-10', 'FASHION')
+''')
+cursor.execute('''
+    INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
+    VALUES('ICE CREAM SUNGLASSES', 200.00, 0.3, 1500, 0.30, 'D:\Downloads\sunglass.png', 'Pink Tinted Ice Cream Sunglasses','2021-01-20', 'FASHION')
+''')
+cursor.execute('''
+    INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
+    VALUES('ICE CREAM SOCKS', 150.00, 0.1, 5000, 0.10, 'D:\Downloads\socks.png', 'White Socks','2021-01-20', 'FASHION')
+''')
+cursor.execute('''
+    INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
+    VALUES('LOVESICK GIRLS HOODIE 1', 325.00, 2.0, 3000, 0, 'D:\Downloads\hoodie.png', 'White Unisex Hoodie','2021-01-30', 'FASHION')
+''')
+cursor.execute('''
+    INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
+    VALUES('LOVESICK GIRLS HOODIE 1I', 325.00, 2.0, 3000, 0, 'D:\Downloads\hoodie2.png', 'Black Unisex Hoodie','2021-01-30', 'FASHION')
 ''')
 
+### ORDER_DETAILS TABLE (TOTAL RECORDS)
 cursor.execute('''
     INSERT INTO order_details(order_id,order_member_id,order_shipping_address,order_courier,order_shipping_fee,order_total,order_status,order_creation_date,order_payment_id)
     VALUES(30001, 10001, '84 Jalan Hang Jebat', 'PostLaju', 10, 149.99, 'To Pay','2022-08-19', 50001)
