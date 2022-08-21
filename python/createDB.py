@@ -68,8 +68,6 @@ db.execute('''CREATE TABLE IF NOT EXISTS payment(
     FOREIGN KEY(payment_order_id) REFERENCES order_details(order_id)
 )''')
 
-db.execute('ALTER TABLE order_details ADD COLUMN order_payment_id INTEGER REFERENCES payment(payment_id)')
-
 db.execute('DROP TABLE IF EXISTS cart')
 db.execute('''CREATE TABLE IF NOT EXISTS cart(
     cart_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -203,20 +201,20 @@ cursor.execute('''
 
 # ORDER_DETAILS TABLE (TOTAL 5 RECORDS)
 cursor.execute('''
-    INSERT INTO order_details(order_id,order_member_id,order_shipping_address,order_courier,order_shipping_fee,order_total,order_status,order_creation_date,order_payment_id)
-    VALUES(30001, 10001, '11 Jalan Kimchi', 'GDEX', 30, 563.21, 'DELIVERED','2022-01-22', 50001)
+    INSERT INTO order_details(order_id,order_member_id,order_shipping_address,order_courier,order_shipping_fee,order_total,order_status,order_creation_date)
+    VALUES(30001, 10001, '11 Jalan Kimchi', 'GDEX', 30, 563.21, 'DELIVERED','2022-01-22')
 ''')
 cursor.execute('''
-    INSERT INTO order_details(order_member_id,order_shipping_address,order_courier,order_shipping_fee,order_total,order_status,order_creation_date,order_payment_id)
-    VALUES(10002, '22 Jalan Olive', 'GDEX', 5, 87.50, 'DELIVERED','2022-02-23', 50002)
+    INSERT INTO order_details(order_member_id,order_shipping_address,order_courier,order_shipping_fee,order_total,order_status,order_creation_date)
+    VALUES(10002, '22 Jalan Olive', 'GDEX', 5, 87.50, 'DELIVERED','2022-02-23')
 ''')
 cursor.execute('''
-    INSERT INTO order_details(order_member_id,order_shipping_address,order_courier,order_shipping_fee,order_total,order_status,order_creation_date,order_payment_id)
-    VALUES(10003, '33 Jalan Joker', 'GDEX', 30, 480.96, 'SHIPPED OUT','2022-03-24', 50003)
+    INSERT INTO order_details(order_member_id,order_shipping_address,order_courier,order_shipping_fee,order_total,order_status,order_creation_date)
+    VALUES(10003, '33 Jalan Joker', 'GDEX', 30, 480.96, 'SHIPPED OUT','2022-03-24')
 ''')
 cursor.execute('''
-    INSERT INTO order_details(order_member_id,order_shipping_address,order_courier,order_shipping_fee,order_total,order_status,order_creation_date,order_payment_id)
-    VALUES(10004, '44 Jalan Jerry', 'GDEX', 10, 465.00, 'PAID','2022-04-25', 50004)
+    INSERT INTO order_details(order_member_id,order_shipping_address,order_courier,order_shipping_fee,order_total,order_status,order_creation_date)
+    VALUES(10004, '44 Jalan Jerry', 'GDEX', 10, 465.00, 'PAID','2022-04-25')
 ''')
 cursor.execute('''
     INSERT INTO order_details(order_member_id,order_shipping_address,order_courier,order_shipping_fee,order_total,order_status,order_creation_date)
