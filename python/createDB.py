@@ -41,7 +41,7 @@ db.execute('''CREATE TABLE IF NOT EXISTS order_details(
     order_courier TEXT NOT NULL,
     order_shipping_fee REAL NOT NULL,
     order_total REAL NOT NULL,
-    order_status TEXT CHECK( order_status IN ('TO PAY','PAID','SHIPPED OUT','DELIVERED) ) NOT NULL DEFAULT 'TO PAY',
+    order_status TEXT CHECK( order_status IN ('TO PAY','PAID','SHIPPED OUT','DELIVERED') ) NOT NULL DEFAULT 'TO PAY',
     order_creation_date DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
     FOREIGN KEY(order_member_id) REFERENCES member(member_id)
 )''')
@@ -159,7 +159,7 @@ cursor.execute('''
 ''')
 cursor.execute('''
     INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
-    VALUES('JISOO x MARIE CLAIRE KOREA', 89.99, 2.5, 10000, 0.10, 'D:\Downloads\mag.png', 'JISOO collaboration with Dior Beauty,'2022-07-15', 'MAGAZINE')
+    VALUES('JISOO x MARIE CLAIRE KOREA', 89.99, 2.5, 10000, 0.10, 'D:\Downloads\mag.png', 'JISOO collaboration with Dior Beauty','2022-07-15', 'MAGAZINE')
 ''')
 cursor.execute('''
     INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
