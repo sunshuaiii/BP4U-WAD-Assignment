@@ -53,9 +53,21 @@ export default class HomeScreen extends Component {
 
   render() {
     return (
-      <View style={{ flex: 1, margin: 5 }}>
-        <Text>hi</Text>
-        <Text>{this.state.members}</Text>
+      <View style={{flex: 1, margin: 5}}>
+        <FlatList
+          refreshing={this.state.isFetching}
+          onRefresh={this._load}
+          data={this.state.member}
+          renderItem={({data}) => {
+            return (
+                <View style={{borderBottomWidth: 1, borderBottomColor: 'grey'}}>
+                  <Text style={{fontSize: 20, fontWeight: 'bold'}}>HI</Text>
+                  <Text style={{fontSize: 20, fontWeight: 'bold'}}>{item.lname}</Text>
+                  <Text style={{fontSize: 15}}>{item.email}</Text>
+                  <Text style={{fontSize: 15}}>{item.phone}</Text>
+                </View>
+            );
+          }}></FlatList>
       </View>
     );
   }
