@@ -9,7 +9,10 @@ import CustomDrawer from "./components/CustomDrawer";
 import SettingsScreen from "./screens/SettingsScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import HomeScreen from "./screens/HomeScreen.js";
+import ProductScreen from "./screens/ProductScreen.js";
 import CartScreen from "./screens/CartScreen";
+import EditCartScreen from "./screens/EditCartScreen.js";
+import PaymentScreen from "./screens/PaymentScreen.js";
 import HistoryScreen from "./screens/HistoryScreen.js";
 
 import AntDesign from "react-native-vector-icons/AntDesign";
@@ -21,6 +24,25 @@ LogBox.ignoreLogs(["EventEmitter.removeListener"]);
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
+
+const HomeStack = () => {
+  return (
+    <Stack.Navigator initialRouteName={Home}>
+      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="Product" component={ProductScreen} />
+    </Stack.Navigator>
+  );
+};
+
+const CartStack = () => {
+  return (
+    <Stack.Navigator initialRouteName={Cart}>
+      <Stack.Screen name="Cart" component={CartScreen} />
+      <Stack.Screen name="EditCart" component={EditCartScreen} />
+      <Stack.Screen name="Payment" component={PaymentScreen} />
+    </Stack.Navigator>
+  );
+};
 
 const MyDrawer = () => {
   return (
@@ -78,7 +100,7 @@ export default class App extends Component {
           ></Tab.Screen>
           <Tab.Screen
             name="Home"
-            component={HomeScreen}
+            component={HomeStack}
             options={{
               tabBarIcon: () => {
                 return (
@@ -89,7 +111,7 @@ export default class App extends Component {
           ></Tab.Screen>
           <Tab.Screen
             name="Cart"
-            component={CartScreen}
+            component={CartStack}
             options={{
               tabBarBadge: 0,
               tabBarIcon: () => {

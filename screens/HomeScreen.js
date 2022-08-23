@@ -23,7 +23,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import SearchBar from "react-native-dynamic-search-bar";
 import { InputWithLabel, PickerWithLabel, AppButton } from "../UI";
 import { Product } from '../components/Product.js';
-
+import ProductScreen from './ProductScreen.js';
 
 let config = require("../Config");
 let logo = require("../assets/icons/BP4U.png");
@@ -237,7 +237,7 @@ export default class HomeScreen extends Component {
               if(item.discount == 0){
                 return (
                   <TouchableOpacity style={styles.card} onPress={() => {
-                    navigation.navigate('ProductScreen', {
+                    this.props.navigation.navigate('Product', {
                     productId: item.id,
                     });
                   }}>
@@ -251,7 +251,7 @@ export default class HomeScreen extends Component {
               }else{
                 return (
                   <TouchableOpacity style={styles.card} onPress={() => {
-                    navigation.navigate('ProductScreen', {
+                    this.props.navigation.navigate('Product', {
                     productId: item.id,
                     });
                   }}>
@@ -280,7 +280,7 @@ export default class HomeScreen extends Component {
               if(item.discount == 0){
                 return (
                   <TouchableOpacity style={styles.card} onPress={() => {
-                    navigation.navigate('ProductScreen', {
+                    this.props.navigation.navigate('Product', {
                     productId: item.id,
                     });
                   }}>
@@ -294,7 +294,7 @@ export default class HomeScreen extends Component {
               }else{
                 return (
                   <TouchableOpacity style={styles.card} onPress={() => {
-                    navigation.navigate('ProductScreen', {
+                    this.props.navigation.navigate('Product', {
                     productId: item.id,
                     });
                   }}>
@@ -323,7 +323,7 @@ export default class HomeScreen extends Component {
               if(item.discount == 0){
                 return (
                   <TouchableOpacity style={styles.card} onPress={() => {
-                    navigation.navigate('ProductScreen', {
+                    this.props.navigation.navigate('Product', {
                     productId: item.id,
                     });
                   }}>
@@ -337,7 +337,7 @@ export default class HomeScreen extends Component {
               }else{
                 return (
                   <TouchableOpacity style={styles.card} onPress={() => {
-                    navigation.navigate('ProductScreen', {
+                    this.props.navigation.navigate('Product', {
                     productId: item.id,
                     });
                   }}>
@@ -366,7 +366,7 @@ export default class HomeScreen extends Component {
               if(item.discount == 0){
                 return (
                   <TouchableOpacity style={styles.card} onPress={() => {
-                    navigation.navigate('ProductScreen', {
+                    this.props.navigation.navigate('Product', {
                     productId: item.id,
                     });
                   }}>
@@ -380,7 +380,7 @@ export default class HomeScreen extends Component {
               }else{
                 return (
                   <TouchableOpacity style={styles.card} onPress={() => {
-                    navigation.navigate('ProductScreen', {
+                    this.props.navigation.navigate('Product', {
                     productId: item.id,
                     });
                   }}>
@@ -409,7 +409,7 @@ export default class HomeScreen extends Component {
               if(item.discount == 0){
                 return (
                   <TouchableOpacity style={styles.card} onPress={() => {
-                    navigation.navigate('ProductScreen', {
+                    this.props.navigation.navigate('Product', {
                     productId: item.id,
                     });
                   }}>
@@ -423,7 +423,7 @@ export default class HomeScreen extends Component {
               }else{
                 return (
                   <TouchableOpacity style={styles.card} onPress={() => {
-                    navigation.navigate('ProductScreen', {
+                    this.props.navigation.navigate('Product', {
                     productId: item.id,
                     });
                   }}>
