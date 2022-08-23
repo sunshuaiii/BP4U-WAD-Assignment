@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { View, Text, Image, StyleSheet, Button, TouchableOpacity, FlatList } from "react-native";
+import { View, Text, Image, StyleSheet, Button, TouchableOpacity, FlatList ,Alert} from "react-native";
 import { TouchableHighlight,ScrollView } from "react-native-gesture-handler";
 import { color } from "react-native-reanimated";
 import Icon from 'react-native-ionicons';
@@ -14,10 +14,14 @@ export default class CartScreen extends Component {
     this.state = {
       cartItem:[],
       product:[],
-      quantity: 1,
+      id: '',
+      cart_id: '',
+      product_id:'',
+      quantity: '',
       isFetching: false,
     };
     this._load = this._load.bind(this);
+    this._update = this._update.bind(this);
   }
   
   _load(){
@@ -27,7 +31,7 @@ export default class CartScreen extends Component {
       .then(response =>{
         console.log(response);
         if(!response.ok){
-          Alert.alert('Error: ', repsonse.status.toString());
+          Alert.alert('Error: ', response.status.toString());
           throw Error('Error'+ response.status);
         }
         this.setState({isFetching:false});
@@ -41,25 +45,50 @@ export default class CartScreen extends Component {
         console.log(error);
       });
   }
+  
+  _loadbyId(){
+    let url = config.settings.severPath + '/api/cart-item/' + this.state.id;
+    this.setState({isFetching: true});
+    fetch(url)
+      .then(response =>{
+        console.log(response);
+        if(!response.ok){
+          Alert.alert('Error: ', response.status.toString());
+          throw Error('Error'+ response.status);
+        }
+        this.setState({isFetching:false});
+        return response.json();
+      })
+      .then(cartItem =>{
+        this.setState({
+          cart_id: cartItem.cart_id,
+          product_id: cartItem.product_id,
+          quantity: cartItem.quantity,
+        })
+      })
+    .catch(error =>{
+      console.log(error);
+    })
+  }
 
   _update(){
-    let url = config.settings.serverPath + '/api/cart-item/${ci_cart_id}';
+    let url = config.settings.serverPath + '/api/cart-item/' + this.state.id;
     this.setState({isFetching: true});
     fetch(url,{
       method:'PUT',
       headers:{
         Accept: 'application/json',
-        'Content-Type':'application/json'
+        'Content-Type':'application/json',
       },
-      body:json.stringify({
-        cart_item_id: this.state.cart_item_id,
-        ci_product_id: this.state.ci_product_id,
-        ci_quantity: this.state.quantity,
+      body: JSON.stringify({
+        cart_id: this.state.cart_id,
+        product_id: this.state.product_id,
+        quantity: this.state.quantity,
       }),
     })
     .then(response => {
       if(!response.ok){
-        Alert.alert('Error: ', repsonse.status.toString());
+        Alert.alert('Error: ', response.status.toString());
         throw Error('Error'+ response.status);
       }
       this.setState({isFetching:false});
@@ -67,7 +96,7 @@ export default class CartScreen extends Component {
     })
     .then(respondJson =>{
       if(respondJson.affected > 0){
-        Alert.alert ('Record UPDATED for',this.state.ci_quantity);
+        Alert.alert ('Record UPDATED for',this.state.quantity);
       }
       else{
         Alert.alert ('Error in UPDATING');
@@ -82,13 +111,13 @@ export default class CartScreen extends Component {
 
   componentDidMount(){
     this._load();
+    this._loadbyId();
   }
 
   addQuantity = () => {
     this.setState({
-      ci_quantity: this.state.ci_quantity +1,
+      quantity:this.state.quantity +1
     })
-    this._update()
     console.log('pressed');
   }
 
@@ -97,7 +126,7 @@ export default class CartScreen extends Component {
       return;
     }
     this.setState({
-      quantity: this.state.cartItem.quantity -1
+      quantity: this.state.quantity -1
     })
   }
 
@@ -135,7 +164,7 @@ export default class CartScreen extends Component {
                       size = {20}></SimpleLineIcons>
                   </TouchableOpacity>
                   <Text style ={{fontSize: 15, color: 'black'}}>{item.quantity}</Text>
-                  <TouchableOpacity style = {styles.quantityButton} onPress = {this.addQuantity}>
+                  <TouchableOpacity style = {styles.quantityButton} onPress = {() =>{this.setState({id: item.id}); this.addQuantity(); this._update()}}>
                     <SimpleLineIcons
                       name = "plus"
                       style = {styles.plusIcon}
