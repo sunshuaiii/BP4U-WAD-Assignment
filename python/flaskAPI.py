@@ -547,15 +547,14 @@ def store_order():
         request.json['ship_fee'],
         request.json['total'],
         request.json['status'],
-        request.json['payment_id'],
     )
 
     db = sqlite3.connect(DB)
     cursor = db.cursor()
 
     cursor.execute('''
-        INSERT INTO order(order_member_id,order_shipping_address,order_courier,order_shipping_fee,order_total,order_status,order_payment_id)
-        VALUES(?,?,?,?,?,?,?)
+        INSERT INTO order(order_member_id,order_shipping_address,order_courier,order_shipping_fee,order_total,order_status)
+        VALUES(?,?,?,?,?,?)
     ''', new_order)
 
     order_id = cursor.lastrowid
@@ -590,7 +589,6 @@ def update_order(order):
         request.json['ship_fee'],
         request.json['total'],
         request.json['status'],
-        request.json['payment_id'],
         str(order),
     )
 
@@ -599,7 +597,7 @@ def update_order(order):
 
     cursor.execute('''
         UPDATE order_details SET
-            order_member_id=?,order_shipping_address=?,order_courier=?,order_shipping_fee=?,order_total=?,order_status=?,order_payment_id=?
+            order_member_id=?,order_shipping_address=?,order_courier=?,order_shipping_fee=?,order_total=?,order_status=?
         WHERE order_id=?
     ''', update_order)
 
