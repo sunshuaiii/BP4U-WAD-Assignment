@@ -27,7 +27,7 @@ const Stack = createStackNavigator();
 
 const HomeStack = () => {
   return (
-    <Stack.Navigator initialRouteName={Home}>
+    <Stack.Navigator initialRouteName={'Home'}>
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="Product" component={ProductScreen} />
     </Stack.Navigator>
@@ -36,7 +36,7 @@ const HomeStack = () => {
 
 const CartStack = () => {
   return (
-    <Stack.Navigator initialRouteName={Cart}>
+    <Stack.Navigator initialRouteName={'Cart'}>
       <Stack.Screen name="Cart" component={CartScreen} />
       <Stack.Screen name="EditCart" component={EditCartScreen} />
       <Stack.Screen name="Payment" component={PaymentScreen} />
