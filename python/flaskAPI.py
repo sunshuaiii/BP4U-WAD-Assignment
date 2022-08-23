@@ -1030,6 +1030,23 @@ def show_product(product):
     else:
         return jsonify(None), 200
 
+@app.route('/api/product/search/<string:productName>', methods=['GET'])
+def index_product_search(productName):
+    db = sqlite3.connect(DB)
+    cursor = db.cursor()
+    cursor.execute('SELECT * FROM product WHERE product_name LIKE "%?%" COLLATE NOCASE ORDER BY product_id', (str(productName)))
+    rows = cursor.fetchall()
+
+    print(rows)
+
+    db.close()
+
+    rows_as_dict = []
+    for row in rows:
+        row_as_dict = get_product_row_as_dict(row)
+        rows_as_dict.append(row_as_dict)
+
+    return jsonify(rows_as_dict), 200
 
 @app.route('/api/product', methods=['POST'])
 def store_product():

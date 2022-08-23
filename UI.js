@@ -59,7 +59,7 @@ class AppButton extends Component {
           this.backgroundColor = '#286090';
       }
     } else {
-      this.backgroundColor = '#286090';
+      this.backgroundColor = 'black';
     }
   }
 
@@ -87,8 +87,13 @@ class AppButton extends Component {
 
 const buttonStyles = StyleSheet.create({
   button: {
-    margin: 5,
     alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 4,
+    elevation: 3,
+    marginTop: 20,
   },
   buttonText: {
     padding: 20,

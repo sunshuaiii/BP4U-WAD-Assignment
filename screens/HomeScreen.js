@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import {
   ScrollView,
   StatusBar,
@@ -26,7 +26,6 @@ import { Product } from '../components/Product.js';
 
 let config = require("../Config");
 let logo = require("../assets/icons/BP4U.png");
-const Stack = createStackNavigator();
 
 
 export default class HomeScreen extends Component {
