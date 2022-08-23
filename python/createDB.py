@@ -139,63 +139,83 @@ cursor.execute('''
 # PRODUCT TABLE (TOTAL 15 RECORDS)
 cursor.execute('''
     INSERT INTO product(product_id,product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
-    VALUES(20001, 'BORN PINK EXCLUSIVE BOX SET - BLACK VERSION', 149.99, 0.5, 10000, 0, '../assets/productImages/bornpink.jpg', 'BLACKPINK 2nd Full Album','2022-08-19', 'ALBUM')
+    VALUES(20001, 'BORN PINK EXCLUSIVE BOX SET - BLACK VERSION', 149.99, 0.5, 10000, 0, 'https://cdn.shopify.com/s/files/1/0022/5011/3123/products/2.0BLACKBOX.png?v=1660168680', 'BLACKPINK 2nd Full Album','2022-08-19', 'ALBUM')
 ''')
 cursor.execute('''
     INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
-    VALUES('BORN PINK EXCLUSIVE BOX SET – PINK VERSION', 149.99, 0.5, 10000, 0, '../assets/productImages/bornpink2.jpg', 'BLACKPINK 2nd Full Album','2022-08-19', 'ALBUM')
+    VALUES('BORN PINK EXCLUSIVE BOX SET – PINK VERSION', 149.99, 0.5, 10000, 0, 'https://cdn.shopify.com/s/files/1/0022/5011/3123/products/2.0PINKBOX.png?v=1660168633', 'BLACKPINK 2nd Full Album','2022-08-19', 'ALBUM')
 ''')
 cursor.execute('''
     INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
-    VALUES('THE ALBUM – VERSION 1', 150.99, 1.0, 20000, 0.25, '../assets/productImages/album.jpg', 'BLACKPINK 1st Full Album','2020-11-20', 'ALBUM')
+    VALUES('THE ALBUM – VERSION 1', 150.99, 1.0, 20000, 0.25, 'https://cdn.shopify.com/s/files/1/0022/5011/3123/products/BP_Box_V1_90fc247f-9726-4ee6-a117-7823ed2373b6.png?v=1602082456', 'BLACKPINK 1st Full Album','2020-11-20', 'ALBUM')
 ''')
 cursor.execute('''
     INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
-    VALUES('THE ALBUM – VERSION 2', 150.99, 1.0, 20000, 0.25, '../assets/productImages/album2.jpg', 'BLACKPINK 1st Full Album','2020-11-20', 'ALBUM')
+    VALUES('THE ALBUM – VERSION 2', 150.99, 1.0, 20000, 0.25, 'https://cdn.shopify.com/s/files/1/0022/5011/3123/products/BP_Box_V2_ef110fa6-bcc9-4665-90c2-9b5be31fd58f.png?v=1602082483', 'BLACKPINK 1st Full Album','2020-11-20', 'ALBUM')
 ''')
 cursor.execute('''
     INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
-    VALUES('THE ALBUM – VERSION 3', 150.99, 1.0, 20000, 0.25, '../assets/productImages/album3.jpg', 'BLACKPINK 1st Full Album','2020-11-20', 'ALBUM')
+    VALUES('THE ALBUM – VERSION 3', 150.99, 1.0, 20000, 0.25, 'https://cdn.shopify.com/s/files/1/0022/5011/3123/products/BP_Box_V3_7bf94f26-dc6f-48f1-9e7c-009795f08f6f.png?v=1599188148', 'BLACKPINK 1st Full Album','2020-11-20', 'ALBUM')
 ''')
 cursor.execute('''
     INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
-    VALUES('JISOO x MARIE CLAIRE KOREA', 89.99, 2.5, 10000, 0.10, '../assets/productImages/mag.jpg', 'JISOO collaboration with Dior Beauty','2022-07-15', 'MAGAZINE')
+    VALUES('THE ALBUM – VERSION 4', 150.99, 1.0, 20000, 0.25, 'https://cdn.shopify.com/s/files/1/0022/5011/3123/products/BP_Box_V4_82ba5e5f-94b1-47f4-aa4f-83b34c64d997.png?v=1599188148', 'BLACKPINK 1st Full Album','2020-11-20', 'ALBUM')
 ''')
 cursor.execute('''
     INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
-    VALUES('JENNIE x HIGHCUT', 79.99, 2.0, 10000, 0.15, '../assets/productImages/mag2.jpg', 'HIGHCUT MAGAZINE','2018-11-15', 'MAGAZINE')
+    VALUES('STANDARD LP', 39.98, 0.5, 20000, 0.30, 'https://cdn.shopify.com/s/files/1/0022/5011/3123/products/BPLP.png?v=1595876400', 'BLACKPINK 1st Full Album Standard LP','2020-11-20', 'ALBUM')
 ''')
 cursor.execute('''
     INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
-    VALUES('JISOO ROSE x VOGUE KOREA', 99.99, 2.5, 10000, 0, '../assets/productImages/mag3.jpg', 'JISOO and ROSE featured in Vogue Korea','2018-11-19', 'MAGAZINE')
+    VALUES('R CD DIGIPAK', 60.00, 1.5, 5000, 0.25, 'https://cdn.shopify.com/s/files/1/0022/5011/3123/products/ROSE_digipak.png?v=1616703308', 'BLACKPINK ROSE Solo CD','2021-03-30', 'ALBUM')
 ''')
 cursor.execute('''
     INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
-    VALUES('LISA PHOTOBOOK LIMITED EDITION', 149.99, 2.5, 500, 0, '../assets/productImages/mag4.jpg', 'PHOTOBOOK BY LISA','2020-03-27', 'MAGAZINE')
+    VALUES('STANDARD CD – VERSION 1', 89.45, 0.5, 10000, 0, 'https://cdn.shopify.com/s/files/1/0022/5011/3123/products/BPCD_9789b3e2-55c6-44a9-8cc1-6110baddcdd0.png?v=1595876458', 'BLACKPINK 1st Full Album Standard CD','2020-11-20', 'ALBUM')
 ''')
 cursor.execute('''
     INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
-    VALUES('BLACKPINK HOW YOU LIKE THAT PHOTOBOOK', 149.99, 2.5, 800, 0, '../assets/productImages/mag5.jpg', 'SPECIAL EDITION PHOTOBOOK','2020-07-27', 'MAGAZINE')
+    VALUES('STANDARD CD – VERSION 2', 89.45, 0.5, 10000, 0, 'https://cdn.shopify.com/s/files/1/0022/5011/3123/products/BPCD_9789b3e2-55c6-44a9-8cc1-6110baddcdd0.png?v=1595876458', 'BLACKPINK 1st Full Album Standard CD','2020-11-20', 'ALBUM')
 ''')
 cursor.execute('''
     INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
-    VALUES('THE ALBUM NECKLACE', 125.00, 0.5, 2000, 0.30, '../assets/productImages/necklace.jpg', 'BLACKPINK THE ALBUM Crown Necklace','2021-01-10', 'FASHION')
+    VALUES('JISOO x MARIE CLAIRE KOREA', 89.99, 2.5, 10000, 0.10, 'https://blackpinkupdate.com/wp-content/uploads/2022/08/3-BLACKPINK-Jisoo-Dior-Beauty-Marie-Claire-Korea-Magazine-1581x2048.jpeg', 'JISOO collaboration with Dior Beauty','2022-07-15', 'MAGAZINE')
 ''')
 cursor.execute('''
     INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
-    VALUES('ICE CREAM SUNGLASSES', 200.00, 0.3, 1500, 0.30, '../assets/productImages/sunglass.jpg', 'Pink Tinted Ice Cream Sunglasses','2021-01-20', 'FASHION')
+    VALUES('JENNIE x HIGHCUT', 79.99, 2.0, 10000, 0.15, 'https://i0.wp.com/blackpinkupdate.com/wp-content/uploads/2020/03/6-BLACKPINK-Jennie-Calvin-Klein-Jeans-Highcut-Star-Magazine-Korea.jpg?fit=696%2C1024&ssl=1', 'HIGHCUT MAGAZINE','2018-11-15', 'MAGAZINE')
 ''')
 cursor.execute('''
     INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
-    VALUES('ICE CREAM SOCKS', 150.00, 0.1, 5000, 0.10, '../assets/productImages/socks.jpg', 'White Socks','2021-01-20', 'FASHION')
+    VALUES('JISOO ROSE x VOGUE KOREA', 99.99, 2.5, 10000, 0, 'https://blackpinkupdate.com/wp-content/uploads/2018/10/1-HQ-BLACKPINK-Jisoo-Rose-Vogue-Korea-Magazine-November-2018-Issue.jpg', 'JISOO and ROSE featured in Vogue Korea','2018-11-19', 'MAGAZINE')
 ''')
 cursor.execute('''
     INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
-    VALUES('LOVESICK GIRLS HOODIE 1', 325.00, 2.0, 3000, 0, '../assets/productImages/hoodie.jpg', 'White Unisex Hoodie','2021-01-30', 'FASHION')
+    VALUES('LISA PHOTOBOOK LIMITED EDITION', 149.99, 2.5, 500, 0, 'https://blackpinkupdate.com/wp-content/uploads/2020/03/3-BLACKPINK-Official-Merch-Lisa-Photobook-Limited-Edition-2020.jpg', 'PHOTOBOOK BY LISA','2020-03-27', 'MAGAZINE')
 ''')
 cursor.execute('''
     INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
-    VALUES('LOVESICK GIRLS HOODIE 1I', 325.00, 2.0, 3000, 0, '../assets/productImages/hoodie2.jpg', 'Black Unisex Hoodie','2021-01-30', 'FASHION')
+    VALUES('BLACKPINK HOW YOU LIKE THAT PHOTOBOOK', 149.99, 2.5, 800, 0, 'https://blackpinkupdate.com/wp-content/uploads/2020/07/4-Official-Merch-BLACKPINK-How-You-Like-That-Special-Edition.jpg', 'SPECIAL EDITION PHOTOBOOK','2020-07-27', 'MAGAZINE')
+''')
+cursor.execute('''
+    INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
+    VALUES('THE ALBUM NECKLACE', 125.00, 0.5, 2000, 0.30, 'https://cdn.shopify.com/s/files/1/0022/5011/3123/products/BP_album_necklace.png?v=1601238171', 'BLACKPINK THE ALBUM Crown Necklace','2021-01-10', 'FASHION')
+''')
+cursor.execute('''
+    INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
+    VALUES('ICE CREAM SUNGLASSES', 200.00, 0.3, 1500, 0.30, 'https://cdn.shopify.com/s/files/1/0022/5011/3123/products/BPSG_Glasses.png?v=1598580813', 'Pink Tinted Ice Cream Sunglasses','2021-01-20', 'FASHION')
+''')
+cursor.execute('''
+    INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
+    VALUES('ICE CREAM SOCKS', 150.00, 0.1, 5000, 0.10, 'https://cdn.shopify.com/s/files/1/0022/5011/3123/products/BPSG_Socks.png?v=1598580755', 'White Socks','2021-01-20', 'FASHION')
+''')
+cursor.execute('''
+    INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
+    VALUES('LOVESICK GIRLS HOODIE I', 325.00, 2.0, 3000, 0, 'https://cdn.shopify.com/s/files/1/0022/5011/3123/products/WHT-HOODIE_FRNT.png?v=1601589541', 'White Unisex Hoodie','2021-01-30', 'FASHION')
+''')
+cursor.execute('''
+    INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
+    VALUES('LOVESICK GIRLS HOODIE II', 325.00, 2.0, 3000, 0, 'https://cdn.shopify.com/s/files/1/0022/5011/3123/products/BLK-HOODIE_FRNT.png?v=1601589549', 'Black Unisex Hoodie','2021-01-30', 'FASHION')
 ''')
 
 

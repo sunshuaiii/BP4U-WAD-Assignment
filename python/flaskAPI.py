@@ -926,6 +926,95 @@ def index_product():
 
     return jsonify(rows_as_dict), 200
 
+@app.route('/api/product/new-released', methods=['GET'])
+def index_new_released_products():
+    db = sqlite3.connect(DB)
+    cursor = db.cursor()
+    cursor.execute('SELECT * FROM product WHERE (SELECT julianday("now") - julianday(product_creation_date)) < 30 ORDER BY product_id ')
+    rows = cursor.fetchall()
+
+    print(rows)
+
+    db.close()
+
+    rows_as_dict = []
+    for row in rows:
+        row_as_dict = get_product_row_as_dict(row)
+        rows_as_dict.append(row_as_dict)
+
+    return jsonify(rows_as_dict), 200
+
+@app.route('/api/product/on-sales', methods=['GET'])
+def index_on_sales_products():
+    db = sqlite3.connect(DB)
+    cursor = db.cursor()
+    cursor.execute('SELECT * FROM product WHERE product_discount_percent > 0 ORDER BY product_id ')
+    rows = cursor.fetchall()
+
+    print(rows)
+
+    db.close()
+
+    rows_as_dict = []
+    for row in rows:
+        row_as_dict = get_product_row_as_dict(row)
+        rows_as_dict.append(row_as_dict)
+
+    return jsonify(rows_as_dict), 200
+
+@app.route('/api/product/album', methods=['GET'])
+def index_product_album():
+    db = sqlite3.connect(DB)
+    cursor = db.cursor()
+    cursor.execute('SELECT * FROM product WHERE product_category="ALBUM" ORDER BY product_id')
+    rows = cursor.fetchall()
+
+    print(rows)
+
+    db.close()
+
+    rows_as_dict = []
+    for row in rows:
+        row_as_dict = get_product_row_as_dict(row)
+        rows_as_dict.append(row_as_dict)
+
+    return jsonify(rows_as_dict), 200
+
+@app.route('/api/product/magazine', methods=['GET'])
+def index_product_magazine():
+    db = sqlite3.connect(DB)
+    cursor = db.cursor()
+    cursor.execute('SELECT * FROM product WHERE product_category="MAGAZINE" ORDER BY product_id')
+    rows = cursor.fetchall()
+
+    print(rows)
+
+    db.close()
+
+    rows_as_dict = []
+    for row in rows:
+        row_as_dict = get_product_row_as_dict(row)
+        rows_as_dict.append(row_as_dict)
+
+    return jsonify(rows_as_dict), 200
+
+@app.route('/api/product/fashion', methods=['GET'])
+def index_product_fashion():
+    db = sqlite3.connect(DB)
+    cursor = db.cursor()
+    cursor.execute('SELECT * FROM product WHERE product_category="FASHION" ORDER BY product_id')
+    rows = cursor.fetchall()
+
+    print(rows)
+
+    db.close()
+
+    rows_as_dict = []
+    for row in rows:
+        row_as_dict = get_product_row_as_dict(row)
+        rows_as_dict.append(row_as_dict)
+
+    return jsonify(rows_as_dict), 200
 
 @app.route('/api/product/<int:product>', methods=['GET'])
 def show_product(product):
