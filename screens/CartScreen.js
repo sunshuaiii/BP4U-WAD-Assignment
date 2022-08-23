@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import { View, Text, Image, StyleSheet, Button, TouchableOpacity, FlatList ,Alert} from "react-native";
 import { TouchableHighlight,ScrollView } from "react-native-gesture-handler";
 import { color } from "react-native-reanimated";
-import Icon from 'react-native-ionicons';
 import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
 import SQLite from "react-native-sqlite-storage";
 
