@@ -27,7 +27,7 @@ db.execute('''CREATE TABLE IF NOT EXISTS product(
     product_weight REAL NOT NULL,
     product_stock INTEGER NOT NULL,
     product_discount_percent REAL NOT NULL DEFAULT 0,
-    product_photo BLOB NOT NULL,
+    product_photo TEXT NOT NULL,
     product_desc TEXT NOT NULL,
     product_creation_date DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
     product_category TEXT CHECK( product_category IN ('N/A','ALBUM','MAGAZINE','FASHION') ) NOT NULL DEFAULT 'N/A'
@@ -139,63 +139,63 @@ cursor.execute('''
 # PRODUCT TABLE (TOTAL 15 RECORDS)
 cursor.execute('''
     INSERT INTO product(product_id,product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
-    VALUES(20001, 'BORN PINK EXCLUSIVE BOX SET - BLACK VERSION', 149.99, 0.5, 10000, 0, 'D:\Downloads\bornpink.png', 'BLACKPINK 2nd Full Album','2022-08-19', 'ALBUM')
+    VALUES(20001, 'BORN PINK EXCLUSIVE BOX SET - BLACK VERSION', 149.99, 0.5, 10000, 0, '../assets/productImages/bornpink.jpg', 'BLACKPINK 2nd Full Album','2022-08-19', 'ALBUM')
 ''')
 cursor.execute('''
     INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
-    VALUES('BORN PINK EXCLUSIVE BOX SET – PINK VERSION', 149.99, 0.5, 10000, 0, 'D:\Downloads\bornpink2.png', 'BLACKPINK 2nd Full Album','2022-08-19', 'ALBUM')
+    VALUES('BORN PINK EXCLUSIVE BOX SET – PINK VERSION', 149.99, 0.5, 10000, 0, '../assets/productImages/bornpink2.jpg', 'BLACKPINK 2nd Full Album','2022-08-19', 'ALBUM')
 ''')
 cursor.execute('''
     INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
-    VALUES('THE ALBUM – VERSION 1', 150.99, 1.0, 20000, 0.25, 'D:\Downloads\album.png', 'BLACKPINK 1st Full Album','2020-11-20', 'ALBUM')
+    VALUES('THE ALBUM – VERSION 1', 150.99, 1.0, 20000, 0.25, '../assets/productImages/album.jpg', 'BLACKPINK 1st Full Album','2020-11-20', 'ALBUM')
 ''')
 cursor.execute('''
     INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
-    VALUES('THE ALBUM – VERSION 2', 150.99, 1.0, 20000, 0.25, 'D:\Downloads\album2.png', 'BLACKPINK 1st Full Album','2020-11-20', 'ALBUM')
+    VALUES('THE ALBUM – VERSION 2', 150.99, 1.0, 20000, 0.25, '../assets/productImages/album2.jpg', 'BLACKPINK 1st Full Album','2020-11-20', 'ALBUM')
 ''')
 cursor.execute('''
     INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
-    VALUES('THE ALBUM – VERSION 3', 150.99, 1.0, 20000, 0.25, 'D:\Downloads\album3.png', 'BLACKPINK 1st Full Album','2020-11-20', 'ALBUM')
+    VALUES('THE ALBUM – VERSION 3', 150.99, 1.0, 20000, 0.25, '../assets/productImages/album3.jpg', 'BLACKPINK 1st Full Album','2020-11-20', 'ALBUM')
 ''')
 cursor.execute('''
     INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
-    VALUES('JISOO x MARIE CLAIRE KOREA', 89.99, 2.5, 10000, 0.10, 'D:\Downloads\mag.png', 'JISOO collaboration with Dior Beauty','2022-07-15', 'MAGAZINE')
+    VALUES('JISOO x MARIE CLAIRE KOREA', 89.99, 2.5, 10000, 0.10, '../assets/productImages/mag.jpg', 'JISOO collaboration with Dior Beauty','2022-07-15', 'MAGAZINE')
 ''')
 cursor.execute('''
     INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
-    VALUES('JENNIE x HIGHCUT', 79.99, 2.0, 10000, 0.15, 'D:\Downloads\mag2.png', 'HIGHCUT MAGAZINE','2018-11-15', 'MAGAZINE')
+    VALUES('JENNIE x HIGHCUT', 79.99, 2.0, 10000, 0.15, '../assets/productImages/mag2.jpg', 'HIGHCUT MAGAZINE','2018-11-15', 'MAGAZINE')
 ''')
 cursor.execute('''
     INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
-    VALUES('JISOO ROSE x VOGUE KOREA', 99.99, 2.5, 10000, 0, 'D:\Downloads\mag3.png', 'JISOO and ROSE featured in Vogue Korea','2018-11-19', 'MAGAZINE')
+    VALUES('JISOO ROSE x VOGUE KOREA', 99.99, 2.5, 10000, 0, '../assets/productImages/mag3.jpg', 'JISOO and ROSE featured in Vogue Korea','2018-11-19', 'MAGAZINE')
 ''')
 cursor.execute('''
     INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
-    VALUES('LISA PHOTOBOOK LIMITED EDITION', 149.99, 2.5, 500, 0, 'D:\Downloads\mag4.png', 'PHOTOBOOK BY LISA','2020-03-27', 'MAGAZINE')
+    VALUES('LISA PHOTOBOOK LIMITED EDITION', 149.99, 2.5, 500, 0, '../assets/productImages/mag4.jpg', 'PHOTOBOOK BY LISA','2020-03-27', 'MAGAZINE')
 ''')
 cursor.execute('''
     INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
-    VALUES('BLACKPINK HOW YOU LIKE THAT PHOTOBOOK', 149.99, 2.5, 800, 0, 'D:\Downloads\mag5.png', 'SPECIAL EDITION PHOTOBOOK','2020-07-27', 'MAGAZINE')
+    VALUES('BLACKPINK HOW YOU LIKE THAT PHOTOBOOK', 149.99, 2.5, 800, 0, '../assets/productImages/mag5.jpg', 'SPECIAL EDITION PHOTOBOOK','2020-07-27', 'MAGAZINE')
 ''')
 cursor.execute('''
     INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
-    VALUES('THE ALBUM NECKLACE', 125.00, 0.5, 2000, 0.30, 'D:\Downloads\necklace.png', 'BLACKPINK THE ALBUM Crown Necklace','2021-01-10', 'FASHION')
+    VALUES('THE ALBUM NECKLACE', 125.00, 0.5, 2000, 0.30, '../assets/productImages/necklace.jpg', 'BLACKPINK THE ALBUM Crown Necklace','2021-01-10', 'FASHION')
 ''')
 cursor.execute('''
     INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
-    VALUES('ICE CREAM SUNGLASSES', 200.00, 0.3, 1500, 0.30, 'D:\Downloads\sunglass.png', 'Pink Tinted Ice Cream Sunglasses','2021-01-20', 'FASHION')
+    VALUES('ICE CREAM SUNGLASSES', 200.00, 0.3, 1500, 0.30, '../assets/productImages/sunglass.jpg', 'Pink Tinted Ice Cream Sunglasses','2021-01-20', 'FASHION')
 ''')
 cursor.execute('''
     INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
-    VALUES('ICE CREAM SOCKS', 150.00, 0.1, 5000, 0.10, 'D:\Downloads\socks.png', 'White Socks','2021-01-20', 'FASHION')
+    VALUES('ICE CREAM SOCKS', 150.00, 0.1, 5000, 0.10, '../assets/productImages/socks.jpg', 'White Socks','2021-01-20', 'FASHION')
 ''')
 cursor.execute('''
     INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
-    VALUES('LOVESICK GIRLS HOODIE 1', 325.00, 2.0, 3000, 0, 'D:\Downloads\hoodie.png', 'White Unisex Hoodie','2021-01-30', 'FASHION')
+    VALUES('LOVESICK GIRLS HOODIE 1', 325.00, 2.0, 3000, 0, '../assets/productImages/hoodie.jpg', 'White Unisex Hoodie','2021-01-30', 'FASHION')
 ''')
 cursor.execute('''
     INSERT INTO product(product_name,product_price,product_weight,product_stock,product_discount_percent,product_photo,product_desc,product_creation_date,product_category)
-    VALUES('LOVESICK GIRLS HOODIE 1I', 325.00, 2.0, 3000, 0, 'D:\Downloads\hoodie2.png', 'Black Unisex Hoodie','2021-01-30', 'FASHION')
+    VALUES('LOVESICK GIRLS HOODIE 1I', 325.00, 2.0, 3000, 0, '../assets/productImages/hoodie2.jpg', 'Black Unisex Hoodie','2021-01-30', 'FASHION')
 ''')
 
 
