@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { View, Text, Image, StyleSheet, Button, TouchableOpacity } from "react-native";
+import { View, Text, Image, StyleSheet, Button, TouchableOpacity, FlatList } from "react-native";
 import { TouchableHighlight,ScrollView } from "react-native-gesture-handler";
 import { color } from "react-native-reanimated";
 import Icon from 'react-native-ionicons';
@@ -13,6 +13,7 @@ export default class CartScreen extends Component {
     super(props);
     this.state = {
       cartItem:[],
+      product:[],
       quantity: 1,
       isFetching: false,
     };
@@ -41,14 +42,53 @@ export default class CartScreen extends Component {
       });
   }
 
+  _update(){
+    let url = config.settings.serverPath + '/api/cart-item/${ci_cart_id}';
+    this.setState({isFetching: true});
+    fetch(url,{
+      method:'PUT',
+      headers:{
+        Accept: 'application/json',
+        'Content-Type':'application/json'
+      },
+      body:json.stringify({
+        cart_item_id: this.state.cart_item_id,
+        ci_product_id: this.state.ci_product_id,
+        ci_quantity: this.state.quantity,
+      }),
+    })
+    .then(response => {
+      if(!response.ok){
+        Alert.alert('Error: ', repsonse.status.toString());
+        throw Error('Error'+ response.status);
+      }
+      this.setState({isFetching:false});
+      return response.json();
+    })
+    .then(respondJson =>{
+      if(respondJson.affected > 0){
+        Alert.alert ('Record UPDATED for',this.state.ci_quantity);
+      }
+      else{
+        Alert.alert ('Error in UPDATING');
+      }
+      this.props.route.params._refresh();
+      this.props.navigation.goBack();
+    })
+    .catch(error =>{
+      console.log(error);
+    })
+  }
+
   componentDidMount(){
     this._load();
   }
 
   addQuantity = () => {
     this.setState({
-      quantity: this.state.quantity +1
+      ci_quantity: this.state.ci_quantity +1,
     })
+    this._update()
     console.log('pressed');
   }
 
@@ -57,57 +97,63 @@ export default class CartScreen extends Component {
       return;
     }
     this.setState({
-      quantity: this.state.quantity -1
+      quantity: this.state.cartItem.quantity -1
     })
   }
 
   removeItem = () =>{
     console.log('pressed');
   }
-<FlatList
-  refeshing = {this.state.isFetching}
-  onPress = {this.load}
-  data = {this.state.cartItem}
-  renderItem={({item}) => {
-    return (
-      <ScrollView style = {{marginbottom: 80}}>
-        <View style = {{flexDirection: 'row', height: 150}}>
-          <View style = {{flex: 1}}>
-            <Image source = {require('../productimg/bpshirt.jpg')}
-            style = {styles.image}
-            ></Image>
-          </View>
 
-          <View style= {{flex: 2}}>
-            <Text style = {styles.itemName}>Item Name</Text>
-            <Text style = {styles.itemPrice}>Price: RM 149.99</Text>
+  render() {
+    return(
+    <FlatList
+      refeshing = {this.state.isFetching}
+      onRefresh = {this.load}
+      data = {this.state.cartItem}
 
-            <View style = {{flexDirection: 'row'}}>
-              <TouchableOpacity style = {styles.quantityButton} onPress = {this.removeQuantity}>
-                <SimpleLineIcons
-                  name = "minus"
-                  style = {styles.minusIcon}
-                  color={"black"}
-                  size = {20}></SimpleLineIcons>
-              </TouchableOpacity>
-              <Text style ={{fontSize: 15, color: 'black'}}>{this.state.quantity}</Text>
-              <TouchableOpacity style = {styles.quantityButton} onPress = {this.addQuantity}>
-                <SimpleLineIcons
-                  name = "plus"
-                  style = {styles.plusIcon}
-                  color={"black"}
-                  size = {20}></SimpleLineIcons>
-              </TouchableOpacity>
-              <TouchableOpacity style = {styles.removeButton} onPress = {this.removeItem}>
-                <Text color = 'black'>REMOVE</Text>
-              </TouchableOpacity>
+      renderItem={({item}) => {
+        return (
+          <ScrollView style = {{marginbottom: 80}}>
+            <View style = {{flexDirection: 'row', height: 150}}>
+              <View style = {{flex: 1}}>
+                <Image source = {require('../productimg/bpshirt.jpg')}
+                style = {styles.image}
+                ></Image>
+              </View>
+
+              <View style= {{flex: 2}}>
+                <Text style = {styles.itemName}>{item.product_id}</Text>
+                <Text style = {styles.itemPrice}>Price: RM 149.99</Text>
+
+                <View style = {{flexDirection: 'row'}}>
+                  <TouchableOpacity style = {styles.quantityButton} onPress = {this.removeQuantity}>
+                    <SimpleLineIcons
+                      name = "minus"
+                      style = {styles.minusIcon}
+                      color={"black"}
+                      size = {20}></SimpleLineIcons>
+                  </TouchableOpacity>
+                  <Text style ={{fontSize: 15, color: 'black'}}>{item.quantity}</Text>
+                  <TouchableOpacity style = {styles.quantityButton} onPress = {this.addQuantity}>
+                    <SimpleLineIcons
+                      name = "plus"
+                      style = {styles.plusIcon}
+                      color={"black"}
+                      size = {20}></SimpleLineIcons>
+                  </TouchableOpacity>
+                  <TouchableOpacity style = {styles.removeButton} onPress = {this.removeItem}>
+                    <Text color = 'black'>REMOVE</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+
             </View>
-          </View>
-
-        </View>
-      </ScrollView>
-    );
-  }}></FlatList>
+          </ScrollView>
+        );
+      }}
+      ></FlatList>
+    )}
 }
 
 const styles = StyleSheet.create({
