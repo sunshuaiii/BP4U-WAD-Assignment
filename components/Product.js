@@ -3,23 +3,20 @@ import {Text, Image, View, StyleSheet, TouchableOpacity} from 'react-native';
 
 // create a reusable component for a single product item
 
-export default class ProductScreen extends Component {
-  render() {
-    return (
-      <TouchableOpacity style={styles.card} onPress={onPress}>
-        <Image
-          style={styles.thumb}
-          source={image}
-        />
-        <View style={styles.infoContainer}>
-          {/* <Text style={styles.name}>{name}</Text> */}
-          <Text style={styles.price}>$ {price}</Text>
-        </View>
-      </TouchableOpacity>
-    );
-  }
+export function Product({name, price, image, onPress}) {
+  return (
+    <TouchableOpacity style={styles.card} onPress={onPress}>
+      <Image
+        style={styles.thumb}
+        source={image}
+      />
+      <View style={styles.infoContainer}>
+        <Text style={styles.name}>{name}</Text>
+        <Text style={styles.price}>$ {price}</Text>
+      </View>
+    </TouchableOpacity>
+  );
 }
-
 const styles = StyleSheet.create({
   card: {
     backgroundColor: 'white',

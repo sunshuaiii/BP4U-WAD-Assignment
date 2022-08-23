@@ -11,7 +11,13 @@ import {
 
 // creating the product detials screen
 
-export function ProductScreen({route}) {
+export default class ProductDetailsScreen extends Component {
+  render() {
+    return null;
+  }
+}
+
+function ProductDetailsScreen({route}) {
   const { productId } = route.params;
   const [product, setProduct] = useState({});
 

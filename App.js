@@ -9,7 +9,7 @@ import CustomDrawer from "./components/CustomDrawer";
 import SettingsScreen from "./screens/SettingsScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import HomeScreen from "./screens/HomeScreen.js";
-import ProductScreen from "./screens/ProductScreen.js";
+import ProductDetailsScreen from "./screens/ProductDetailsScreen.js";
 import CartScreen from "./screens/CartScreen";
 import EditCartScreen from "./screens/EditCartScreen.js";
 import PaymentScreen from "./screens/PaymentScreen.js";
@@ -29,7 +29,7 @@ const HomeStack = () => {
   return (
     <Stack.Navigator initialRouteName={'Home'}>
       <Stack.Screen name="Home" component={HomeScreen} />
-      <Stack.Screen name="Product" component={ProductScreen} />
+      <Stack.Screen name="ProductDetails" component={ProductDetailsScreen} />
     </Stack.Navigator>
   );
 };
