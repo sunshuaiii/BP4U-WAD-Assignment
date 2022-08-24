@@ -1,50 +1,60 @@
 import React, {Component} from 'react';
-import { View, Text, TextInput, Image, StyleSheet, Button, TouchableOpacity, FlatList ,Alert} from "react-native";
-import { TouchableHighlight,ScrollView } from "react-native-gesture-handler";
-import { color } from "react-native-reanimated";
-import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
-import SQLite from "react-native-sqlite-storage";
+import {
+  View,
+  Text,
+  TextInput,
+  Image,
+  StyleSheet,
+  Button,
+  TouchableOpacity,
+  FlatList,
+  Alert,
+} from 'react-native';
+import {TouchableHighlight, ScrollView} from 'react-native-gesture-handler';
+import {color} from 'react-native-reanimated';
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import SQLite from 'react-native-sqlite-storage';
 import {InputWithLabel, PickerWithLabel, AppButton} from '../UI';
 
 let config = require('../Config');
 
 export default class EditCartScreen extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
-      this.state = {
-        id: this.props.route.params.id,
-        cartItem:[],
-        quantity: '',
-        isFetching: false,
+    this.state = {
+      id: this.props.route.params.id,
+      cartItem: [],
+      quantity: '',
+      isFetching: false,
     };
-    this._loadbyID = this._loadbyID.bind(this);    
+    this._loadbyID = this._loadbyID.bind(this);
     this._update = this._update.bind(this);
   }
 
-_loadbyID(){
+  _loadbyID() {
     let url = config.settings.serverPath + '/api/cart-item/' + this.state.id;
     console.log(url);
     this.setState({isFetching: true});
     fetch(url)
-        .then(response =>{
+      .then(response => {
         console.log(response);
-        if(!response.ok){
-            Alert.alert('Error: ', response.status.toString());
-            throw Error('Error'+ response.status);
+        if (!response.ok) {
+          Alert.alert('Error: ', response.status.toString());
+          throw Error('Error' + response.status);
         }
-        this.setState({isFetching:false});
+        this.setState({isFetching: false});
         return response.json();
-        })
-        .then(cartItem =>{
-            console.log(cartItem);
-            this.setState({cartItem: cartItem});
-        })
-    .catch(error =>{
+      })
+      .then(cartItem => {
+        console.log(cartItem);
+        this.setState({cartItem: cartItem});
+      })
+      .catch(error => {
         console.log(error);
-    })
-}
+      });
+  }
 
-_update(){
+  _update() {
     console.log('nihao');
     let url = config.settings.serverPath + '/api/cart-item/' + this.state.id;
     this.setState({isFetching: true});
@@ -83,88 +93,84 @@ _update(){
         console.log(error);
       });
   }
-      
-componentDidMount(){
+
+  componentDidMount() {
     this._loadbyID();
-}
+  }
 
-componentDidUpdate() {
-  this.props.navigation.setOptions({headerTitle: 'Edit: ' + this.state.id});
-}
-    
-render() {
-  return (
-      <ScrollView style = {{flex: 1, margin: 5}}>
-          <View style = {{flexDirection: 'row', height: 150}}>
-            <View style = {{flex: 1}}>
-              <Image source = {require('../productimg/bpshirt.jpg')}
-              style = {styles.image}
-              ></Image>
-            </View>
+  componentDidUpdate() {
+    this.props.navigation.setOptions({headerTitle: 'Edit: ' + this.state.id});
+  }
 
-            <View style= {{flex: 2}}>
-              <Text style = {styles.itemName}>{this.state.id}</Text>
-              <Text style = {styles.itemPrice}>Price: RM 149.99</Text>
-              <TextInput
-                label = {'Quantity'}
-                placeholder = {'Enter your quantity'}
-                value = {this.state.quantity}
-                onChangeText = {quantity =>{
-                  this.setState({quantity});
-                }}
-              ></TextInput>
-            </View>
+  render() {
+    return (
+      <ScrollView style={{flex: 1, margin: 5}}>
+        <View style={{flexDirection: 'row', height: 150}}>
+          <View style={{flex: 1}}>
+            <Image
+              source={require('../assets/productImages/hoodie.jpg')}
+              style={styles.image}></Image>
           </View>
-          <AppButton
-            title = {'SAVE'} 
-            onPress ={this._update}
-          ></AppButton>
+
+          <View style={{flex: 2}}>
+            <Text style={styles.itemName}>{this.state.id}</Text>
+            <Text style={styles.itemPrice}>Price: RM 149.99</Text>
+            <TextInput
+              label={'Quantity'}
+              placeholder={'Enter your quantity'}
+              value={this.state.quantity}
+              onChangeText={quantity => {
+                this.setState({quantity});
+              }}></TextInput>
+          </View>
+        </View>
+        <AppButton title={'SAVE'} onPress={this._update}></AppButton>
       </ScrollView>
     );
   }
 }
 
 const styles = StyleSheet.create({
-    image: {
-      height: 100,
-      width: 100,
-      margin: 15,
-    },
-  
-    itemName:{
-      margin: 15,
-      fontSize: 20,
-      color: 'black',
-    },
-  
-    itemPrice:{
-      marginTop: -5,
-      margin: 15,
-      color: '#FF4023',
-      fontSize: 13.5,
-    },
-  
-    itemQuantity:{
-      marginTop: -5,
-      margin: 15,
-      color: 'black',
-      fontSize: 13.5,
-    },
-  
-    quantityButton:{
-      width: 40,
-      height: 40,
-    },
-  
-    removeButton:{
-      width: 65,
-      height: 30,
-      backgroundColor: '#FF9F00',
-      borderWidth: 1,
-      borderRadius: 5,
-      borderColor: 'black',
-      padding: 3,
-      marginTop: -10,
-      marginLeft: 40,
-    },
+  image: {
+    height: 100,
+    width: 100,
+    margin: 15,
+  },
+
+  itemName: {
+    margin: 15,
+    fontSize: 20,
+    color: 'black',
+  },
+
+  itemPrice: {
+    marginTop: -5,
+    margin: 15,
+    color: '#FF4023',
+    fontSize: 13.5,
+  },
+
+  itemQuantity: {
+    marginTop: -5,
+    margin: 15,
+    color: 'black',
+    fontSize: 13.5,
+  },
+
+  quantityButton: {
+    width: 40,
+    height: 40,
+  },
+
+  removeButton: {
+    width: 65,
+    height: 30,
+    backgroundColor: '#FF9F00',
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: 'black',
+    padding: 3,
+    marginTop: -10,
+    marginLeft: 40,
+  },
 });
