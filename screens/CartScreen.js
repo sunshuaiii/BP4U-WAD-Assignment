@@ -4,6 +4,7 @@ import { TouchableHighlight,ScrollView } from "react-native-gesture-handler";
 import { color } from "react-native-reanimated";
 import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
 import SQLite from "react-native-sqlite-storage";
+import {InputWithLabel, PickerWithLabel, AppButton} from '../UI';
 
 let config = require('../Config');
 
@@ -19,6 +20,7 @@ export default class CartScreen extends Component {
   
   _load(){
     let url = config.settings.serverPath + '/api/cart-item';
+    console.log(url);
     this.setState({isFetching: true});
     fetch(url)
       .then(response =>{
@@ -82,6 +84,9 @@ export default class CartScreen extends Component {
             );
           }}
         ></FlatList>
+        <AppButton style = {styles.checkoutButton}>
+          <Text style = {styles.checkoutButton}>CHECK OUT</Text>
+        </AppButton>
       </View>
     )
   }
@@ -114,19 +119,6 @@ const styles = StyleSheet.create({
     fontSize: 13.5,
   },
 
-  quantityButton:{
-    width: 40,
-    height: 40,
-  },
-
-  minusIcon:{
-    marginLeft: 15,
-  },
-
-  plusIcon:{
-    marginLeft: 5,
-  },
-
   editButton:{
     width: 65,
     height: 30,
@@ -138,4 +130,21 @@ const styles = StyleSheet.create({
     marginTop: -10,
     marginLeft: 40,
   },
+
+  checkoutButton:{
+    position: 'absolute',
+    width: 100,
+    height: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    right: 30,
+    top: 250,
+    backgroundColor: 'pink'
+  },
+
+  floatingButton:{
+    resizeMode:'contain',
+    width: 100,
+    heigh: 30,
+  }
 });

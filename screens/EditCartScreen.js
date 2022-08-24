@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { View, Text, Image, StyleSheet, Button, TouchableOpacity, FlatList ,Alert} from "react-native";
+import { View, Text, TextInput, Image, StyleSheet, Button, TouchableOpacity, FlatList ,Alert} from "react-native";
 import { TouchableHighlight,ScrollView } from "react-native-gesture-handler";
 import { color } from "react-native-reanimated";
 import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
@@ -13,16 +13,16 @@ export default class EditCartScreen extends Component {
     super(props);
       this.state = {
         id: this.props.route.params.id,
-        cart_item:[],
+        cartItem:[],
         quantity: '',
         isFetching: false,
     };
-    this._loadbyId = this._loadbyId.bind(this);    
+    this._loadbyID = this._loadbyID.bind(this);    
     this._update = this._update.bind(this);
   }
 
-_loadbyId(){
-    let url = config.settings.severPath + '/api/cart-item/' + this.state.id;
+_loadbyID(){
+    let url = config.settings.serverPath + '/api/cart-item/' + this.state.id;
     console.log(url);
     this.setState({isFetching: true});
     fetch(url)
@@ -35,9 +35,9 @@ _loadbyId(){
         this.setState({isFetching:false});
         return response.json();
         })
-        .then(cart_item =>{
-            console.log(cart_item);
-            this.setState({cart_item: cart_item});
+        .then(cartItem =>{
+            console.log(cartItem);
+            this.setState({cartItem: cartItem});
         })
     .catch(error =>{
         console.log(error);
@@ -45,47 +45,47 @@ _loadbyId(){
 }
 
 _update(){
+    console.log('nihao');
     let url = config.settings.serverPath + '/api/cart-item/' + this.state.id;
     this.setState({isFetching: true});
-    fetch(url,{
-        method:'PUT',
-        headers:{
-            Accept: 'application/json',
-            'Content-Type':'application/json',
-        },
-        body: JSON.stringify({
-            id: this.state.id,
-            cart_id: this.state.cart_id,
-            product_id: this.state.product_id,
-            quantity: this.state.quantity,
-        }),
+    console.log(url);
+
+    fetch(url, {
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: this.state.id,
+        quantity: this.state.quantity,
+      }),
     })
-    .then(response => {
-        if(!response.ok){
-          console.log(response);
+      .then(response => {
+        console.log(response);
+        if (!response.ok) {
           Alert.alert('Error:', response.status.toString());
-          throw Error('Error'+ response.status);
+          throw Error('Error ' + response.status);
         }
-        this.setState({isFetching:false});
+
         return response.json();
-    })
-     .then(respondJson =>{
-        if(respondJson.affected > 0){
-            Alert.alert ('Record UPDATED for',this.state.quantity.toString());
-        }
-        else{
-            Alert.alert ('Error in UPDATING');
+      })
+      .then(respondJson => {
+        if (respondJson.affected > 0) {
+          Alert.alert('Record UPDATED for', this.state.quantity.toString());
+        } else {
+          Alert.alert('Error in UPDATING');
         }
         this.props.route.params._refresh();
         this.props.navigation.goBack();
-    })
-    .catch(error =>{
+      })
+      .catch(error => {
         console.log(error);
-    })
-}
+      });
+  }
       
 componentDidMount(){
-    this._loadbyId();
+    this._loadbyID();
 }
 
 componentDidUpdate() {
@@ -105,21 +105,19 @@ render() {
             <View style= {{flex: 2}}>
               <Text style = {styles.itemName}>{this.state.id}</Text>
               <Text style = {styles.itemPrice}>Price: RM 149.99</Text>
-              <InputWithLabel
-                textLabelStyle = {styles.TextLabel}
-                textInputStyle = {styles.TextInput}
+              <TextInput
                 label = {'Quantity'}
                 placeholder = {'Enter your quantity'}
                 value = {this.state.quantity}
                 onChangeText = {quantity =>{
                   this.setState({quantity});
                 }}
-              ></InputWithLabel>
+              ></TextInput>
             </View>
           </View>
           <AppButton
             title = {'SAVE'} 
-            onPress = {() => {this._update()}}
+            onPress ={this._update}
           ></AppButton>
       </ScrollView>
     );
@@ -156,14 +154,6 @@ const styles = StyleSheet.create({
     quantityButton:{
       width: 40,
       height: 40,
-    },
-  
-    minusIcon:{
-      marginLeft: 15,
-    },
-  
-    plusIcon:{
-      marginLeft: 5,
     },
   
     removeButton:{
