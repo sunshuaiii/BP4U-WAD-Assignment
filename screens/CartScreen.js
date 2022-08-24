@@ -32,6 +32,7 @@ export default class CartScreen extends Component {
       })
       .then(cartItem =>{
         this.setState({cartItem: cartItem});
+        console.log(cartItem);
       })
       .catch(error =>{
         console.log(error);
@@ -41,28 +42,6 @@ export default class CartScreen extends Component {
     this._load();
   }
 
-/*  addQuantity(quantity) {
-    this.setState({
-      newQuantity: quantity +1
-    })
-    this._update();
-    console.log('pressed');
-  }
-
-  removeQuantity = () => {
-    if (this.state.quantity === 1){
-      return;
-    }
-    this.setState({
-      newQuantity: this.state.quantity -1
-    })
-    console.log('pressed1')
-  }
-
-  removeItem = () =>{
-    console.log('pressed');
-  }
-*/
   render() {
     return(
       <View>
@@ -104,7 +83,8 @@ export default class CartScreen extends Component {
           }}
         ></FlatList>
       </View>
-      )}
+    )
+  }
 }
 
 const styles = StyleSheet.create({
