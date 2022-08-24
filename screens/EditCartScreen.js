@@ -24,6 +24,8 @@ export default class EditCartScreen extends Component {
     this.state = {
       id: this.props.route.params.id,
       cartItem: [],
+      cart_id: '',
+      product_id: '',
       quantity: '',
       isFetching: false,
     };
@@ -47,7 +49,12 @@ export default class EditCartScreen extends Component {
       })
       .then(cartItem => {
         console.log(cartItem);
-        this.setState({cartItem: cartItem});
+        this.setState({
+          cartItem: cartItem,
+          cart_id: cartItem.ci_cart_id,
+          product_id: cartItem.ci_product_id,
+          quantity: cartItem.ci_quantity,
+        });
       })
       .catch(error => {
         console.log(error);
@@ -55,7 +62,7 @@ export default class EditCartScreen extends Component {
   }
 
   _update() {
-    console.log('nihao');
+    console.log(this.state.id);
     let url = config.settings.serverPath + '/api/cart-item/' + this.state.id;
     this.setState({isFetching: true});
     console.log(url);
@@ -108,7 +115,7 @@ export default class EditCartScreen extends Component {
         <View style={{flexDirection: 'row', height: 150}}>
           <View style={{flex: 1}}>
             <Image
-              source={require('../assets/productImages/hoodie.jpg')}
+              source={require('../assets/productImages/bpshirt.jpg')}
               style={styles.image}></Image>
           </View>
 

@@ -22,9 +22,18 @@ export default class CartScreen extends Component {
     super(props);
     this.state = {
       cartItem: [],
+      cartItem_sql:[],
+      cart_sql:[],
+      order_sql:[],
       isFetching: false,
     };
     this._load = this._load.bind(this);
+
+    this.db = SQLite.openDatabase(
+      {name: 'bp4udb', createFromLocation: '~bp4u.sqlite'},
+      this.openCallback,
+      this.errorCallback,
+    );
   }
 
   _load() {
@@ -49,8 +58,33 @@ export default class CartScreen extends Component {
         console.log(error);
       });
   }
+
+  _query(){
+    this.db.transaction(tx =>
+      tx.executeSql('SELECT product_name, product_price FROM product INNER JOIN cart_item ON product.product.id=cart_item.ci_product_id', [], (tx, results) =>
+        this.setState({cartItem_sql: results.rows.raw()}),
+      ),
+    );
+  }
+
+  _queryForCart(){
+    this.db.transaction(tx =>
+      tx.executeSql('SELECT product_name, product_price FROM product INNER JOIN cart_item ON product.product.id=cart_item.ci_product_id', [], (tx, results) =>
+        this.setState({cart_sql: results.rows.raw()}),
+      ),
+    );
+  }
+
+  openCallback() {
+    console.log('database open success');
+  }
+  errorCallback(err) {
+    console.log('Error in opening the database: ' + err);
+  }
+
   componentDidMount() {
     this._load();
+    this._query();
   }
 
   render() {
@@ -66,7 +100,7 @@ export default class CartScreen extends Component {
                 <View style={{flexDirection: 'row', height: 150}}>
                   <View style={{flex: 1}}>
                     <Image
-                      source={require('../assets/productImages/hoodie.jpg')}
+                      source={require('../assets/productImages/bpshirt.jpg')}
                       style={styles.image}></Image>
                   </View>
 
@@ -93,9 +127,18 @@ export default class CartScreen extends Component {
               </ScrollView>
             );
           }}></FlatList>
-        <AppButton style={styles.checkoutButton}>
-          <Text style={styles.checkoutButton}>CHECK OUT</Text>
-        </AppButton>
+        <TouchableOpacity
+          style={styles.checkoutButton}
+          onPress={() =>
+            this.props.navigation.navigate('Payment', {
+              
+            })
+          }
+          >
+          <View style = {styles.floatingButton}>
+            <Text style = {{color:'black'}}>CHECK OUT</Text>
+          </View>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -142,17 +185,17 @@ const styles = StyleSheet.create({
 
   checkoutButton: {
     position: 'absolute',
-    width: 100,
-    height: 30,
+    width: 150,
+    height: 45,
     alignItems: 'center',
     justifyContent: 'center',
-    right: 30,
-    top: 250,
+    right: 0,
+    top: 585,
     backgroundColor: 'pink',
   },
 
   floatingButton: {
-    resizeMode: 'contain',
+    alignItems: 'center',
     width: 100,
     heigh: 30,
   },
