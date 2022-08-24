@@ -4,25 +4,26 @@ import { TouchableHighlight,ScrollView } from "react-native-gesture-handler";
 import { color } from "react-native-reanimated";
 import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
 import SQLite from "react-native-sqlite-storage";
+import {InputWithLabel, PickerWithLabel, AppButton} from '../UI';
 
 let config = require('../Config');
 
 export default class EditCartScreen extends Component {
-    constructor(props){
-        super(props);
-        this.state = {
-            cartItem:[],
-            id: this.props.route.params.id,
-            quantity: 0,
-            isFetching: false,
-        };
-
+  constructor(props){
+    super(props);
+      this.state = {
+        id: this.props.route.params.id,
+        cart_item:[],
+        quantity: '',
+        isFetching: false,
+    };
     this._loadbyId = this._loadbyId.bind(this);    
     this._update = this._update.bind(this);
-    }
+  }
 
 _loadbyId(){
     let url = config.settings.severPath + '/api/cart-item/' + this.state.id;
+    console.log(url);
     this.setState({isFetching: true});
     fetch(url)
         .then(response =>{
@@ -34,12 +35,9 @@ _loadbyId(){
         this.setState({isFetching:false});
         return response.json();
         })
-        .then(cartItem =>{
-            console.log(cartItem);
-            this.setState({
-            cartItem: cartItem,
-            quantity: cartItem.quantity,
-            })
+        .then(cart_item =>{
+            console.log(cart_item);
+            this.setState({cart_item: cart_item});
         })
     .catch(error =>{
         console.log(error);
@@ -64,19 +62,22 @@ _update(){
     })
     .then(response => {
         if(!response.ok){
-            lert.alert('Error: ', response.status.toString());
-            throw Error('Error'+ response.status);
+          console.log(response);
+          Alert.alert('Error:', response.status.toString());
+          throw Error('Error'+ response.status);
         }
         this.setState({isFetching:false});
         return response.json();
     })
      .then(respondJson =>{
         if(respondJson.affected > 0){
-            Alert.alert ('Record UPDATED for',this.state.quantity);
+            Alert.alert ('Record UPDATED for',this.state.quantity.toString());
         }
         else{
             Alert.alert ('Error in UPDATING');
         }
+        this.props.route.params._refresh();
+        this.props.navigation.goBack();
     })
     .catch(error =>{
         console.log(error);
@@ -86,46 +87,41 @@ _update(){
 componentDidMount(){
     this._loadbyId();
 }
+
+componentDidUpdate() {
+  this.props.navigation.setOptions({headerTitle: 'Edit: ' + this.state.id});
+}
     
-  render() {
-    let cartItem = this.state.cartItem
-    return (
-        <ScrollView style = {{flex: 1, margin: 5}}>
-            <View style = {{flexDirection: 'row', height: 150}}>
-              <View style = {{flex: 1}}>
-                <Image source = {require('../productimg/bpshirt.jpg')}
-                style = {styles.image}
-                ></Image>
-              </View>
-
-              <View style= {{flex: 2}}>
-                <Text style = {styles.itemName}>{this.state.id}</Text>
-                <Text style = {styles.itemPrice}>Price: RM 149.99</Text>
-
-                <View style = {{flexDirection: 'row'}}>
-                  <TouchableOpacity style = {styles.quantityButton} onPress = {this.removeQuantity}>
-                    <SimpleLineIcons
-                      name = "minus"
-                      style = {styles.minusIcon}
-                      color={"black"}
-                      size = {20}></SimpleLineIcons>
-                  </TouchableOpacity>
-                  <Text style ={{fontSize: 15, color: 'black'}}>{this.state.quantity}</Text>
-                  <TouchableOpacity style = {styles.quantityButton} onPress = {() =>{this.setState({id: item.id}); this.addQuantity(quantity)}}>
-                    <SimpleLineIcons
-                      name = "plus"
-                      style = {styles.plusIcon}
-                      color={"black"}
-                      size = {20}></SimpleLineIcons>
-                  </TouchableOpacity>
-                  <TouchableOpacity style = {styles.removeButton} onPress = {this.removeItem}>
-                    <Text color = 'black'>REMOVE</Text>
-                  </TouchableOpacity>
-                </View>
-
-              </View>
+render() {
+  return (
+      <ScrollView style = {{flex: 1, margin: 5}}>
+          <View style = {{flexDirection: 'row', height: 150}}>
+            <View style = {{flex: 1}}>
+              <Image source = {require('../productimg/bpshirt.jpg')}
+              style = {styles.image}
+              ></Image>
             </View>
-        </ScrollView>
+
+            <View style= {{flex: 2}}>
+              <Text style = {styles.itemName}>{this.state.id}</Text>
+              <Text style = {styles.itemPrice}>Price: RM 149.99</Text>
+              <InputWithLabel
+                textLabelStyle = {styles.TextLabel}
+                textInputStyle = {styles.TextInput}
+                label = {'Quantity'}
+                placeholder = {'Enter your quantity'}
+                value = {this.state.quantity}
+                onChangeText = {quantity =>{
+                  this.setState({quantity});
+                }}
+              ></InputWithLabel>
+            </View>
+          </View>
+          <AppButton
+            title = {'SAVE'} 
+            onPress = {() => {this._update()}}
+          ></AppButton>
+      </ScrollView>
     );
   }
 }
@@ -181,4 +177,4 @@ const styles = StyleSheet.create({
       marginTop: -10,
       marginLeft: 40,
     },
-  });
+});
