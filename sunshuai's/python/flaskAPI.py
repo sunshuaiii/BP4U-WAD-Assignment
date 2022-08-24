@@ -14,6 +14,7 @@ def get_cart_row_as_dict(row):
 
     return row_dict
 
+
 def get_cart_item_row_as_dict(row):
     row_dict = {
         'id': row[0],
@@ -23,6 +24,7 @@ def get_cart_item_row_as_dict(row):
     }
 
     return row_dict
+
 
 def get_member_row_as_dict(row):
     row_dict = {
@@ -39,6 +41,7 @@ def get_member_row_as_dict(row):
 
     return row_dict
 
+
 def get_order_row_as_dict(row):
     row_dict = {
         'id': row[0],
@@ -54,6 +57,7 @@ def get_order_row_as_dict(row):
 
     return row_dict
 
+
 def get_order_item_row_as_dict(row):
     row_dict = {
         'id': row[0],
@@ -63,6 +67,7 @@ def get_order_item_row_as_dict(row):
     }
 
     return row_dict
+
 
 def get_payment_row_as_dict(row):
     row_dict = {
@@ -75,6 +80,7 @@ def get_payment_row_as_dict(row):
     }
 
     return row_dict
+
 
 def get_product_row_as_dict(row):
     row_dict = {
@@ -174,9 +180,8 @@ def update_cart(cart):
         abort(400)
 
     update_cart = (
-        request.json['member_id'],
         request.json['total'],
-        str(update_cart),
+        str(cart),
     )
 
     db = sqlite3.connect(DB)
@@ -184,7 +189,7 @@ def update_cart(cart):
 
     cursor.execute('''
         UPDATE cart SET
-            cart_member_id=?,cart_total=?
+            cart_total=?
         WHERE cart_id=?
     ''', update_cart)
 
@@ -226,6 +231,7 @@ def delete_cart(cart):
     db.close()
 
     return jsonify(response), 201
+
 
 @app.route('/api/cart-item', methods=['GET'])
 def index_cart_item():
@@ -307,7 +313,7 @@ def update_cart_item(cart_item):
 
     update_cart_item = (
         request.json['quantity'],
-        str(update_cart_item),
+        str(cart_item),
     )
 
     db = sqlite3.connect(DB)
@@ -357,6 +363,7 @@ def delete_cart_item(cart_item):
     db.close()
 
     return jsonify(response), 201
+
 
 @app.route('/api/member', methods=['GET'])
 def index_member():
@@ -499,6 +506,7 @@ def delete_member(member):
 
     return jsonify(response), 201
 
+
 @app.route('/api/order', methods=['GET'])
 def index_order():
     db = sqlite3.connect(DB)
@@ -522,7 +530,8 @@ def index_order():
 def show_order(order):
     db = sqlite3.connect(DB)
     cursor = db.cursor()
-    cursor.execute('SELECT * FROM order_details WHERE order_id=?', (str(order),))
+    cursor.execute(
+        'SELECT * FROM order_details WHERE order_id=?', (str(order),))
     row = cursor.fetchone()
     db.close()
 
@@ -581,7 +590,6 @@ def update_order(order):
         abort(400)
 
     update_order = (
-        request.json['member_id'],
         request.json['ship_address'],
         request.json['courier'],
         request.json['ship_fee'],
@@ -595,7 +603,7 @@ def update_order(order):
 
     cursor.execute('''
         UPDATE order_details SET
-            order_member_id=?,order_shipping_address=?,order_courier=?,order_shipping_fee=?,order_total=?,order_status=?
+            order_shipping_address=?,order_courier=?,order_shipping_fee=?,order_total=?,order_status=?
         WHERE order_id=?
     ''', update_order)
 
@@ -638,6 +646,7 @@ def delete_order(order):
 
     return jsonify(response), 201
 
+
 @app.route('/api/order-item', methods=['GET'])
 def index_order_item():
     db = sqlite3.connect(DB)
@@ -661,7 +670,8 @@ def index_order_item():
 def show_order_item(order_item):
     db = sqlite3.connect(DB)
     cursor = db.cursor()
-    cursor.execute('SELECT * FROM order_item WHERE oi_id=?', (str(order_item),))
+    cursor.execute('SELECT * FROM order_item WHERE oi_id=?',
+                   (str(order_item),))
     row = cursor.fetchone()
     db.close()
 
@@ -717,10 +727,8 @@ def update_order_item(order_item):
         abort(400)
 
     update_order_item = (
-        request.json['order_id'],
-        request.json['product_id'],
         request.json['quantity'],
-        str(update_order_item),
+        str(order_item),
     )
 
     db = sqlite3.connect(DB)
@@ -728,7 +736,7 @@ def update_order_item(order_item):
 
     cursor.execute('''
         UPDATE order_item SET
-            oi_order_id=?,oi_product_id=?,oi_quantity=?
+            oi_quantity=?
         WHERE oi_id=?
     ''', update_order_item)
 
@@ -770,6 +778,7 @@ def delete_order_item(order_item):
     db.close()
 
     return jsonify(response), 201
+
 
 @app.route('/api/payment', methods=['GET'])
 def index_payment():
@@ -851,7 +860,6 @@ def update_payment(payment):
         abort(400)
 
     update_payment = (
-        request.json['order_id'],
         request.json['amount'],
         request.json['provider'],
         request.json['status'],
@@ -863,7 +871,7 @@ def update_payment(payment):
 
     cursor.execute('''
         UPDATE payment SET
-            payment_order_id=?,payment_amount=?,payment_provider=?,payment_status=?
+            payment_amount=?,payment_provider=?,payment_status=?
         WHERE payment_id=?
     ''', update_payment)
 
@@ -906,6 +914,7 @@ def delete_payment(payment):
 
     return jsonify(response), 201
 
+
 @app.route('/api/product', methods=['GET'])
 def index_product():
     db = sqlite3.connect(DB)
@@ -924,11 +933,13 @@ def index_product():
 
     return jsonify(rows_as_dict), 200
 
+
 @app.route('/api/product/new-released', methods=['GET'])
 def index_new_released_products():
     db = sqlite3.connect(DB)
     cursor = db.cursor()
-    cursor.execute('SELECT * FROM product WHERE (SELECT julianday("now") - julianday(product_creation_date)) < 30 ORDER BY product_id ')
+    cursor.execute(
+        'SELECT * FROM product WHERE (SELECT julianday("now") - julianday(product_creation_date)) < 30 ORDER BY product_id ')
     rows = cursor.fetchall()
 
     print(rows)
@@ -941,12 +952,14 @@ def index_new_released_products():
         rows_as_dict.append(row_as_dict)
 
     return jsonify(rows_as_dict), 200
+
 
 @app.route('/api/product/on-sales', methods=['GET'])
 def index_on_sales_products():
     db = sqlite3.connect(DB)
     cursor = db.cursor()
-    cursor.execute('SELECT * FROM product WHERE product_discount_percent > 0 ORDER BY product_id ')
+    cursor.execute(
+        'SELECT * FROM product WHERE product_discount_percent > 0 ORDER BY product_id ')
     rows = cursor.fetchall()
 
     print(rows)
@@ -959,12 +972,14 @@ def index_on_sales_products():
         rows_as_dict.append(row_as_dict)
 
     return jsonify(rows_as_dict), 200
+
 
 @app.route('/api/product/album', methods=['GET'])
 def index_product_album():
     db = sqlite3.connect(DB)
     cursor = db.cursor()
-    cursor.execute('SELECT * FROM product WHERE product_category="ALBUM" ORDER BY product_id')
+    cursor.execute(
+        'SELECT * FROM product WHERE product_category="ALBUM" ORDER BY product_id')
     rows = cursor.fetchall()
 
     print(rows)
@@ -977,12 +992,14 @@ def index_product_album():
         rows_as_dict.append(row_as_dict)
 
     return jsonify(rows_as_dict), 200
+
 
 @app.route('/api/product/magazine', methods=['GET'])
 def index_product_magazine():
     db = sqlite3.connect(DB)
     cursor = db.cursor()
-    cursor.execute('SELECT * FROM product WHERE product_category="MAGAZINE" ORDER BY product_id')
+    cursor.execute(
+        'SELECT * FROM product WHERE product_category="MAGAZINE" ORDER BY product_id')
     rows = cursor.fetchall()
 
     print(rows)
@@ -995,12 +1012,14 @@ def index_product_magazine():
         rows_as_dict.append(row_as_dict)
 
     return jsonify(rows_as_dict), 200
+
 
 @app.route('/api/product/fashion', methods=['GET'])
 def index_product_fashion():
     db = sqlite3.connect(DB)
     cursor = db.cursor()
-    cursor.execute('SELECT * FROM product WHERE product_category="FASHION" ORDER BY product_id')
+    cursor.execute(
+        'SELECT * FROM product WHERE product_category="FASHION" ORDER BY product_id')
     rows = cursor.fetchall()
 
     print(rows)
@@ -1013,6 +1032,7 @@ def index_product_fashion():
         rows_as_dict.append(row_as_dict)
 
     return jsonify(rows_as_dict), 200
+
 
 @app.route('/api/product/<int:product>', methods=['GET'])
 def show_product(product):
@@ -1027,6 +1047,27 @@ def show_product(product):
         return jsonify(row_as_dict), 200
     else:
         return jsonify(None), 200
+
+
+@app.route('/api/product/search/<string:productName>', methods=['GET'])
+def index_product_search(productName):
+    db = sqlite3.connect(DB)
+    cursor = db.cursor()
+    cursor.execute(
+        'SELECT * FROM product WHERE product_name LIKE "%?%" COLLATE NOCASE ORDER BY product_id', (str(productName)))
+    rows = cursor.fetchall()
+
+    print(rows)
+
+    db.close()
+
+    rows_as_dict = []
+    for row in rows:
+        row_as_dict = get_product_row_as_dict(row)
+        rows_as_dict.append(row_as_dict)
+
+    return jsonify(rows_as_dict), 200
+
 
 @app.route('/api/product', methods=['POST'])
 def store_product():
@@ -1140,7 +1181,8 @@ def delete_product(product):
 
 if __name__ == '__main__':
     parser = ArgumentParser()
-    parser.add_argument('-p', '--port', default=5000, type=int, help='port to listen on')
+    parser.add_argument('-p', '--port', default=5000,
+                        type=int, help='port to listen on')
     args = parser.parse_args()
     port = args.port
 

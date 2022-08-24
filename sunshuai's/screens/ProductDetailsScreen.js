@@ -10,7 +10,10 @@ import {
 } from 'react-native';
 import {AppButton} from '../UI';
 
+let SQLite = require('react-native-sqlite-storage');
 let config = require('../Config');
+const member_Id = "10006";
+const cart_Id = "60006";
 
 // creating the product detials screen
 
@@ -20,9 +23,23 @@ export default class ProductDetailsScreen extends Component {
     this.state = {
       productId: this.props.route.params.productId,
       product: [],
+      memberId: member_Id,
+      cartId: cart_Id,
+      total: '',
+      quantity: '',
     };
     this._loadByID = this._loadByID.bind(this);
     this._addToCart = this._addToCart.bind(this);
+    this._insertCartItem = this._insertCartItem.bind(this);
+    this._queryCartTotal = this._queryCartTotal.bind(this);
+    this._updateCartTotal = this._updateCartTotal.bind(this);
+    this._updateCartItemQuantity = this._updateCartItemQuantity.bind(this);
+
+    this.db = SQLite.openDatabase(
+      {name: 'bp4udb'},
+      this.openCallback,
+      this.errorCallback,
+    );
   }
 
   _loadByID() {
@@ -46,8 +63,84 @@ export default class ProductDetailsScreen extends Component {
       });
   }
 
+  _insertCartItem(){
+    this.db.transaction(tx => {
+      tx.executeSql('INSERT INTO cart_item(ci_cart_id, ci_product_id) VALUES (?,?)', [
+          this.state.cartId,
+          this.state.productId,
+      ]);
+    });
+  }
+  
+  _queryCartTotal() {
+    this.db.transaction(tx => {
+      tx.executeSql(
+        'SELECT round(SUM(product.product_price*(1-product.product_discount_percent) * cart_item.ci_quantity),2) FROM product INNER JOIN cart_item ON product.product_id = cart_item.ci_product_id WHERE cart_item.ci_cart_id=?',
+        [this.state.cartId],
+        (tx, results) => {
+          if (results.rows.length) {
+            this.setState({
+              total: results.rows.item(0).total,
+            });
+          }
+        },
+      );
+    });
+  }
+
+  _updateCartTotal(){
+    this.db.transaction(tx => {
+      tx.executeSql('UPDATE cart SET cart_total=? WHERE cart_id=?', [
+        this.state.total,
+        this.state.cartId,
+      ]);
+    });
+  }
+
+  _updateCartItemQuantity(){
+    this.db.transaction(tx => {
+      tx.executeSql('UPDATE cart_item SET ci_quantity=? WHERE ci_cart_id=? AND ci_product_id=?', [
+        (Number(this.state.quantity)+1).toString(),
+        this.state.cart_Id,
+        this.state.productId,
+      ]);
+    });
+  }
+
   _addToCart() {
+    let count = '';
+    this.db.transaction(tx => {
+      tx.executeSql(
+        'SELECT COUNT(*) AS count FROM cart_item WHERE cart_item.ci_cart_id=? AND cart_item.ci_product_id=?',
+        [this.state.cartId, this.state.productId],
+        (tx, results) => {
+          if (results.rows.length) {
+            this.setState({
+              count: results.rows.item(0).count,
+            });
+          }
+        },
+      );
+    });
+    count = Number(count);
+    console.log(count);
+    if(count == 0){
+      this._insertCartItem();
+    }
+    else{
+      this._updateCartItemQuantity();
+    }
+    this._queryCartTotal();
+    this._updateCartTotal();
     Alert.alert('Item successfully added to your cart!');
+  }
+
+  openCallback() {
+    console.log('Database open successfully.');
+  }
+
+  errorCallback(err) {
+    console.log('Error in opening the database: ' + err);
   }
 
   componentDidMount() {
