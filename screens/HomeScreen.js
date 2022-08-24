@@ -18,8 +18,6 @@ import {
 
 // creating the home screen with search function and view products by categories
 
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
 import SearchBar from 'react-native-dynamic-search-bar';
 import {InputWithLabel, PickerWithLabel, AppButton} from '../UI';
 import {ScrollViewProduct} from '../components/ScrollViewProduct.js';
@@ -229,6 +227,7 @@ export default class HomeScreen extends Component {
             isFetching={this.state.isFetching}
             loadProducts={this._loadNewReleasedProducts}
             productData={this.state.newreleasedProducts}
+            navigation={this.props.navigation}
           />
 
           {/* On Sales Category */}
@@ -238,6 +237,7 @@ export default class HomeScreen extends Component {
             isFetching={this.state.isFetching}
             loadProducts={this._loadOnsalesProducts}
             productData={this.state.onsalesProducts}
+            navigation={this.props.navigation}
           />
 
           {/* Albums Category */}
@@ -247,6 +247,7 @@ export default class HomeScreen extends Component {
             isFetching={this.state.isFetching}
             loadProducts={this._loadAlbums}
             productData={this._loadAlbums}
+            navigation={this.props.navigation}
           />
 
           {/* Magazines Category */}
@@ -256,6 +257,7 @@ export default class HomeScreen extends Component {
             isFetching={this.state.isFetching}
             loadProducts={this._loadMagazines}
             productData={this.state.magazines}
+            navigation={this.props.navigation}
           />
           
           {/* Fashions Category */}
@@ -265,6 +267,7 @@ export default class HomeScreen extends Component {
             isFetching={this.state.isFetching}
             loadProducts={this._loadFashions}
             productData={this.state.fashions}
+            navigation={this.props.navigation}
           />
         </ScrollView>
       </View>
