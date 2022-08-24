@@ -72,8 +72,7 @@ db.execute('DROP TABLE IF EXISTS cart')
 db.execute('''CREATE TABLE IF NOT EXISTS cart(
     cart_id INTEGER PRIMARY KEY AUTOINCREMENT,
     cart_member_id INTEGER NOT NULL,
-    cart_total REAL NOT NULL,
-    cart_creation_date DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    cart_total REAL NOT NULL DEFAULT 0,
     FOREIGN KEY(cart_member_id) REFERENCES member(member_id)
 )''')
 
@@ -306,24 +305,44 @@ cursor.execute('''
 
 # CART TABLE (TOTAL 5 RECORDS)
 cursor.execute('''
-    INSERT INTO cart(cart_id,cart_member_id,cart_total,cart_creation_date)
-    VALUES(60001, 10001, 474.99, '2022-03-01')
+    INSERT INTO cart(cart_id,cart_member_id,cart_total)
+    VALUES(60001, 10001, 474.99)
 ''')
 cursor.execute('''
-    INSERT INTO cart(cart_member_id,cart_total,cart_creation_date)
-    VALUES(10002, 325.00, '2022-04-02')
+    INSERT INTO cart(cart_member_id,cart_total)
+    VALUES(10002, 325.00)
 ''')
 cursor.execute('''
-    INSERT INTO cart(cart_member_id,cart_total,cart_creation_date)
-    VALUES(10003, 149.99, '2022-05-03')
+    INSERT INTO cart(cart_member_id,cart_total)
+    VALUES(10003, 149.99)
 ''')
 cursor.execute('''
-    INSERT INTO cart(cart_member_id,cart_total,cart_creation_date)
-    VALUES(10004, 181.23, '2022-06-04')
+    INSERT INTO cart(cart_member_id,cart_total)
+    VALUES(10004, 181.23)
 ''')
 cursor.execute('''
-    INSERT INTO cart(cart_member_id,cart_total,cart_creation_date)
-    VALUES(10005, 605.00, '2022-07-05')
+    INSERT INTO cart(cart_member_id,cart_total)
+    VALUES(10005, 605.00)
+''')
+cursor.execute('''
+    INSERT INTO cart(cart_member_id)
+    VALUES(10006)
+''')
+cursor.execute('''
+    INSERT INTO cart(cart_member_id)
+    VALUES(10007)
+''')
+cursor.execute('''
+    INSERT INTO cart(cart_member_id)
+    VALUES(10008)
+''')
+cursor.execute('''
+    INSERT INTO cart(cart_member_id)
+    VALUES(10009)
+''')
+cursor.execute('''
+    INSERT INTO cart(cart_member_id)
+    VALUES(10010)
 ''')
 
 
