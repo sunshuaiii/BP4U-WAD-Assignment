@@ -47,7 +47,7 @@ export default class ProductDetailsScreen extends Component {
   }
 
   _addToCart() {
-    Alert.alert('Hi adding to cart ya');
+    Alert.alert('Item successfully added to your cart!');
   }
 
   componentDidMount() {
@@ -75,9 +75,7 @@ export default class ProductDetailsScreen extends Component {
               Category: {this.state.product.category}
             </Text>
             <AppButton
-              onPress={() => {
-                this._addToCart;
-              }}
+              onPress={this._addToCart}
               title="Add to cart"
             />
             
@@ -107,9 +105,7 @@ export default class ProductDetailsScreen extends Component {
             </Text>
             <Text style={styles.attribute}>Discount: {Number(this.state.product.discount)*100}%</Text>
             <AppButton
-              onPress={() => {
-                this._addToCart;
-              }}
+              onPress={this._addToCart}
               title="Add to cart"
               style={styles.button}
             />
@@ -136,7 +132,8 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   name: {
-    fontSize: 22,
+    marginTop: 10,
+    fontSize: 25,
     fontWeight: 'bold',
   },
   price: {

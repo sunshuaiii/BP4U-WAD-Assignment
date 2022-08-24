@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {StyleSheet, ScrollView, FlatList, Text, TouchableOpacity, View, Image} from 'react-native';
 
-const ScrollViewProduct = ({isFetching, loadProducts, productData}) => {
+const ScrollViewProduct = ({isFetching, loadProducts, productData, navigation}) => {
   return (
     <ScrollView>
       <FlatList
@@ -13,7 +13,7 @@ const ScrollViewProduct = ({isFetching, loadProducts, productData}) => {
           if(item.discount == 0){
             return (
               <TouchableOpacity style={styles.card} onPress={() => {
-                this.props.navigation.navigate('ProductDetails', {
+                navigation.navigate('ProductDetails', {
                 productId: item.id,
                 });
               }}>
@@ -27,7 +27,7 @@ const ScrollViewProduct = ({isFetching, loadProducts, productData}) => {
           }else{
             return (
               <TouchableOpacity style={styles.card} onPress={() => {
-                this.props.navigation.navigate('ProductDetails', {
+                navigation.navigate('ProductDetails', {
                 productId: item.id,
                 });
               }}>
