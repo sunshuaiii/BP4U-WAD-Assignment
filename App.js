@@ -21,8 +21,10 @@ import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import ProfileScreen from './screens/LoginScreen';
+import MenuScreen from './screens/MenuScreen';
 import HomeScreen from './screens/HomeScreen.js';
 import ProductDetailsScreen from './screens/ProductDetailsScreen.js';
+import ProductListScreen from './screens/ProductListScreen.js';
 import CartScreen from './screens/CartScreen';
 import EditCartScreen from './screens/EditCartScreen.js';
 import PaymentScreen from './screens/PaymentScreen.js';
@@ -63,6 +65,7 @@ const HomeStack = () => {
       }}>
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="ProductDetails" component={ProductDetailsScreen} />
+      <Stack.Screen name="ProductList" component={ProductListScreen} />
     </Stack.Navigator>
   );
 };
@@ -94,7 +97,7 @@ const MyTab = () => {
       }}>
       <Tab.Screen
         name="Menu"
-        component={ProfileScreen}
+        component={MenuScreen}
         options={{
           tabBarIcon: () => {
             return (
