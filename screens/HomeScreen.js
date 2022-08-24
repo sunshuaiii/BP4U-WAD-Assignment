@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
   ScrollView,
   StatusBar,
@@ -14,22 +14,21 @@ import {
   Image,
   SafeAreaView,
   ActivityIndicator,
-} from "react-native";
+} from 'react-native';
 
 // creating the home screen with search function and view products by categories
 
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
-import SearchBar from "react-native-dynamic-search-bar";
-import { InputWithLabel, PickerWithLabel, AppButton } from "../UI";
-import { Product } from '../components/Product.js';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+import SearchBar from 'react-native-dynamic-search-bar';
+import {InputWithLabel, PickerWithLabel, AppButton} from '../UI';
+import {ScrollViewProduct} from '../components/ScrollViewProduct.js';
 
-let config = require("../Config");
-let logo = require("../assets/icons/BP4U.png");
-
+let config = require('../Config');
+let logo = require('../assets/icons/BP4U.png');
 
 export default class HomeScreen extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       newreleasedProducts: [],
@@ -37,7 +36,7 @@ export default class HomeScreen extends Component {
       albums: [],
       magazines: [],
       fashions: [],
-      searchText: "",
+      searchText: '',
       isFetching: false,
     };
     this._loadAllproducts = this._loadAllproducts.bind(this);
@@ -48,7 +47,7 @@ export default class HomeScreen extends Component {
     this._loadFashions = this._loadFashions.bind(this);
   }
 
-  handleOnChangeText = (text) => {
+  handleOnChangeText = text => {
     // ? Visible the spinner
     this.setState({
       searchText: text,
@@ -60,134 +59,134 @@ export default class HomeScreen extends Component {
     });
   };
 
-  _loadAllproducts(){
+  _loadAllproducts() {
     let url = config.settings.serverPath + '/api/product';
     this.setState({isFetching: true});
     fetch(url)
-      .then(response =>{
+      .then(response => {
         console.log(response);
-        if(!response.ok){
+        if (!response.ok) {
           Alert.alert('Error: ', repsonse.status.toString());
-          throw Error('Error'+ response.status);
+          throw Error('Error' + response.status);
         }
-        this.setState({isFetching:false});
+        this.setState({isFetching: false});
         return response.json();
       })
-      .then(products =>{
+      .then(products => {
         console.log(products);
         this.setState({products: products});
       })
-      .catch(error =>{
+      .catch(error => {
         console.log(error);
       });
   }
 
-  _loadNewReleasedProducts(){
+  _loadNewReleasedProducts() {
     let url = config.settings.serverPath + '/api/product/new-released';
     this.setState({isFetching: true});
     fetch(url)
-      .then(response =>{
+      .then(response => {
         console.log(response);
-        if(!response.ok){
+        if (!response.ok) {
           Alert.alert('Error: ', repsonse.status.toString());
-          throw Error('Error'+ response.status);
+          throw Error('Error' + response.status);
         }
-        this.setState({isFetching:false});
+        this.setState({isFetching: false});
         return response.json();
       })
-      .then(newreleasedProducts =>{
+      .then(newreleasedProducts => {
         console.log(newreleasedProducts);
         this.setState({newreleasedProducts: newreleasedProducts});
       })
-      .catch(error =>{
+      .catch(error => {
         console.log(error);
       });
   }
 
-  _loadOnsalesProducts(){
+  _loadOnsalesProducts() {
     let url = config.settings.serverPath + '/api/product/on-sales';
     this.setState({isFetching: true});
     fetch(url)
-      .then(response =>{
+      .then(response => {
         console.log(response);
-        if(!response.ok){
+        if (!response.ok) {
           Alert.alert('Error: ', repsonse.status.toString());
-          throw Error('Error'+ response.status);
+          throw Error('Error' + response.status);
         }
-        this.setState({isFetching:false});
+        this.setState({isFetching: false});
         return response.json();
       })
-      .then(onsalesProducts =>{
+      .then(onsalesProducts => {
         console.log(onsalesProducts);
         this.setState({onsalesProducts: onsalesProducts});
       })
-      .catch(error =>{
+      .catch(error => {
         console.log(error);
       });
   }
 
-  _loadAlbums(){
+  _loadAlbums() {
     let url = config.settings.serverPath + '/api/product/album';
     this.setState({isFetching: true});
     fetch(url)
-      .then(response =>{
+      .then(response => {
         console.log(response);
-        if(!response.ok){
+        if (!response.ok) {
           Alert.alert('Error: ', repsonse.status.toString());
-          throw Error('Error'+ response.status);
+          throw Error('Error' + response.status);
         }
-        this.setState({isFetching:false});
+        this.setState({isFetching: false});
         return response.json();
       })
-      .then(albums =>{
+      .then(albums => {
         console.log(albums);
         this.setState({albums: albums});
       })
-      .catch(error =>{
+      .catch(error => {
         console.log(error);
       });
   }
 
-  _loadMagazines(){
+  _loadMagazines() {
     let url = config.settings.serverPath + '/api/product/magazine';
     this.setState({isFetching: true});
     fetch(url)
-      .then(response =>{
+      .then(response => {
         console.log(response);
-        if(!response.ok){
+        if (!response.ok) {
           Alert.alert('Error: ', repsonse.status.toString());
-          throw Error('Error'+ response.status);
+          throw Error('Error' + response.status);
         }
-        this.setState({isFetching:false});
+        this.setState({isFetching: false});
         return response.json();
       })
-      .then(magazines =>{
+      .then(magazines => {
         console.log(magazines);
         this.setState({magazines: magazines});
       })
-      .catch(error =>{
+      .catch(error => {
         console.log(error);
       });
   }
 
-  _loadFashions(){
+  _loadFashions() {
     let url = config.settings.serverPath + '/api/product/fashion';
     this.setState({isFetching: true});
     fetch(url)
-      .then(response =>{
+      .then(response => {
         console.log(response);
-        if(!response.ok){
+        if (!response.ok) {
           Alert.alert('Error: ', repsonse.status.toString());
-          throw Error('Error'+ response.status);
+          throw Error('Error' + response.status);
         }
-        this.setState({isFetching:false});
+        this.setState({isFetching: false});
         return response.json();
       })
-      .then(fashions =>{
+      .then(fashions => {
         console.log(fashions);
         this.setState({fashions: fashions});
       })
-      .catch(error =>{
+      .catch(error => {
         console.log(error);
       });
   }
@@ -202,15 +201,13 @@ export default class HomeScreen extends Component {
   }
 
   render() {
-
-    const { spinnerVisibility } = this.state;
+    const {spinnerVisibility} = this.state;
 
     return (
-      
       <View style={styles.container}>
         {/* Header */}
         <View style={styles.header}>
-          <Image source={logo} style={styles.logo}/>
+          <Image source={logo} style={styles.logo} />
           <SearchBar
             height={50}
             fontSize={20}
@@ -223,221 +220,52 @@ export default class HomeScreen extends Component {
             onChangeText={this.handleOnChangeText}
           />
         </View>
+
         <ScrollView style={styles.content}>
           {/* New Released Category */}
           <Text style={styles.title}>New Released</Text>
-
-          <FlatList style={styles.productsListContainer}
-            refreshing={this.state.isFetching}
-            onRefresh={this._loadNewReleasedProducts}
-            data={this.state.newreleasedProducts}
-            renderItem={({item, index}) => {
-              if(item.discount == 0){
-                return (
-                  <TouchableOpacity style={styles.card} onPress={() => {
-                    this.props.navigation.navigate('ProductDetails', {
-                    productId: item.id,
-                    });
-                  }}>
-                    <View style={styles.infoContainer}>
-                    <Image source={{uri: item.photo}} style={styles.thumb}/>
-                    <Text style={styles.name}>{item.name}</Text>
-                    <Text style={styles.price}>RM {item.price}</Text>
-                  </View>
-                  </TouchableOpacity>
-                );
-              }else{
-                return (
-                  <TouchableOpacity style={styles.card} onPress={() => {
-                    this.props.navigation.navigate('ProductDetails', {
-                    productId: item.id,
-                    });
-                  }}>
-                    <View style={styles.infoContainer}>
-                    <Image source={{uri: item.photo}} style={styles.thumb}/>
-                    <Text style={styles.name}>{item.name}</Text>
-                    <Text style={styles.discountedPrice}>RM {item.price}</Text>
-                    <Text style={styles.price}>RM {(Number(item.price) * (1-Number(item.discount))).toFixed(2)}</Text>
-                    <Text style={styles.attribute}>Discount: {Number(item.discount)*100}%</Text>
-                  </View>
-                  </TouchableOpacity>
-                );
-              }
-            }}>
-          </FlatList>
-          
+          <ScrollViewProduct
+            title="New Released"
+            isFetching={this.state.isFetching}
+            loadProducts={this._loadNewReleasedProducts}
+            productData={this.state.newreleasedProducts}
+          />
 
           {/* On Sales Category */}
           <Text style={styles.title}>On Sales</Text>
-
-          <FlatList style={styles.productsListContainer}
-            refreshing={this.state.isFetching}
-            onRefresh={this._loadOnsalesProducts}
-            data={this.state.onsalesProducts}
-            renderItem={({item}) => {
-              if(item.discount == 0){
-                return (
-                  <TouchableOpacity style={styles.card} onPress={() => {
-                    this.props.navigation.navigate('ProductDetails', {
-                    productId: item.id,
-                    });
-                  }}>
-                    <View style={styles.infoContainer}>
-                    <Image source={{uri: item.photo}} style={styles.thumb}/>
-                    <Text style={styles.name}>{item.name}</Text>
-                    <Text style={styles.price}>RM {item.price}</Text>
-                  </View>
-                  </TouchableOpacity>
-                );
-              }else{
-                return (
-                  <TouchableOpacity style={styles.card} onPress={() => {
-                    this.props.navigation.navigate('ProductDetails', {
-                    productId: item.id,
-                    });
-                  }}>
-                    <View style={styles.infoContainer}>
-                    <Image source={{uri: item.photo}} style={styles.thumb}/>
-                    <Text style={styles.name}>{item.name}</Text>
-                    <Text style={styles.discountedPrice}>RM {item.price}</Text>
-                    <Text style={styles.price}>RM {(Number(item.price) * (1-Number(item.discount))).toFixed(2)}</Text>
-                    <Text style={styles.attribute}>Discount: {Number(item.discount)*100}%</Text>
-                  </View>
-                  </TouchableOpacity>
-                );
-              }
-            }}>
-          </FlatList>
-
+          <ScrollViewProduct
+            title="New Released"
+            isFetching={this.state.isFetching}
+            loadProducts={this._loadOnsalesProducts}
+            productData={this.state.onsalesProducts}
+          />
 
           {/* Albums Category */}
           <Text style={styles.title}>Albums 4U</Text>
-
-          <FlatList style={styles.productsListContainer}
-            refreshing={this.state.isFetching}
-            onRefresh={this._loadAlbums}
-            data={this.state.albums}
-            renderItem={({item}) => {
-              if(item.discount == 0){
-                return (
-                  <TouchableOpacity style={styles.card} onPress={() => {
-                    this.props.navigation.navigate('ProductDetails', {
-                    productId: item.id,
-                    });
-                  }}>
-                    <View style={styles.infoContainer}>
-                    <Image source={{uri: item.photo}} style={styles.thumb}/>
-                    <Text style={styles.name}>{item.name}</Text>
-                    <Text style={styles.price}>RM {item.price}</Text>
-                  </View>
-                  </TouchableOpacity>
-                );
-              }else{
-                return (
-                  <TouchableOpacity style={styles.card} onPress={() => {
-                    this.props.navigation.navigate('ProductDetails', {
-                    productId: item.id,
-                    });
-                  }}>
-                    <View style={styles.infoContainer}>
-                    <Image source={{uri: item.photo}} style={styles.thumb}/>
-                    <Text style={styles.name}>{item.name}</Text>
-                    <Text style={styles.discountedPrice}>RM {item.price}</Text>
-                    <Text style={styles.price}>RM {(Number(item.price) * (1-Number(item.discount))).toFixed(2)}</Text>
-                    <Text style={styles.attribute}>Discount: {Number(item.discount)*100}%</Text>
-                  </View>
-                  </TouchableOpacity>
-                );
-              }
-            }}>
-          </FlatList>
-
+          <ScrollViewProduct
+            title="New Released"
+            isFetching={this.state.isFetching}
+            loadProducts={this._loadAlbums}
+            productData={this._loadAlbums}
+          />
 
           {/* Magazines Category */}
           <Text style={styles.title}>Magazines 4U</Text>
-
-          <FlatList style={styles.productsListContainer}
-            refreshing={this.state.isFetching}
-            onRefresh={this._loadMagazines}
-            data={this.state.magazines}
-            renderItem={({item}) => {
-              if(item.discount == 0){
-                return (
-                  <TouchableOpacity style={styles.card} onPress={() => {
-                    this.props.navigation.navigate('ProductDetails', {
-                    productId: item.id,
-                    });
-                  }}>
-                    <View style={styles.infoContainer}>
-                    <Image source={{uri: item.photo}} style={styles.thumb}/>
-                    <Text style={styles.name}>{item.name}</Text>
-                    <Text style={styles.price}>RM {item.price}</Text>
-                  </View>
-                  </TouchableOpacity>
-                );
-              }else{
-                return (
-                  <TouchableOpacity style={styles.card} onPress={() => {
-                    this.props.navigation.navigate('ProductDetails', {
-                    productId: item.id,
-                    });
-                  }}>
-                    <View style={styles.infoContainer}>
-                    <Image source={{uri: item.photo}} style={styles.thumb}/>
-                    <Text style={styles.name}>{item.name}</Text>
-                    <Text style={styles.discountedPrice}>RM {item.price}</Text>
-                    <Text style={styles.price}>RM {(Number(item.price) * (1-Number(item.discount))).toFixed(2)}</Text>
-                    <Text style={styles.attribute}>Discount: {Number(item.discount)*100}%</Text>
-                  </View>
-                  </TouchableOpacity>
-                );
-              }
-            }}>
-          </FlatList>
-
-
+          <ScrollViewProduct
+            title="New Released"
+            isFetching={this.state.isFetching}
+            loadProducts={this._loadMagazines}
+            productData={this.state.magazines}
+          />
+          
           {/* Fashions Category */}
           <Text style={styles.title}>Fashions 4U</Text>
-
-          <FlatList style={styles.productsListContainer}
-            refreshing={this.state.isFetching}
-            onRefresh={this._loadFashions}
-            data={this.state.fashions}
-            renderItem={({item}) => {
-              if(item.discount == 0){
-                return (
-                  <TouchableOpacity style={styles.card} onPress={() => {
-                    this.props.navigation.navigate('ProductDetails', {
-                    productId: item.id,
-                    });
-                  }}>
-                    <View style={styles.infoContainer}>
-                    <Image source={{uri: item.photo}} style={styles.thumb}/>
-                    <Text style={styles.name}>{item.name}</Text>
-                    <Text style={styles.price}>RM {item.price}</Text>
-                  </View>
-                  </TouchableOpacity>
-                );
-              }else{
-                return (
-                  <TouchableOpacity style={styles.card} onPress={() => {
-                    this.props.navigation.navigate('ProductDetails', {
-                    productId: item.id,
-                    });
-                  }}>
-                    <View style={styles.infoContainer}>
-                    <Image source={{uri: item.photo}} style={styles.thumb}/>
-                    <Text style={styles.name}>{item.name}</Text>
-                    <Text style={styles.discountedPrice}>RM {item.price}</Text>
-                    <Text style={styles.price}>RM {(Number(item.price) * (1-Number(item.discount))).toFixed(2)}</Text>
-                    <Text style={styles.attribute}>Discount: {Number(item.discount)*100}%</Text>
-                  </View>
-                  </TouchableOpacity>
-                );
-              }
-            }}>
-          </FlatList>
-
+          <ScrollViewProduct
+            title="New Released"
+            isFetching={this.state.isFetching}
+            loadProducts={this._loadFashions}
+            productData={this.state.fashions}
+          />
         </ScrollView>
       </View>
     );
@@ -446,9 +274,9 @@ export default class HomeScreen extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "lightpink",
-    paddingBottom: "5%",
-    marginBottom: "5%",
+    backgroundColor: 'lightpink',
+    paddingBottom: '5%',
+    marginBottom: '5%',
   },
   header: {
     justifyContent: 'center',
@@ -456,21 +284,21 @@ const styles = StyleSheet.create({
     paddingBottom: 18,
   },
   container: {
-    backgroundColor: "lightpink",
-    paddingBottom: "15%",
-    marginBottom: "15%",
+    backgroundColor: 'lightpink',
+    paddingBottom: '15%',
+    marginBottom: '15%',
   },
-  logo:{
+  logo: {
     width: 65,
     height: 65,
     padding: 5,
   },
   title: {
-    width: "100%",
+    width: '100%',
     marginTop: 20,
     fontSize: 25,
-    fontWeight: "bold",
-    marginLeft: "10%",
+    fontWeight: 'bold',
+    marginLeft: '10%',
   },
   productsListContainer: {
     padding: 16,
@@ -498,6 +326,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   name: {
+    marginTop: 10,
     fontSize: 22,
     fontWeight: 'bold',
   },
@@ -511,7 +340,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '600',
     textAlign: 'right',
-    textDecorationLine: 'line-through', 
+    textDecorationLine: 'line-through',
     textDecorationStyle: 'solid',
   },
   attribute: {
