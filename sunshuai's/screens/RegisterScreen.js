@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -11,30 +11,30 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   ToastAndroid,
-} from 'react-native';
-import {TextInput} from 'react-native-gesture-handler';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import SQLite from 'react-native-sqlite-storage';
+} from "react-native";
+import { TextInput } from "react-native-gesture-handler";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import SQLite from "react-native-sqlite-storage";
 
-let config = require('../Config');
+let config = require("../Config");
 
 const db = SQLite.openDatabase(
   {
-    name: 'bp4udb',
-    location: '~bp4u.sqlite',
+    name: "bp4udb",
+    location: "~bp4u.sqlite",
   },
   () => {},
-  error => {
+  (error) => {
     console.log(error);
-  },
+  }
 );
 
-const RegisterScreen = ({navigation}) => {
-  const [name, setUserName] = useState('');
-  const [password, setUserPassword] = useState('');
-  const [email, setUserEmail] = useState('');
-  const [address, setUserAddress] = useState('');
-  const [phone, setUserPhone] = useState('');
+const RegisterScreen = ({ navigation }) => {
+  const [name, setUserName] = useState("");
+  const [password, setUserPassword] = useState("");
+  const [email, setUserEmail] = useState("");
+  const [address, setUserAddress] = useState("");
+  const [phone, setUserPhone] = useState("");
 
   // const block =()=>{
   //   return name != '' && password != '' && email != '' && address != '' && phone != '' &&
@@ -44,46 +44,46 @@ const RegisterScreen = ({navigation}) => {
     console.log(name, password, email, address, phone);
 
     if (!name) {
-      Alert.alert('Please fill name');
+      Alert.alert("Please fill name");
       return;
     }
     if (!password) {
-      Alert.alert('Please fill password');
+      Alert.alert("Please fill password");
       return;
     }
     if (!email) {
-      Alert.alert('Please fill email');
+      Alert.alert("Please fill email");
       return;
     }
     if (!address) {
-      Alert.alert('Please fill address');
+      Alert.alert("Please fill address");
       return;
     }
     if (!phone) {
-      Alert.alert('Please fill your phone number');
+      Alert.alert("Please fill your phone number");
       return;
     }
 
     db.transaction(function (tx) {
       tx.executeSql(
-        'INSERT INTO table_user (name, password, email, address, phone) value (?,?,?,?,?)',
+        "INSERT INTO table_user (name, password, email, address, phone) value (?,?,?,?,?)",
         [name, password, email, address, phone],
         (tx, results) => {
-          console.log('Results', results.rowsAffected);
+          console.log("Results", results.rowsAffected);
           if (results.rowsAffected > 0) {
             Alert.alert(
-              'Success',
-              'You are Registered Successfully',
+              "Success",
+              "You are Registered Successfully",
               [
                 {
-                  text: 'Ok',
-                  onPress: () => navigation.navigate('Profile'),
+                  text: "Ok",
+                  onPress: () => navigation.navigate("Profile"),
                 },
               ],
-              {cancelable: false},
+              { cancelable: false }
             );
-          } else alert('Registration Failed');
-        },
+          } else alert("Registration Failed");
+        }
       );
     });
   };
@@ -138,14 +138,15 @@ const RegisterScreen = ({navigation}) => {
     <ScrollView
       keyboardShouldPersistTaps="handled"
       contentContainerStyle={{
-        justifyContent: 'center',
-        alignContent: 'center',
-      }}>
+        justifyContent: "center",
+        alignContent: "center",
+      }}
+    >
       <KeyboardAvoidingView enabled>
         <View style={styles.body}>
           <Image
             style={styles.logo}
-            source={require('../assets/icons/BP4U.png')}
+            source={require("../assets/icons/BP4U.png")}
           />
           <Text style={styles.txt}>BP4U</Text>
           <TextInput
@@ -158,7 +159,7 @@ const RegisterScreen = ({navigation}) => {
             autoCapitalize="none"
             keyboardType="default"
             returnKeyType="next"
-            onChangeText={value => {
+            onChangeText={(value) => {
               setUserName(value);
             }}
             // onSubmitEditing={() =>
@@ -177,7 +178,7 @@ const RegisterScreen = ({navigation}) => {
               placeholder="Enter Password"
               placeholderTextColor="#fffafa"
               keyboardType="default"
-              onChangeText={value => setUserPassword(value)}
+              onChangeText={(value) => setUserPassword(value)}
               // ref={passwordInputRef}
               // onSubmitEditing={Keyboard.dismiss}
               blurOnSubmit={false}
@@ -195,7 +196,7 @@ const RegisterScreen = ({navigation}) => {
               placeholder="Enter your Email-Address"
               placeholderTextColor="#fffafa"
               keyboardType="email-address"
-              onChangeText={value => setUserEmail(value)}
+              onChangeText={(value) => setUserEmail(value)}
               // ref={passwordInputRef}
               // onSubmitEditing={Keyboard.dismiss}
               blurOnSubmit={false}
@@ -213,7 +214,7 @@ const RegisterScreen = ({navigation}) => {
               placeholder="Enter your Address"
               placeholderTextColor="#fffafa"
               keyboardType="default"
-              onChangeText={value => setUserAddress(value)}
+              onChangeText={(value) => setUserAddress(value)}
               // ref={passwordInputRef}
               // onSubmitEditing={Keyboard.dismiss}
               blurOnSubmit={false}
@@ -231,7 +232,7 @@ const RegisterScreen = ({navigation}) => {
               placeholder="Enter your Phone Number"
               placeholderTextColor="#fffafa"
               keyboardType="numeric"
-              onChangeText={value => setUserPhone(value)}
+              onChangeText={(value) => setUserPhone(value)}
               // ref={passwordInputRef}
               // onSubmitEditing={Keyboard.dismiss}
               blurOnSubmit={false}
@@ -258,11 +259,13 @@ const RegisterScreen = ({navigation}) => {
   );
 };
 
+export default RegisterScreen;
+
 const styles = StyleSheet.create({
   body: {
     flex: 1,
-    alignItems: 'center',
-    backgroundColor: '#ff1493',
+    alignItems: "center",
+    backgroundColor: "#ff1493",
   },
   logo: {
     width: 70,
@@ -271,16 +274,16 @@ const styles = StyleSheet.create({
   },
   txt: {
     fontSize: 25,
-    color: '#000000',
+    color: "#000000",
   },
   input: {
     width: 300,
     height: 40,
-    borderColor: '#000000',
+    borderColor: "#000000",
     borderWidth: 1,
     borderRadiius: 10,
-    backgroundColor: '#ffb6',
-    textAlign: 'center',
+    backgroundColor: "#ffb6",
+    textAlign: "center",
     frontSize: 20,
     marginTop: 20,
     marginBottom: 10,
@@ -289,28 +292,28 @@ const styles = StyleSheet.create({
   input2: {
     width: 300,
     height: 40,
-    borderColor: '#000000',
+    borderColor: "#000000",
     borderWidth: 1,
     borderRadiius: 10,
-    backgroundColor: '#ffb6',
-    textAlign: 'center',
+    backgroundColor: "#ffb6",
+    textAlign: "center",
     frontSize: 20,
     marginTop: 10,
     marginBottom: 10,
     borderRadius: 30,
   },
   bttn: {
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
     marginTop: 10,
   },
   registerTextStyle: {
-    color: '#FFFFFF',
-    textAlign: 'center',
-    fontWeight: 'bold',
+    color: "#FFFFFF",
+    textAlign: "center",
+    fontWeight: "bold",
     fontSize: 14,
-    alignSelf: 'center',
+    alignSelf: "center",
     padding: 10,
   },
 });
