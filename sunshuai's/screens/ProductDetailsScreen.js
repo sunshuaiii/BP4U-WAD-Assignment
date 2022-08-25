@@ -94,7 +94,8 @@ export default class ProductDetailsScreen extends Component {
   }
 
   _queryCartTotal() {
-    let url = config.settings.serverPath + '/api/cart/cart-total/' + this.state.cartId;
+    let url =
+      config.settings.serverPath + '/api/cart/cart-total/' + this.state.cartId;
     console.log(url);
     fetch(url)
       .then(response => {
@@ -122,8 +123,8 @@ export default class ProductDetailsScreen extends Component {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
+        id: this.state.cartId,
         total: this.state.total.total,
-        cart_id: this.state.cartId,
       }),
     })
       .then(response => {
@@ -150,7 +151,12 @@ export default class ProductDetailsScreen extends Component {
   }
 
   _updateCartItemQuantity() {
-    let url = config.settings.serverPath + '/api/cart-item/update-quantity/' + this.state.cartId + '/' + this.state.productId;
+    let url =
+      config.settings.serverPath +
+      '/api/cart-item/update-quantity/' +
+      this.state.cartId +
+      '/' +
+      this.state.productId;
 
     fetch(url, {
       method: 'PUT',
@@ -158,11 +164,7 @@ export default class ProductDetailsScreen extends Component {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        ci_cart_id: this.state.cartId,
-        ci_product_id: this.state.productId,
-        ci_quantity: this.state.quantityInCart.quantity,
-      }),
+      body: JSON.stringify({}),
     })
       .then(response => {
         console.log(response);
@@ -185,8 +187,13 @@ export default class ProductDetailsScreen extends Component {
       });
   }
 
-  _checkProductInCart(){
-    let url = config.settings.serverPath + '/api/product/quantity-in-cart/' + this.state.cartId + '/'+ this.state.productId;
+  _checkProductInCart() {
+    let url =
+      config.settings.serverPath +
+      '/api/product/quantity-in-cart/' +
+      this.state.cartId +
+      '/' +
+      this.state.productId;
     console.log(url);
 
     fetch(url)
@@ -205,7 +212,6 @@ export default class ProductDetailsScreen extends Component {
       });
   }
 
-
   _addToCart() {
     // check if the product is in the cart
     this._checkProductInCart();
@@ -218,14 +224,13 @@ export default class ProductDetailsScreen extends Component {
     }
     // product in the cart, quantity +1
     else {
-      // this._updateCartItemQuantity();
+      this._updateCartItemQuantity();
       Alert.alert('Item already added to your cart!');
     }
     // update cart total
     this._queryCartTotal();
     console.log(this.state.total.total);
     this._updateCartTotal();
-    
   }
 
   componentDidMount() {
@@ -233,7 +238,6 @@ export default class ProductDetailsScreen extends Component {
 
     // check if the product is in the cart
     this._checkProductInCart();
-    console.log(this.state.quantityInCart.quantity);
   }
 
   render() {
