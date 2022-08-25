@@ -17,22 +17,28 @@ import {
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 
+import AlbumScreen from './screens/AlbumScreen';
+import MagazineScreen from './screens/MagazineScreen';
+import NewReleasesScreen from './screens/NewReleasesScreen';
+import FashionScreen from './screens/FashionScreen';
+import OnSaleScreen from './screens/OnSaleScreen';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import ProfileScreen from './screens/LoginScreen';
-import MenuScreen from './screens/MenuScreen';
 import HomeScreen from './screens/HomeScreen.js';
 import ProductDetailsScreen from './screens/ProductDetailsScreen.js';
-import ProductListScreen from './screens/ProductListScreen.js';
 import CartScreen from './screens/CartScreen';
 import EditCartScreen from './screens/EditCartScreen.js';
 import PaymentScreen from './screens/PaymentScreen.js';
 import HistoryScreen from './screens/HistoryScreen.js';
+import OrderItem from './screens/OrderItemScreen';
+import SearchScreen from './screens/SearchScreen.js';
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Octicons from 'react-native-vector-icons/Octicons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import OrderItemScreen from './screens/OrderItemScreen';
 
 LogBox.ignoreLogs(['EventEmitter.removeListener']);
 LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
@@ -65,7 +71,7 @@ const HomeStack = () => {
       }}>
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="ProductDetails" component={ProductDetailsScreen} />
-      <Stack.Screen name="ProductList" component={ProductListScreen} />
+      <Stack.Screen name="Search" component={SearchScreen} />
     </Stack.Navigator>
   );
 };
@@ -84,6 +90,20 @@ const CartStack = () => {
   );
 };
 
+const HistoryStack = () => {
+  return (
+    <Stack.Navigator
+      initialRouteName={'History'}
+      screenOptions={{
+        headerShown: false,
+      }}>
+      <Stack.Screen name="History" component={HistoryScreen} />
+      <Stack.Screen name="OrderItem" component={OrderItemScreen} />
+      <Stack.Screen name="ProductDetails" component={ProductDetailsScreen} />
+    </Stack.Navigator>
+  );
+};
+
 const MyTab = () => {
   return (
     <Tab.Navigator
@@ -96,8 +116,8 @@ const MyTab = () => {
         showLabel: false,
       }}>
       <Tab.Screen
-        name="Menu"
-        component={MenuScreen}
+        name="Register"
+        component={RegisterScreen}
         options={{
           tabBarIcon: () => {
             return (
@@ -142,7 +162,7 @@ const MyTab = () => {
         }}></Tab.Screen>
       <Tab.Screen
         name="History"
-        component={HistoryScreen}
+        component={HistoryStack}
         options={{
           tabBarBadge: 0,
           tabBarIcon: () => {
@@ -206,11 +226,11 @@ export default class App extends Component {
             },
           }}>
           <Drawer.Screen name="BP4U" component={MyTab} />
-          <Drawer.Screen name="New Releases" component={HomeScreen} />
-          <Drawer.Screen name="On Sale" component={HomeScreen} />
-          <Drawer.Screen name="Albums" component={HomeScreen} />
-          <Drawer.Screen name="Magazines" component={HomeScreen} />
-          <Drawer.Screen name="Fashion" component={HomeScreen} />
+          <Drawer.Screen name="New Releases" component={NewReleasesScreen} />
+          <Drawer.Screen name="On Sale" component={OnSaleScreen} />
+          <Drawer.Screen name="Albums" component={AlbumScreen} />
+          <Drawer.Screen name="Magazines" component={MagazineScreen} />
+          <Drawer.Screen name="Fashion" component={FashionScreen} />
           <Drawer.Screen name="Settings" component={SettingsScreen} />
         </Drawer.Navigator>
       </NavigationContainer>
