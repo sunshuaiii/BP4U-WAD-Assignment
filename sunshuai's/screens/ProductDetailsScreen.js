@@ -9,11 +9,9 @@ import {
   StyleSheet,
 } from 'react-native';
 import {AppButton} from '../UI';
+import SQLite from 'react-native-sqlite-storage';
 
-let SQLite = require('react-native-sqlite-storage');
 let config = require('../Config');
-const member_Id = "10006";
-const cart_Id = "60006";
 
 // creating the product detials screen
 
@@ -23,10 +21,12 @@ export default class ProductDetailsScreen extends Component {
     this.state = {
       productId: this.props.route.params.productId,
       product: [],
-      memberId: member_Id,
-      cartId: cart_Id,
+      memberId: '10005',
+      cartId: '60005',
       total: '',
       quantity: '',
+      count: [],
+      initialQuantity: '1',
     };
     this._loadByID = this._loadByID.bind(this);
     this._addToCart = this._addToCart.bind(this);
@@ -36,7 +36,7 @@ export default class ProductDetailsScreen extends Component {
     this._updateCartItemQuantity = this._updateCartItemQuantity.bind(this);
 
     this.db = SQLite.openDatabase(
-      {name: 'bp4udb'},
+      {name: 'bp4udb', createFromLocation: '~bp4u.sqlite'},
       this.openCallback,
       this.errorCallback,
     );
@@ -63,15 +63,16 @@ export default class ProductDetailsScreen extends Component {
       });
   }
 
-  _insertCartItem(){
+  _insertCartItem() {
     this.db.transaction(tx => {
-      tx.executeSql('INSERT INTO cart_item(ci_cart_id, ci_product_id) VALUES (?,?)', [
-          this.state.cartId,
-          this.state.productId,
-      ]);
+      tx.executeSql(
+        'INSERT INTO cart_item(ci_cart_id, ci_product_id, ci_quantity) VALUES (?,?,?)',
+        [this.state.cartId, this.state.productId, this.state.initialQuantity],
+      );
     });
+    console.log('_insertCartItem');
   }
-  
+
   _queryCartTotal() {
     this.db.transaction(tx => {
       tx.executeSql(
@@ -86,50 +87,52 @@ export default class ProductDetailsScreen extends Component {
         },
       );
     });
+    console.log('_queryCartTotal');
   }
 
-  _updateCartTotal(){
+  _updateCartTotal() {
     this.db.transaction(tx => {
       tx.executeSql('UPDATE cart SET cart_total=? WHERE cart_id=?', [
         this.state.total,
         this.state.cartId,
       ]);
     });
+    console.log('_updateCartTotal');
   }
 
-  _updateCartItemQuantity(){
+  _updateCartItemQuantity() {
     this.db.transaction(tx => {
-      tx.executeSql('UPDATE cart_item SET ci_quantity=? WHERE ci_cart_id=? AND ci_product_id=?', [
-        (Number(this.state.quantity)+1).toString(),
-        this.state.cart_Id,
-        this.state.productId,
-      ]);
+      tx.executeSql(
+        'UPDATE cart_item SET ci_quantity=? WHERE ci_cart_id=? AND ci_product_id=?',
+        [
+          (Number(this.state.quantity) + 1).toString(),
+          this.state.cart_Id,
+          this.state.productId,
+        ],
+      );
     });
+    console.log('_updateCartItemQuantity');
   }
 
   _addToCart() {
-    let count = '';
-    this.db.transaction(tx => {
+    // check if the product is in the cart
+    this.db.transaction(tx =>
       tx.executeSql(
-        'SELECT COUNT(*) AS count FROM cart_item WHERE cart_item.ci_cart_id=? AND cart_item.ci_product_id=?',
+        'SELECT COUNT(*) as count FROM cart_item WHERE ci_cart_id=? AND ci_product_id=?',
         [this.state.cartId, this.state.productId],
-        (tx, results) => {
-          if (results.rows.length) {
-            this.setState({
-              count: results.rows.item(0).count,
-            });
-          }
-        },
-      );
-    });
-    count = Number(count);
-    console.log(count);
-    if(count == 0){
+        (tx, results) => this.setState({count: results.rows.raw()}),
+      ),
+    );
+    console.log(this.state.count);
+    // if the product is not in the cart, put the product to the cart
+    if (this.state.count === 0) {
       this._insertCartItem();
     }
-    else{
+    // product in the cart, quantity +1
+    else {
       this._updateCartItemQuantity();
     }
+    // update cart total
     this._queryCartTotal();
     this._updateCartTotal();
     Alert.alert('Item successfully added to your cart!');
@@ -148,73 +151,84 @@ export default class ProductDetailsScreen extends Component {
   }
 
   render() {
-    if(this.state.product.discount == 0){
+    if (this.state.product.discount == 0) {
       return (
-      <View style={styles.container}>
-        <ScrollView>
-          {/* <Button onPress={() => this.props.navigation.goBack()}/> */}
-          <Image style={styles.image} source={{uri: this.state.product.photo}} />
-          <View style={styles.infoContainer}>
-            <Text style={styles.name}>{this.state.product.name}</Text>
-            <Text style={styles.description}>{this.state.product.desc}</Text>
-            <Text style={styles.price}>RM {this.state.product.price}</Text>
-            <Text style={styles.attribute}>
-              Weight: {this.state.product.weight} kg
-            </Text>
-            <Text style={styles.attribute}>
-              Stock: {this.state.product.stock}
-            </Text>
-            <Text style={styles.attribute}>
-              Category: {this.state.product.category}
-            </Text>
-            <AppButton
-              onPress={this._addToCart}
-              title="Add to cart"
+        <View style={styles.container}>
+          <ScrollView>
+            {/* <Button onPress={() => this.props.navigation.goBack()}/> */}
+            <Image
+              style={styles.image}
+              source={{uri: this.state.product.photo}}
             />
-            
-          </View>
-        </ScrollView>
-      </View>
-    );
-  } else{
-    return (
-      <View style={styles.container}>
-        <ScrollView>
-          {/* <Button onPress={() => this.props.navigation.goBack()}/> */}
-          <Image style={styles.image} source={{uri: this.state.product.photo}} />
-          <View style={styles.infoContainer}>
-            <Text style={styles.name}>{this.state.product.name}</Text>
-            <Text style={styles.description}>{this.state.product.desc}</Text>
-            <Text style={styles.discountedPrice}>RM {this.state.product.price}</Text>
-            <Text style={styles.price}>RM {(Number(this.state.product.price) * (1-Number(this.state.product.discount))).toFixed(2)}</Text>
-            <Text style={styles.attribute}>
-              Weight: {this.state.product.weight} kg
-            </Text>
-            <Text style={styles.attribute}>
-              Stock: {this.state.product.stock}
-            </Text>
-            <Text style={styles.attribute}>
-              Category: {this.state.product.category}
-            </Text>
-            <Text style={styles.attribute}>Discount: {Number(this.state.product.discount)*100}%</Text>
-            <AppButton
-              onPress={this._addToCart}
-              title="Add to cart"
-              style={styles.button}
+            <View style={styles.infoContainer}>
+              <Text style={styles.name}>{this.state.product.name}</Text>
+              <Text style={styles.description}>{this.state.product.desc}</Text>
+              <Text style={styles.price}>RM {this.state.product.price}</Text>
+              <Text style={styles.attribute}>
+                Weight: {this.state.product.weight} kg
+              </Text>
+              <Text style={styles.attribute}>
+                Stock: {this.state.product.stock}
+              </Text>
+              <Text style={styles.attribute}>
+                Category: {this.state.product.category}
+              </Text>
+              <AppButton onPress={this._addToCart} title="Add to cart" />
+            </View>
+          </ScrollView>
+        </View>
+      );
+    } else {
+      return (
+        <View style={styles.container}>
+          <ScrollView>
+            {/* <Button onPress={() => this.props.navigation.goBack()}/> */}
+            <Image
+              style={styles.image}
+              source={{uri: this.state.product.photo}}
             />
-            
-          </View>
-        </ScrollView>
-      </View>
-    );
-  }
+            <View style={styles.infoContainer}>
+              <Text style={styles.name}>{this.state.product.name}</Text>
+              <Text style={styles.description}>{this.state.product.desc}</Text>
+              <Text style={styles.discountedPrice}>
+                RM {this.state.product.price}
+              </Text>
+              <Text style={styles.price}>
+                RM{' '}
+                {(
+                  Number(this.state.product.price) *
+                  (1 - Number(this.state.product.discount))
+                ).toFixed(2)}
+              </Text>
+              <Text style={styles.attribute}>
+                Weight: {this.state.product.weight} kg
+              </Text>
+              <Text style={styles.attribute}>
+                Stock: {this.state.product.stock}
+              </Text>
+              <Text style={styles.attribute}>
+                Category: {this.state.product.category}
+              </Text>
+              <Text style={styles.attribute}>
+                Discount: {Number(this.state.product.discount) * 100}%
+              </Text>
+              <AppButton
+                onPress={this._addToCart}
+                title="Add to cart"
+                style={styles.button}
+              />
+            </View>
+          </ScrollView>
+        </View>
+      );
+    }
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "lightpink",
-    paddingBottom: "5%",
+    backgroundColor: 'lightpink',
+    paddingBottom: '5%',
   },
   image: {
     marginTop: 15,
@@ -240,7 +254,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '600',
     textAlign: 'right',
-    textDecorationLine: 'line-through', 
+    textDecorationLine: 'line-through',
     textDecorationStyle: 'solid',
   },
   attribute: {
