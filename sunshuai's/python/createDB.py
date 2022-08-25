@@ -38,10 +38,9 @@ db.execute('''CREATE TABLE IF NOT EXISTS order_details(
     order_id INTEGER PRIMARY KEY AUTOINCREMENT,
     order_member_id INTEGER NOT NULL,
     order_shipping_address TEXT NOT NULL,
-    order_courier TEXT NOT NULL,
     order_shipping_fee REAL NOT NULL,
     order_total REAL NOT NULL,
-    order_status TEXT CHECK( order_status IN ('TO PAY','PAID','SHIPPED OUT','DELIVERED') ) NOT NULL DEFAULT 'TO PAY',
+    order_status TEXT CHECK( order_status IN ('PAID','SHIPPED OUT','DELIVERED') ) NOT NULL DEFAULT 'PAID',
     order_creation_date DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
     FOREIGN KEY(order_member_id) REFERENCES member(member_id)
 )''')
@@ -220,24 +219,24 @@ cursor.execute('''
 
 # ORDER_DETAILS TABLE (TOTAL 5 RECORDS)
 cursor.execute('''
-    INSERT INTO order_details(order_id,order_member_id,order_shipping_address,order_courier,order_shipping_fee,order_total,order_status,order_creation_date)
-    VALUES(30001, 10001, '11 Jalan Kimchi', 'GDEX', 30, 563.21, 'DELIVERED','2022-01-22')
+    INSERT INTO order_details(order_id,order_member_id,order_shipping_address,order_shipping_fee,order_total,order_status,order_creation_date)
+    VALUES(30001, 10001, '11 Jalan Kimchi', 30, 563.21, 'DELIVERED','2022-01-22')
 ''')
 cursor.execute('''
-    INSERT INTO order_details(order_member_id,order_shipping_address,order_courier,order_shipping_fee,order_total,order_status,order_creation_date)
-    VALUES(10002, '22 Jalan Olive', 'GDEX', 5, 87.50, 'DELIVERED','2022-02-23')
+    INSERT INTO order_details(order_member_id,order_shipping_address,order_shipping_fee,order_total,order_status,order_creation_date)
+    VALUES(10002, '22 Jalan Olive', 5, 87.50, 'DELIVERED','2022-02-23')
 ''')
 cursor.execute('''
-    INSERT INTO order_details(order_member_id,order_shipping_address,order_courier,order_shipping_fee,order_total,order_status,order_creation_date)
-    VALUES(10003, '33 Jalan Joker', 'GDEX', 30, 480.96, 'SHIPPED OUT','2022-03-24')
+    INSERT INTO order_details(order_member_id,order_shipping_address,order_shipping_fee,order_total,order_status,order_creation_date)
+    VALUES(10003, '33 Jalan Joker', 30, 480.96, 'SHIPPED OUT','2022-03-24')
 ''')
 cursor.execute('''
-    INSERT INTO order_details(order_member_id,order_shipping_address,order_courier,order_shipping_fee,order_total,order_status,order_creation_date)
-    VALUES(10004, '44 Jalan Jerry', 'GDEX', 10, 465.00, 'PAID','2022-04-25')
+    INSERT INTO order_details(order_member_id,order_shipping_address,order_shipping_fee,order_total,order_status,order_creation_date)
+    VALUES(10004, '44 Jalan Jerry', 10, 465.00, 'PAID','2022-04-25')
 ''')
 cursor.execute('''
-    INSERT INTO order_details(order_member_id,order_shipping_address,order_courier,order_shipping_fee,order_total,order_status,order_creation_date)
-    VALUES(10005, '55 Jalan Monday', 'GDEX', 10, 325.00, 'TO PAY','2022-05-26')
+    INSERT INTO order_details(order_member_id,order_shipping_address,order_shipping_fee,order_total,order_status,order_creation_date)
+    VALUES(10005, '55 Jalan Monday', 10, 325.00, 'PAID','2022-05-26')
 ''')
 
 
@@ -306,11 +305,11 @@ cursor.execute('''
 # CART TABLE (TOTAL 5 RECORDS)
 cursor.execute('''
     INSERT INTO cart(cart_id,cart_member_id,cart_total)
-    VALUES(60001, 10001, 474.99)
+    VALUES(60001, 10001, 686.69)
 ''')
 cursor.execute('''
     INSERT INTO cart(cart_member_id,cart_total)
-    VALUES(10002, 325.00)
+    VALUES(10002, 149.99)
 ''')
 cursor.execute('''
     INSERT INTO cart(cart_member_id,cart_total)
@@ -318,11 +317,11 @@ cursor.execute('''
 ''')
 cursor.execute('''
     INSERT INTO cart(cart_member_id,cart_total)
-    VALUES(10004, 181.23)
+    VALUES(10004, 141.23)
 ''')
 cursor.execute('''
     INSERT INTO cart(cart_member_id,cart_total)
-    VALUES(10005, 605.00)
+    VALUES(10005, 285.97)
 ''')
 cursor.execute('''
     INSERT INTO cart(cart_member_id)

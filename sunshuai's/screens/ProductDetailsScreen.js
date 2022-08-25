@@ -1,4 +1,4 @@
-import React, {Component, useEffect, useState, useContext} from 'react';
+import React, {Component} from 'react';
 import {
   Text,
   Image,
@@ -23,9 +23,8 @@ export default class ProductDetailsScreen extends Component {
       product: [],
       memberId: '10005',
       cartId: '60005',
-      total: '',
-      quantity: '',
-      count: [],
+      total: 0,
+      quantityInCart: 0,
       initialQuantity: '1',
     };
     this._loadByID = this._loadByID.bind(this);
@@ -34,12 +33,7 @@ export default class ProductDetailsScreen extends Component {
     this._queryCartTotal = this._queryCartTotal.bind(this);
     this._updateCartTotal = this._updateCartTotal.bind(this);
     this._updateCartItemQuantity = this._updateCartItemQuantity.bind(this);
-
-    this.db = SQLite.openDatabase(
-      {name: 'bp4udb', createFromLocation: '~bp4u.sqlite'},
-      this.openCallback,
-      this.errorCallback,
-    );
+    this._checkProductInCart = this._checkProductInCart.bind(this);
   }
 
   _loadByID() {
@@ -64,90 +58,182 @@ export default class ProductDetailsScreen extends Component {
   }
 
   _insertCartItem() {
-    this.db.transaction(tx => {
-      tx.executeSql(
-        'INSERT INTO cart_item(ci_cart_id, ci_product_id, ci_quantity) VALUES (?,?,?)',
-        [this.state.cartId, this.state.productId, this.state.initialQuantity],
-      );
-    });
-    console.log('_insertCartItem');
+    let url = config.settings.serverPath + '/api/cart-item';
+
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        cart_id: this.state.cartId,
+        product_id: this.state.productId,
+        quantity: this.state.initialQuantity,
+      }),
+    })
+      .then(response => {
+        console.log(response);
+        if (!response.ok) {
+          Alert.alert('Error:', response.status.toString());
+          throw Error('Error ' + response.status);
+        }
+
+        return response.json();
+      })
+      .then(respondJson => {
+        if (respondJson.affected > 0) {
+          Alert.alert('Record SAVED for', this.state.productId.toString());
+        } else {
+          Alert.alert('Error in SAVING');
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 
   _queryCartTotal() {
-    this.db.transaction(tx => {
-      tx.executeSql(
-        'SELECT round(SUM(product.product_price*(1-product.product_discount_percent) * cart_item.ci_quantity),2) FROM product INNER JOIN cart_item ON product.product_id = cart_item.ci_product_id WHERE cart_item.ci_cart_id=?',
-        [this.state.cartId],
-        (tx, results) => {
-          if (results.rows.length) {
-            this.setState({
-              total: results.rows.item(0).total,
-            });
-          }
-        },
-      );
-    });
-    console.log('_queryCartTotal');
+    let url = config.settings.serverPath + '/api/cart/cart-total/' + this.state.cartId;
+    console.log(url);
+    fetch(url)
+      .then(response => {
+        if (!response.ok) {
+          Alert.alert('Error:', response.status.toString());
+          throw Error('Error ' + response.status);
+        }
+        return response.json();
+      })
+      .then(total => {
+        this.setState({total: total});
+      })
+      .catch(error => {
+        console.error(error);
+      });
   }
 
   _updateCartTotal() {
-    this.db.transaction(tx => {
-      tx.executeSql('UPDATE cart SET cart_total=? WHERE cart_id=?', [
-        this.state.total,
-        this.state.cartId,
-      ]);
-    });
-    console.log('_updateCartTotal');
+    let url = config.settings.serverPath + '/api/cart/' + this.state.cartId;
+
+    fetch(url, {
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        total: this.state.total.total,
+        cart_id: this.state.cartId,
+      }),
+    })
+      .then(response => {
+        console.log(response);
+        if (!response.ok) {
+          Alert.alert('Error:', response.status.toString());
+          throw Error('Error ' + response.status);
+        }
+
+        return response.json();
+      })
+      .then(respondJson => {
+        if (respondJson.affected > 0) {
+          Alert.alert('Record UPDATED for', this.state.name);
+        } else {
+          Alert.alert('Error in UPDATING');
+        }
+        this.props.route.params._refresh();
+        this.props.navigation.goBack();
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 
   _updateCartItemQuantity() {
-    this.db.transaction(tx => {
-      tx.executeSql(
-        'UPDATE cart_item SET ci_quantity=? WHERE ci_cart_id=? AND ci_product_id=?',
-        [
-          (Number(this.state.quantity) + 1).toString(),
-          this.state.cart_Id,
-          this.state.productId,
-        ],
-      );
-    });
-    console.log('_updateCartItemQuantity');
+    let url = config.settings.serverPath + '/api/cart-item/update-quantity/' + this.state.cartId + '/' + this.state.productId;
+
+    fetch(url, {
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        ci_cart_id: this.state.cartId,
+        ci_product_id: this.state.productId,
+        ci_quantity: this.state.quantityInCart.quantity,
+      }),
+    })
+      .then(response => {
+        console.log(response);
+        if (!response.ok) {
+          Alert.alert('Error:', response.status.toString());
+          throw Error('Error ' + response.status);
+        }
+
+        return response.json();
+      })
+      .then(respondJson => {
+        if (respondJson.affected > 0) {
+          Alert.alert('Record UPDATED');
+        } else {
+          Alert.alert('Error in UPDATING');
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
+
+  _checkProductInCart(){
+    let url = config.settings.serverPath + '/api/product/quantity-in-cart/' + this.state.cartId + '/'+ this.state.productId;
+    console.log(url);
+
+    fetch(url)
+      .then(response => {
+        if (!response.ok) {
+          Alert.alert('Error:', response.status.toString());
+          throw Error('Error ' + response.status);
+        }
+        return response.json();
+      })
+      .then(quantityInCart => {
+        this.setState({quantityInCart: quantityInCart});
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+
 
   _addToCart() {
     // check if the product is in the cart
-    this.db.transaction(tx =>
-      tx.executeSql(
-        'SELECT COUNT(*) as count FROM cart_item WHERE ci_cart_id=? AND ci_product_id=?',
-        [this.state.cartId, this.state.productId],
-        (tx, results) => this.setState({count: results.rows.raw()}),
-      ),
-    );
-    console.log(this.state.count);
+    this._checkProductInCart();
+    console.log(this.state.quantityInCart.quantity);
+
     // if the product is not in the cart, put the product to the cart
-    if (this.state.count === 0) {
+    if (this.state.quantityInCart.quantity == 0) {
       this._insertCartItem();
+      Alert.alert('Item successfully added to your cart!');
     }
     // product in the cart, quantity +1
     else {
-      this._updateCartItemQuantity();
+      // this._updateCartItemQuantity();
+      Alert.alert('Item already added to your cart!');
     }
     // update cart total
     this._queryCartTotal();
+    console.log(this.state.total.total);
     this._updateCartTotal();
-    Alert.alert('Item successfully added to your cart!');
-  }
-
-  openCallback() {
-    console.log('Database open successfully.');
-  }
-
-  errorCallback(err) {
-    console.log('Error in opening the database: ' + err);
+    
   }
 
   componentDidMount() {
     this._loadByID();
+
+    // check if the product is in the cart
+    this._checkProductInCart();
+    console.log(this.state.quantityInCart.quantity);
   }
 
   render() {

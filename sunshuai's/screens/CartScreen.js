@@ -22,22 +22,14 @@ export default class CartScreen extends Component {
     super(props);
     this.state = {
       cartItem: [],
-      cartItem_sql:[],
-      cart_sql:[],
-      order_sql:[],
+      cart_id: "60001",
       isFetching: false,
     };
     this._load = this._load.bind(this);
-
-    this.db = SQLite.openDatabase(
-      {name: 'bp4udb', createFromLocation: '~bp4u.sqlite'},
-      this.openCallback,
-      this.errorCallback,
-    );
   }
 
   _load() {
-    let url = config.settings.serverPath + '/api/cart-item';
+    let url = config.settings.serverPath + '/api/cart-item/incart/' + this.state.cart_id;
     console.log(url);
     this.setState({isFetching: true});
     fetch(url)
@@ -59,32 +51,8 @@ export default class CartScreen extends Component {
       });
   }
 
-  _query(){
-    this.db.transaction(tx =>
-      tx.executeSql('SELECT product_name, product_price FROM product INNER JOIN cart_item ON product.product.id=cart_item.ci_product_id', [], (tx, results) =>
-        this.setState({cartItem_sql: results.rows.raw()}),
-      ),
-    );
-  }
-
-  _queryForCart(){
-    this.db.transaction(tx =>
-      tx.executeSql('SELECT product_name, product_price FROM product INNER JOIN cart_item ON product.product.id=cart_item.ci_product_id', [], (tx, results) =>
-        this.setState({cart_sql: results.rows.raw()}),
-      ),
-    );
-  }
-
-  openCallback() {
-    console.log('database open success');
-  }
-  errorCallback(err) {
-    console.log('Error in opening the database: ' + err);
-  }
-
   componentDidMount() {
     this._load();
-    this._query();
   }
 
   render() {
@@ -99,14 +67,14 @@ export default class CartScreen extends Component {
               <ScrollView style={{marginbottom: 80}}>
                 <View style={{flexDirection: 'row', height: 150}}>
                   <View style={{flex: 1}}>
-                    {/* <Image
-                      source={require('../assets/productImages/bpshirt.jpg')}
-                      style={styles.image}></Image> */}
+                    <Image
+                      source={{uri: item.photo}}
+                      style={styles.image}></Image>
                   </View>
 
                   <View style={{flex: 2}}>
-                    <Text style={styles.itemName}>{item.product_id}</Text>
-                    <Text style={styles.itemPrice}>Price: RM 149.99</Text>
+                    <Text style={styles.itemName}>{item.name}</Text>
+                    <Text style={styles.itemPrice}>{item.price}</Text>
                     <View style={{flexDirection: 'row'}}>
                       <Text style={styles.itemQuantity}>
                         Quantity: {item.quantity}
