@@ -36,7 +36,7 @@ export default class CartScreen extends Component {
     console.log(url);
     this.setState({isFetching: true});
     fetch(url)
-      .then(response => {
+      .then((response) => {
         console.log(response);
         if (!response.ok) {
           Alert.alert('Error: ', response.status.toString());

@@ -42,6 +42,7 @@ def get_cart_total_as_dict(row):
 
     return row_dict
 
+
 def get_member_row_as_dict(row):
     row_dict = {
         'id': row[0],
@@ -323,22 +324,37 @@ def index_cart_item():
     return jsonify(rows_as_dict), 200
 
 # using
-@app.route('/api/cart-item/incart/total/<int:cart_item>', methods=['GET'])
-def show_cart_item_in_cart_total(cart_item):
+@app.route('/api/cart-item/total-quantity/<int:cartID>', methods=['GET'])
+def index_cart_item_quantity(cartID):
     db = sqlite3.connect(DB)
     cursor = db.cursor()
-    cursor.execute('SELECT ci_product_id, product_name, round(SUM(product.product_price*(1-product.product_discount_percent) * cart_item.ci_quantity),2),ci_quantity,product_photo FROM product INNER JOIN cart_item ON product.product_id=cart_item.ci_product_id WHERE cart_item.ci_cart_id=?', (str(cart_item),))
-    rows = cursor.fetchall()
-    print(rows)
-
+    cursor.execute('SELECT SUM(ci_quantity) FROM cart_item WHERE ci_cart_id=?', (str(cartID),))
+    row = cursor.fetchone()
     db.close()
 
-    rows_as_dict = []
-    for row in rows:
-        row_as_dict = get_cart_item_in_cart_as_dict(row)
-        rows_as_dict.append(row_as_dict)
+    if row:
+        row_as_dict = get_cart_total_as_dict(row)
+        return jsonify(row_as_dict), 200
+    else:
+        return jsonify(None), 200
 
-    return jsonify(rows_as_dict), 200
+# using
+# @app.route('/api/cart-item/incart/total/<int:cart_item>', methods=['GET'])
+# def show_cart_item_in_cart_total(cart_item):
+#     db = sqlite3.connect(DB)
+#     cursor = db.cursor()
+#     cursor.execute('SELECT ci_product_id, product_name, round(SUM(product.product_price*(1-product.product_discount_percent) * cart_item.ci_quantity),2),ci_quantity,product_photo FROM product INNER JOIN cart_item ON product.product_id=cart_item.ci_product_id WHERE cart_item.ci_cart_id=?', (str(cart_item),))
+#     rows = cursor.fetchall()
+#     print(rows)
+
+#     db.close()
+
+#     rows_as_dict = []
+#     for row in rows:
+#         row_as_dict = get_cart_item_in_cart_as_dict(row)
+#         rows_as_dict.append(row_as_dict)
+
+#     return jsonify(rows_as_dict), 200
 
 # using
 @app.route('/api/cart-item/incart/<int:cart_item>', methods=['GET'])
@@ -363,15 +379,16 @@ def show_cart_item_in_cart(cart_item):
 def show_index_cart_item_in_cart(cart_item, cart_item_index):
     db = sqlite3.connect(DB)
     cursor = db.cursor()
-    cursor.execute('SELECT ci_id, product_name, product_price,ci_quantity, product_photo FROM product INNER JOIN cart_item ON product.product_id=cart_item.ci_product_id WHERE cart_item.ci_cart_id=? AND cart_item.ci_product_id=?', (str(cart_item), str(cart_item_index),))
+    cursor.execute('SELECT cart_item.ci_id, product_name, product_price,ci_quantity,product_photo FROM product INNER JOIN cart_item ON product.product_id=cart_item.ci_product_id WHERE cart_item.ci_cart_id=? AND cart_item.ci_product_id=?', (str(cart_item), str(cart_item_index)))
     rows = cursor.fetchall()
+
     print(rows)
 
     db.close()
 
     rows_as_dict = []
     for row in rows:
-        row_as_dict = get_cart_item_in_cart_as_dict(row)
+        row_as_dict = get_cart_item_row_as_dict(row)
         rows_as_dict.append(row_as_dict)
 
     return jsonify(rows_as_dict), 200
@@ -673,6 +690,20 @@ def index_order():
 
     return jsonify(rows_as_dict), 200
 
+# using
+@app.route('/api/order/total-quantity/<int:memberID>', methods=['GET'])
+def index_order_quantity(cartID):
+    db = sqlite3.connect(DB)
+    cursor = db.cursor()
+    cursor.execute('SELECT COUNT(*) FROM order_details WHERE order_member_id=?', (str(cartID),))
+    row = cursor.fetchone()
+    db.close()
+
+    if row:
+        row_as_dict = get_cart_total_as_dict(row)
+        return jsonify(row_as_dict), 200
+    else:
+        return jsonify(None), 200
 
 @app.route('/api/order/<int:order>', methods=['GET'])
 def show_order(order):

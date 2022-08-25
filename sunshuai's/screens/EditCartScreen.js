@@ -24,7 +24,7 @@ export default class EditCartScreen extends Component {
     this.state = {
       product_id: this.props.route.params.product_id,
       cart_id: this.props.route.params.cart_id,
-      cartItem: [],
+      cartItem: '',
       isFetching: false,
     };
     this._loadbyID = this._loadbyID.bind(this);
@@ -42,7 +42,7 @@ export default class EditCartScreen extends Component {
     console.log(url);
     this.setState({isFetching: true});
     fetch(url)
-      .then(response => {
+      .then((response) => {
         console.log(response);
         if (!response.ok) {
           Alert.alert('Error: ', response.status.toString());
@@ -146,12 +146,6 @@ export default class EditCartScreen extends Component {
     this._loadbyID();
   }
 
-  componentDidUpdate() {
-    this.props.navigation.setOptions({
-      headerTitle: 'Edit: ' + this.state.cartItem.id,
-    });
-  }
-
   render() {
     console.log(this.state.cartItem);
     return (
@@ -186,13 +180,11 @@ export default class EditCartScreen extends Component {
                       }}></TextInput>
                   </View>
                 </View>
-                
               </ScrollView>
-              
             );
           }}></FlatList>
-          <AppButton title={'SAVE'} onPress={this._update}></AppButton>
-          <AppButton title={'REMOVE'} onPress={this._remove}></AppButton>
+        <AppButton title={'SAVE'} onPress={this._update}></AppButton>
+        <AppButton title={'REMOVE'} onPress={this._remove}></AppButton>
       </View>
     );
   }

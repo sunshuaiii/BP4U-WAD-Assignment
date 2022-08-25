@@ -39,9 +39,9 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Octicons from 'react-native-vector-icons/Octicons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 
-LogBox.ignoreLogs(['EventEmitter.removeListener']);
-LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
-LogBox.ignoreLogs(['Found Screens with the same name nested']);
+LogBox.ignoreAllLogs();
+
+let config = require('./Config');
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -54,9 +54,9 @@ const ProfileStack = () => {
       screenOptions={{
         headerShown: false,
       }}>
+      <Stack.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Register" component={RegisterScreen} />
-      <Stack.Screen name="Profile" component={ProfileScreen} />
     </Stack.Navigator>
   );
 };
@@ -135,7 +135,7 @@ const MyTab = () => {
         name="Cart"
         component={CartStack}
         options={{
-          tabBarBadge: 0,
+          tabBarBadge: this.state.cartQuantity.total,
           tabBarIcon: () => {
             return (
               <SimpleLineIcons
@@ -149,7 +149,7 @@ const MyTab = () => {
         name="History"
         component={HistoryScreen}
         options={{
-          tabBarBadge: 0,
+          tabBarBadge: this.state.historyQuantity.total,
           tabBarIcon: () => {
             return (
               <AntDesign
@@ -164,6 +164,7 @@ const MyTab = () => {
 };
 
 class MyDrawerComponent extends Component {
+
   render() {
     return (
       <View style={{flex: 1, backgroundColor: 'black'}}>
@@ -196,6 +197,76 @@ class MyDrawerComponent extends Component {
 }
 
 export default class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      cartQuantity: '',
+      historyQuantity: '',
+      cart_id: '60005',
+      member_id: '10005',
+      isFetching: false,
+    };
+    this._loadCartQuantity = this._loadCartQuantity.bind(this);
+    this._loadHistoryQuantity = this._loadHistoryQuantity.bind(this);
+  }
+
+  _loadCartQuantity() {
+    let url =
+      config.settings.serverPath +
+      '/api/cart-item/total-quantity/' +
+      this.state.cart_id;
+    console.log(url);
+    this.setState({isFetching: true});
+    fetch(url)
+      .then((response) => {
+        console.log(response);
+        if (!response.ok) {
+          Alert.alert('Error: ', response.status.toString());
+          throw Error('Error' + response.status);
+        }
+        this.setState({isFetching: false});
+        return response.json();
+      })
+      .then(cartQuantity => {
+        console.log(cartQuantity);
+        this.setState({cartQuantity: cartQuantity});
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+
+  _loadHistoryQuantity() {
+    let url =
+      config.settings.serverPath +
+      '/api/order/total-quantity/' +
+      this.state.member_id;
+    console.log(url);
+    this.setState({isFetching: true});
+    fetch(url)
+      .then((response) => {
+        console.log(response);
+        if (!response.ok) {
+          Alert.alert('Error: ', response.status.toString());
+          throw Error('Error' + response.status);
+        }
+        this.setState({isFetching: false});
+        return response.json();
+      })
+      .then(historyQuantity => {
+        console.log(historyQuantity);
+        this.setState({historyQuantity: historyQuantity});
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+
+  componentDidMount(){
+    this._loadCartQuantity();
+    this._loadHistoryQuantity();
+  }
+
   render() {
     return (
       <NavigationContainer>
