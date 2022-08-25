@@ -83,7 +83,7 @@ export default class ProductDetailsScreen extends Component {
       })
       .then(respondJson => {
         if (respondJson.affected > 0) {
-          Alert.alert('Record SAVED for', this.state.productId.toString());
+          Alert.alert('Item successfully added to your cart!');
         } else {
           Alert.alert('Error in SAVING');
         }
@@ -138,12 +138,9 @@ export default class ProductDetailsScreen extends Component {
       })
       .then(respondJson => {
         if (respondJson.affected > 0) {
-          Alert.alert('Record UPDATED for', this.state.name);
         } else {
           Alert.alert('Error in UPDATING');
         }
-        this.props.route.params._refresh();
-        this.props.navigation.goBack();
       })
       .catch(error => {
         console.log(error);
@@ -177,7 +174,7 @@ export default class ProductDetailsScreen extends Component {
       })
       .then(respondJson => {
         if (respondJson.affected > 0) {
-          Alert.alert('Record UPDATED');
+          Alert.alert('Item successfully added to your cart!');
         } else {
           Alert.alert('Error in UPDATING');
         }
@@ -220,12 +217,10 @@ export default class ProductDetailsScreen extends Component {
     // if the product is not in the cart, put the product to the cart
     if (this.state.quantityInCart.quantity == 0) {
       this._insertCartItem();
-      Alert.alert('Item successfully added to your cart!');
     }
     // product in the cart, quantity +1
     else {
       this._updateCartItemQuantity();
-      Alert.alert('Item already added to your cart!');
     }
     // update cart total
     this._queryCartTotal();

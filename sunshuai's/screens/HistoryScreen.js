@@ -71,11 +71,13 @@ export default class HistoryScreen extends Component<Props> {
               </Text>
             </View>
             <Button
-              title="View Order Items"
+              title='View Order Items'
               onPress={() => {
-                this.props.navigation.navigate('OrderItem')
-              }}
-            />
+                this.props.navigation.navigate('OrderItem', {
+                  order_id: item.order_id,
+                  refresh: this._query,
+                });
+              }} />
           </View>
 
         )}

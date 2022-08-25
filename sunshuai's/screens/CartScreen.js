@@ -22,14 +22,17 @@ export default class CartScreen extends Component {
     super(props);
     this.state = {
       cartItem: [],
-      cart_id: "60001",
+      cart_id: '60005',
       isFetching: false,
     };
     this._load = this._load.bind(this);
   }
 
   _load() {
-    let url = config.settings.serverPath + '/api/cart-item/incart/' + this.state.cart_id;
+    let url =
+      config.settings.serverPath +
+      '/api/cart-item/incart/' +
+      this.state.cart_id;
     console.log(url);
     this.setState({isFetching: true});
     fetch(url)
@@ -57,14 +60,14 @@ export default class CartScreen extends Component {
 
   render() {
     return (
-      <View>
+      <View style={{backgroundColor: 'pink'}}>
         <FlatList
           refreshing={this.state.isFetching}
           onRefresh={this._load}
           data={this.state.cartItem}
           renderItem={({item}) => {
             return (
-              <ScrollView style={{marginbottom: 80}}>
+              <ScrollView style={{marginbottom: 100, paddingBottom: '10%'}}>
                 <View style={{flexDirection: 'row', height: 150}}>
                   <View style={{flex: 1}}>
                     <Image
@@ -74,7 +77,7 @@ export default class CartScreen extends Component {
 
                   <View style={{flex: 2}}>
                     <Text style={styles.itemName}>{item.name}</Text>
-                    <Text style={styles.itemPrice}>{item.price}</Text>
+                    <Text style={styles.itemPrice}>RM {item.price}</Text>
                     <View style={{flexDirection: 'row'}}>
                       <Text style={styles.itemQuantity}>
                         Quantity: {item.quantity}
@@ -83,11 +86,18 @@ export default class CartScreen extends Component {
                         style={styles.editButton}
                         onPress={() =>
                           this.props.navigation.navigate('EditCart', {
-                            id: item.id,
+                            cart_id: this.state.cart_id,
+                            product_id: item.id, //cart_item_id
                             refresh: this._load,
                           })
                         }>
-                        <Text style={{color: 'black'}}>Edit Cart</Text>
+                        <Text
+                          style={{
+                            color: 'black',
+                            fontSize: 15,
+                          }}>
+                          Edit Cart
+                        </Text>
                       </TouchableOpacity>
                     </View>
                   </View>
@@ -99,12 +109,12 @@ export default class CartScreen extends Component {
           style={styles.checkoutButton}
           onPress={() =>
             this.props.navigation.navigate('Payment', {
-              
+              id: this.state.cart_id,
+              refresh: this._load,
             })
-          }
-          >
-          <View style = {styles.floatingButton}>
-            <Text style = {{color:'black'}}>CHECK OUT</Text>
+          }>
+          <View style={styles.floatingButton}>
+            <Text style={{color: 'white'}}>CHECK OUT</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -114,8 +124,8 @@ export default class CartScreen extends Component {
 
 const styles = StyleSheet.create({
   image: {
-    height: 100,
-    width: 100,
+    height: 110,
+    width: 110,
     margin: 15,
   },
 
@@ -129,7 +139,7 @@ const styles = StyleSheet.create({
     marginTop: -5,
     margin: 15,
     color: '#FF4023',
-    fontSize: 13.5,
+    fontSize: 18,
   },
 
   itemQuantity: {
@@ -140,14 +150,16 @@ const styles = StyleSheet.create({
   },
 
   editButton: {
-    width: 65,
+    width: 80,
     height: 30,
-    backgroundColor: '#FF9F00',
-    borderWidth: 1,
+    backgroundColor: 'mistyrose',
+    borderWidth: 2,
     borderRadius: 5,
-    borderColor: 'black',
+    borderColor: 'hotpink',
+    alignItems: 'center',
+    justifyContent: 'center',
     padding: 3,
-    marginTop: -10,
+    marginTop: -20,
     marginLeft: 40,
   },
 
@@ -157,9 +169,10 @@ const styles = StyleSheet.create({
     height: 45,
     alignItems: 'center',
     justifyContent: 'center',
-    right: 0,
+    right: '5%',
     top: 585,
-    backgroundColor: 'pink',
+    backgroundColor: 'black',
+    borderRadius: 4,
   },
 
   floatingButton: {

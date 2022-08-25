@@ -18,7 +18,7 @@ export default class PaymentScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      // cartId: this.props.route.params.cartId,
+      cartId: this.props.route.params.id,
       cartId: '60001',
       shippingAddress: '',
       shippingFee: '',

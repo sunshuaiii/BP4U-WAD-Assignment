@@ -22,19 +22,23 @@ export default class EditCartScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      id: this.props.route.params.id,
+      product_id: this.props.route.params.product_id,
+      cart_id: this.props.route.params.cart_id,
       cartItem: [],
-      cart_id: '',
-      product_id: '',
-      quantity: '',
       isFetching: false,
     };
     this._loadbyID = this._loadbyID.bind(this);
     this._update = this._update.bind(this);
+    this._remove = this._remove.bind(this);
   }
 
   _loadbyID() {
-    let url = config.settings.serverPath + '/api/cart-item/' + this.state.id;
+    let url =
+      config.settings.serverPath +
+      '/api/cart-item/incart/' +
+      this.state.cart_id +
+      '/' +
+      this.state.product_id;
     console.log(url);
     this.setState({isFetching: true});
     fetch(url)
@@ -49,12 +53,7 @@ export default class EditCartScreen extends Component {
       })
       .then(cartItem => {
         console.log(cartItem);
-        this.setState({
-          cartItem: cartItem,
-          cart_id: cartItem.ci_cart_id,
-          product_id: cartItem.ci_product_id,
-          quantity: cartItem.ci_quantity,
-        });
+        this.setState({cartItem: cartItem});
       })
       .catch(error => {
         console.log(error);
@@ -93,12 +92,54 @@ export default class EditCartScreen extends Component {
         } else {
           Alert.alert('Error in UPDATING');
         }
-        this.props.route.params._refresh();
-        this.props.navigation.goBack();
       })
       .catch(error => {
         console.log(error);
       });
+    this.props.route.params.refresh();
+    this.props.navigation.goBack();
+  }
+
+  _remove() {
+    Alert.alert('Confirm to DELETE', this.state.id, [
+      {
+        text: 'No',
+        onPress: () => {},
+      },
+      {
+        text: 'Yes',
+        onPress: () => {
+          let url =
+            config.settings.serverPath + '/api/cart-item/' + this.state.id;
+          console.log(url);
+          fetch(url, {
+            method: 'DELETE',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({id: this.state.id}),
+          })
+            .then(response => {
+              if (!response.ok) {
+                Alert.alert('Error:', response.status.toString());
+                throw Error('Error ' + response.status);
+              }
+              return response.json();
+            })
+            .then(responseJson => {
+              if (responseJson.affected == 0) {
+                Alert.alert('Error in DELETING');
+              }
+            })
+            .catch(error => {
+              console.error(error);
+            });
+          this.props.route.params.refresh();
+          this.props.navigation.goBack();
+        },
+      },
+    ]);
   }
 
   componentDidMount() {
@@ -106,33 +147,53 @@ export default class EditCartScreen extends Component {
   }
 
   componentDidUpdate() {
-    this.props.navigation.setOptions({headerTitle: 'Edit: ' + this.state.id});
+    this.props.navigation.setOptions({
+      headerTitle: 'Edit: ' + this.state.cartItem.id,
+    });
   }
 
   render() {
+    console.log(this.state.cartItem);
     return (
-      <ScrollView style={{flex: 1, margin: 5}}>
-        <View style={{flexDirection: 'row', height: 150}}>
-          <View style={{flex: 1}}>
-            {/* <Image
-              source={require('../assets/productImages/bpshirt.jpg')}
-              style={styles.image}></Image> */}
-          </View>
+      <View>
+        <FlatList
+          refreshing={this.state.isFetching}
+          onRefresh={this._loadbyID}
+          data={this.state.cartItem}
+          renderItem={({item}) => {
+            return (
+              <ScrollView style={{flex: 1, margin: 5}}>
+                <View style={{flexDirection: 'row', height: 150}}>
+                  <View style={{flex: 1}}>
+                    <Image style={styles.image}>
+                      {this.state.cartItem.photo}
+                    </Image>
+                  </View>
 
-          <View style={{flex: 2}}>
-            <Text style={styles.itemName}>{this.state.id}</Text>
-            <Text style={styles.itemPrice}>Price: RM 149.99</Text>
-            <TextInput
-              label={'Quantity'}
-              placeholder={'Enter your quantity'}
-              value={this.state.quantity}
-              onChangeText={quantity => {
-                this.setState({quantity});
-              }}></TextInput>
-          </View>
-        </View>
-        <AppButton title={'SAVE'} onPress={this._update}></AppButton>
-      </ScrollView>
+                  <View style={{flex: 2}}>
+                    <Text style={styles.itemName}>
+                      {this.state.cartItem.name}
+                    </Text>
+                    <Text style={styles.itemPrice}>
+                      {this.state.cartItem.price}
+                    </Text>
+                    <TextInput
+                      label={'Quantity'}
+                      placeholder={'Enter your quantity'}
+                      value={this.state.cartItem.quantity}
+                      onChangeText={quantity => {
+                        this.setState({quantity});
+                      }}></TextInput>
+                  </View>
+                </View>
+                
+              </ScrollView>
+              
+            );
+          }}></FlatList>
+          <AppButton title={'SAVE'} onPress={this._update}></AppButton>
+          <AppButton title={'REMOVE'} onPress={this._remove}></AppButton>
+      </View>
     );
   }
 }
@@ -167,6 +228,7 @@ const styles = StyleSheet.create({
   quantityButton: {
     width: 40,
     height: 40,
+    borderRadius: 4,
   },
 
   removeButton: {
@@ -179,5 +241,6 @@ const styles = StyleSheet.create({
     padding: 3,
     marginTop: -10,
     marginLeft: 40,
+    borderRadius: 4,
   },
 });
