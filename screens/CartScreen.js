@@ -74,7 +74,7 @@ export default class CartScreen extends Component {
 
                   <View style={{flex: 2}}>
                     <Text style={styles.itemName}>{item.name}</Text>
-                    <Text style={styles.itemPrice}>{item.price}</Text>
+                    <Text style={styles.itemPrice}>RM {item.price}</Text>
                     <View style={{flexDirection: 'row'}}>
                       <Text style={styles.itemQuantity}>
                         Quantity: {item.quantity}
@@ -84,7 +84,7 @@ export default class CartScreen extends Component {
                         onPress={() =>
                           this.props.navigation.navigate('EditCart', {
                             cart_id: this.state.cart_id,
-                            id: item.id, //cart_item_id
+                            product_id: item.id, //cart_item_id
                             refresh: this._load,
                           })
                         }>
@@ -100,7 +100,7 @@ export default class CartScreen extends Component {
           style={styles.checkoutButton}
           onPress={() =>
             this.props.navigation.navigate('Payment', {
-              id: cart_id,
+              id: this.state.cart_id,
               refresh:this._load,
             })
           }

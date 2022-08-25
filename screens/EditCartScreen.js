@@ -8,7 +8,7 @@ import {
   Button,
   TouchableOpacity,
   FlatList,
-  Alert
+  Alert,
 } from 'react-native';
 import {TouchableHighlight, ScrollView} from 'react-native-gesture-handler';
 import {color} from 'react-native-reanimated';
@@ -22,15 +22,9 @@ export default class EditCartScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      id: this.props.route.params.id, //70001
-      cart_id: this.props.route.params.cart_id, //60001
+      product_id: this.props.route.params.product_id,
+      cart_id: this.props.route.params.cart_id,
       cartItem: [],
-      name:'',
-      photo:'',
-      price:'',
-      cart_id: '',
-      product_id: '',
-      quantity: '',
       isFetching: false,
     };
     this._loadbyID = this._loadbyID.bind(this);
@@ -39,7 +33,12 @@ export default class EditCartScreen extends Component {
   }
 
   _loadbyID() {
-    let url = config.settings.serverPath + '/api/cart-item/incart/' + this.state.cart_id + '/' + this.state.id;
+    let url =
+      config.settings.serverPath +
+      '/api/cart-item/incart/' +
+      this.state.cart_id +
+      '/' +
+      this.state.product_id;
     console.log(url);
     this.setState({isFetching: true});
     fetch(url)
@@ -54,13 +53,7 @@ export default class EditCartScreen extends Component {
       })
       .then(cartItem => {
         console.log(cartItem);
-        this.setState({
-          cartItem: cartItem,
-          name: cartItem.name,
-          photo: cartItem.photo,
-          price: cartItem.price,
-          quantity: cartItem.ci_quantity,
-        });
+        this.setState({cartItem: cartItem});
       })
       .catch(error => {
         console.log(error);
@@ -103,8 +96,8 @@ export default class EditCartScreen extends Component {
       .catch(error => {
         console.log(error);
       });
-      this.props.route.params.refresh();
-      this.props.navigation.goBack();
+    this.props.route.params.refresh();
+    this.props.navigation.goBack();
   }
 
   _remove() {
@@ -116,7 +109,8 @@ export default class EditCartScreen extends Component {
       {
         text: 'Yes',
         onPress: () => {
-          let url = config.settings.serverPath + '/api/cart-item/' + this.state.id;
+          let url =
+            config.settings.serverPath + '/api/cart-item/' + this.state.id;
           console.log(url);
           fetch(url, {
             method: 'DELETE',
@@ -153,32 +147,51 @@ export default class EditCartScreen extends Component {
   }
 
   componentDidUpdate() {
-    this.props.navigation.setOptions({headerTitle: 'Edit: ' + this.state.id});
+    this.props.navigation.setOptions({
+      headerTitle: 'Edit: ' + this.state.cartItem.id,
+    });
   }
 
   render() {
+    console.log(this.state.cartItem);
     return (
-      <ScrollView style={{flex: 1, margin: 5}}>
-        <View style={{flexDirection: 'row', height: 150}}>
-          <View style={{flex: 1}}>
-            <Image style={styles.image}>{this.state.image}</Image>
-          </View>
+      <View>
+        <FlatList
+          refreshing={this.state.isFetching}
+          onRefresh={this._loadbyID}
+          data={this.state.cartItem}
+          renderItem={({item}) => {
+            return (
+              <ScrollView style={{flex: 1, margin: 5}}>
+                <View style={{flexDirection: 'row', height: 150}}>
+                  <View style={{flex: 1}}>
+                    <Image style={styles.image}>
+                      {this.state.cartItem.photo}
+                    </Image>
+                  </View>
 
-          <View style={{flex: 2}}>
-            <Text style={styles.itemName}>{this.state.name}</Text>
-            <Text style={styles.itemPrice}>{this.state.price}</Text>
-            <TextInput
-              label={'Quantity'}
-              placeholder={'Enter your quantity'}
-              value={this.state.quantity}
-              onChangeText={quantity => {
-                this.setState({quantity});
-              }}></TextInput>
-          </View>
-        </View>
-        <AppButton title={'SAVE'} onPress={this._update}></AppButton>
-        <AppButton title={'REMOVE'} onPress={this._remove}></AppButton>
-      </ScrollView>
+                  <View style={{flex: 2}}>
+                    <Text style={styles.itemName}>
+                      {this.state.cartItem.name}
+                    </Text>
+                    <Text style={styles.itemPrice}>
+                      {this.state.cartItem.price}
+                    </Text>
+                    <TextInput
+                      label={'Quantity'}
+                      placeholder={'Enter your quantity'}
+                      value={this.state.cartItem.quantity}
+                      onChangeText={quantity => {
+                        this.setState({quantity});
+                      }}></TextInput>
+                  </View>
+                </View>
+                <AppButton title={'SAVE'} onPress={this._update}></AppButton>
+                <AppButton title={'REMOVE'} onPress={this._remove}></AppButton>
+              </ScrollView>
+            );
+          }}></FlatList>
+      </View>
     );
   }
 }

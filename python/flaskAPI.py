@@ -14,6 +14,16 @@ def get_cart_row_as_dict(row):
 
     return row_dict
 
+def get_cart_item_in_cart_as_dict(row):
+    row_dict = {
+        'id': row[0],
+        'name': row[1],
+        'price': row[2],
+        'quantity': row[3],
+        'photo': row[4],
+    }
+
+    return row_dict
 
 def get_cart_item_row_as_dict(row):
     row_dict = {
@@ -25,6 +35,12 @@ def get_cart_item_row_as_dict(row):
 
     return row_dict
 
+def get_cart_total_as_dict(row):
+    row_dict = {
+        'total': row[0],
+    }
+
+    return row_dict
 
 def get_member_row_as_dict(row):
     row_dict = {
@@ -98,6 +114,13 @@ def get_product_row_as_dict(row):
 
     return row_dict
 
+def get_product_quantity_in_cart_as_dict(row):
+    row_dict = {
+        'quantity': row[0],
+    }
+
+    return row_dict
+
 
 app = Flask(__name__)
 
@@ -119,6 +142,21 @@ def index_cart():
         rows_as_dict.append(row_as_dict)
 
     return jsonify(rows_as_dict), 200
+
+# using
+@app.route('/api/cart/cart-total/<int:cart>', methods=['GET'])
+def show_cart_total(cart):
+    db = sqlite3.connect(DB)
+    cursor = db.cursor()
+    cursor.execute('SELECT round(SUM(product.product_price*(1-product.product_discount_percent) * cart_item.ci_quantity),2) FROM product INNER JOIN cart_item ON product.product_id = cart_item.ci_product_id WHERE cart_item.ci_cart_id=?', (str(cart),))
+    row = cursor.fetchone()
+    db.close()
+
+    if row:
+        row_as_dict = get_cart_total_as_dict(row)
+        return jsonify(row_as_dict), 200
+    else:
+        return jsonify(None), 200
 
 
 @app.route('/api/cart/<int:cart>', methods=['GET'])
@@ -167,6 +205,40 @@ def store_cart():
 
     return jsonify(response), 201
 
+# using
+@app.route('/api/cart/update-total/<int:cart>', methods=['PUT'])
+def update_cart_total(cart):
+    if not request.json:
+        abort(400)
+
+    if 'id' not in request.json:
+        abort(400)
+
+    if int(request.json['id']) != cart:
+        abort(400)
+
+    update_cart = (
+        request.json['total'],
+        str(cart),
+    )
+
+    db = sqlite3.connect(DB)
+    cursor = db.cursor()
+
+    cursor.execute('''
+        UPDATE cart SET cart_total=? WHERE cart_id=?
+    ''', update_cart)
+
+    db.commit()
+
+    response = {
+        'id': cart,
+        'affected': db.total_changes,
+    }
+
+    db.close()
+
+    return jsonify(response), 201
 
 @app.route('/api/cart/<int:cart>', methods=['PUT'])
 def update_cart(cart):
@@ -252,6 +324,43 @@ def index_cart_item():
     return jsonify(rows_as_dict), 200
 
 
+# using
+@app.route('/api/cart-item/incart/<int:cart_item>', methods=['GET'])
+def show_cart_item_in_cart(cart_item):
+    db = sqlite3.connect(DB)
+    cursor = db.cursor()
+    cursor.execute('SELECT ci_product_id, product_name, product_price,ci_quantity,product_photo FROM product INNER JOIN cart_item ON product.product_id=cart_item.ci_product_id WHERE cart_item.ci_cart_id=?', (str(cart_item),))
+    rows = cursor.fetchall()
+    print(rows)
+
+    db.close()
+
+    rows_as_dict = []
+    for row in rows:
+        row_as_dict = get_cart_item_in_cart_as_dict(row)
+        rows_as_dict.append(row_as_dict)
+
+    return jsonify(rows_as_dict), 200
+
+# using
+@app.route('/api/cart-item/incart/<int:cart_item>/<int:cart_item_index>', methods=['GET'])
+def show_index_cart_item_in_cart(cart_item, cart_item_index):
+    db = sqlite3.connect(DB)
+    cursor = db.cursor()
+    cursor.execute('SELECT ci_id, product_name, product_price,ci_quantity, product_photo FROM product INNER JOIN cart_item ON product.product_id=cart_item.ci_product_id WHERE cart_item.ci_cart_id=? AND cart_item.ci_product_id=?', (str(cart_item), str(cart_item_index),))
+    rows = cursor.fetchall()
+    print(rows)
+
+    db.close()
+
+    rows_as_dict = []
+    for row in rows:
+        row_as_dict = get_cart_item_in_cart_as_dict(row)
+        rows_as_dict.append(row_as_dict)
+
+    return jsonify(rows_as_dict), 200
+
+
 @app.route('/api/cart-item/<int:cart_item>', methods=['GET'])
 def show_cart_item(cart_item):
     db = sqlite3.connect(DB)
@@ -266,7 +375,7 @@ def show_cart_item(cart_item):
     else:
         return jsonify(None), 200
 
-
+# using
 @app.route('/api/cart-item', methods=['POST'])
 def store_cart_item():
     if not request.json:
@@ -282,8 +391,7 @@ def store_cart_item():
     cursor = db.cursor()
 
     cursor.execute('''
-        INSERT INTO cart_item(ci_cart_id,ci_product_id,ci_quantity)
-        VALUES(?,?)
+        INSERT INTO cart_item(ci_cart_id, ci_product_id, ci_quantity) VALUES (?,?,?)
     ''', new_cart_item)
 
     cart_item_id = cursor.lastrowid
@@ -292,6 +400,37 @@ def store_cart_item():
 
     response = {
         'id': cart_item_id,
+        'affected': db.total_changes,
+    }
+
+    db.close()
+
+    return jsonify(response), 201
+
+# using
+@app.route('/api/cart-item/update-quantity/<int:cart_id>/<int:product_id>', methods=['PUT'])
+def update_cart_item_quantity(cart_id, product_id):
+    if not request.json:
+        abort(400)
+
+    update_cart_item = (
+        request.json['quantity'],
+        str(cart_id),
+        str(product_id),
+    )
+
+    db = sqlite3.connect(DB)
+    cursor = db.cursor()
+
+    cursor.execute('''
+        UPDATE cart_item SET ci_quantity=? WHERE ci_cart_id=? AND ci_product_id=?
+    ''', update_cart_item)
+
+    db.commit()
+
+    response = {
+        'ci_cart_id': cart_id,
+        'ci_product_id': product_id,
         'affected': db.total_changes,
     }
 
@@ -914,7 +1053,7 @@ def delete_payment(payment):
 
     return jsonify(response), 201
 
-
+# using
 @app.route('/api/product', methods=['GET'])
 def index_product():
     db = sqlite3.connect(DB)
@@ -933,7 +1072,24 @@ def index_product():
 
     return jsonify(rows_as_dict), 200
 
+# using
+@app.route('/api/product/quantity-in-cart/<int:cart>/<int:product>', methods=['GET'])
+def get_product_quantity_in_cart(cart, product):
+    db = sqlite3.connect(DB)
+    cursor = db.cursor()
 
+    cursor.execute('SELECT COUNT(*) FROM cart_item WHERE ci_cart_id=? AND ci_product_id=?', (str(cart), str(product),))
+    row = cursor.fetchone()
+    db.close()
+
+    if row:
+        row_as_dict = get_product_quantity_in_cart_as_dict(row)
+        return jsonify(row_as_dict), 200
+    else:
+        return jsonify(None), 200
+
+
+# using
 @app.route('/api/product/new-released', methods=['GET'])
 def index_new_released_products():
     db = sqlite3.connect(DB)
@@ -953,7 +1109,7 @@ def index_new_released_products():
 
     return jsonify(rows_as_dict), 200
 
-
+# using
 @app.route('/api/product/on-sales', methods=['GET'])
 def index_on_sales_products():
     db = sqlite3.connect(DB)
@@ -973,7 +1129,7 @@ def index_on_sales_products():
 
     return jsonify(rows_as_dict), 200
 
-
+# using
 @app.route('/api/product/album', methods=['GET'])
 def index_product_album():
     db = sqlite3.connect(DB)
@@ -993,7 +1149,7 @@ def index_product_album():
 
     return jsonify(rows_as_dict), 200
 
-
+# using
 @app.route('/api/product/magazine', methods=['GET'])
 def index_product_magazine():
     db = sqlite3.connect(DB)
@@ -1013,7 +1169,7 @@ def index_product_magazine():
 
     return jsonify(rows_as_dict), 200
 
-
+# using
 @app.route('/api/product/fashion', methods=['GET'])
 def index_product_fashion():
     db = sqlite3.connect(DB)
