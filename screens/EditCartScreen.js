@@ -8,7 +8,7 @@ import {
   Button,
   TouchableOpacity,
   FlatList,
-  Alert,
+  Alert
 } from 'react-native';
 import {TouchableHighlight, ScrollView} from 'react-native-gesture-handler';
 import {color} from 'react-native-reanimated';
@@ -22,8 +22,12 @@ export default class EditCartScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      id: this.props.route.params.id,
+      id: this.props.route.params.id, //70001
+      cart_id: this.props.route.params.cart_id, //60001
       cartItem: [],
+      name:'',
+      photo:'',
+      price:'',
       cart_id: '',
       product_id: '',
       quantity: '',
@@ -31,10 +35,11 @@ export default class EditCartScreen extends Component {
     };
     this._loadbyID = this._loadbyID.bind(this);
     this._update = this._update.bind(this);
+    this._remove = this._remove.bind(this);
   }
 
   _loadbyID() {
-    let url = config.settings.serverPath + '/api/cart-item/' + this.state.id;
+    let url = config.settings.serverPath + '/api/cart-item/incart/' + this.state.cart_id + '/' + this.state.id;
     console.log(url);
     this.setState({isFetching: true});
     fetch(url)
@@ -51,8 +56,9 @@ export default class EditCartScreen extends Component {
         console.log(cartItem);
         this.setState({
           cartItem: cartItem,
-          cart_id: cartItem.ci_cart_id,
-          product_id: cartItem.ci_product_id,
+          name: cartItem.name,
+          photo: cartItem.photo,
+          price: cartItem.price,
           quantity: cartItem.ci_quantity,
         });
       })
@@ -93,12 +99,53 @@ export default class EditCartScreen extends Component {
         } else {
           Alert.alert('Error in UPDATING');
         }
-        this.props.route.params._refresh();
-        this.props.navigation.goBack();
       })
       .catch(error => {
         console.log(error);
       });
+      this.props.route.params.refresh();
+      this.props.navigation.goBack();
+  }
+
+  _remove() {
+    Alert.alert('Confirm to DELETE', this.state.id, [
+      {
+        text: 'No',
+        onPress: () => {},
+      },
+      {
+        text: 'Yes',
+        onPress: () => {
+          let url = config.settings.serverPath + '/api/cart-item/' + this.state.id;
+          console.log(url);
+          fetch(url, {
+            method: 'DELETE',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({id: this.state.id}),
+          })
+            .then(response => {
+              if (!response.ok) {
+                Alert.alert('Error:', response.status.toString());
+                throw Error('Error ' + response.status);
+              }
+              return response.json();
+            })
+            .then(responseJson => {
+              if (responseJson.affected == 0) {
+                Alert.alert('Error in DELETING');
+              }
+            })
+            .catch(error => {
+              console.error(error);
+            });
+          this.props.route.params.refresh();
+          this.props.navigation.goBack();
+        },
+      },
+    ]);
   }
 
   componentDidMount() {
@@ -114,14 +161,12 @@ export default class EditCartScreen extends Component {
       <ScrollView style={{flex: 1, margin: 5}}>
         <View style={{flexDirection: 'row', height: 150}}>
           <View style={{flex: 1}}>
-            <Image
-              source={require('../assets/productImages/bpshirt.jpg')}
-              style={styles.image}></Image>
+            <Image style={styles.image}>{this.state.image}</Image>
           </View>
 
           <View style={{flex: 2}}>
-            <Text style={styles.itemName}>{this.state.id}</Text>
-            <Text style={styles.itemPrice}>Price: RM 149.99</Text>
+            <Text style={styles.itemName}>{this.state.name}</Text>
+            <Text style={styles.itemPrice}>{this.state.price}</Text>
             <TextInput
               label={'Quantity'}
               placeholder={'Enter your quantity'}
@@ -132,6 +177,7 @@ export default class EditCartScreen extends Component {
           </View>
         </View>
         <AppButton title={'SAVE'} onPress={this._update}></AppButton>
+        <AppButton title={'REMOVE'} onPress={this._remove}></AppButton>
       </ScrollView>
     );
   }
