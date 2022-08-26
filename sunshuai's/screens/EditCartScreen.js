@@ -25,6 +25,7 @@ export default class EditCartScreen extends Component {
       product_id: this.props.route.params.product_id,
       cart_id: this.props.route.params.cart_id,
       cartItem: [],
+      quantity: '',
       isFetching: false,
     };
     this._loadbyID = this._loadbyID.bind(this);
@@ -61,10 +62,12 @@ export default class EditCartScreen extends Component {
   }
 
   _update() {
-    console.log(this.state.id);
-    let url = config.settings.serverPath + '/api/cart-item/' + this.state.id;
-    this.setState({isFetching: true});
-    console.log(url);
+    let url =
+      config.settings.serverPath +
+      '/api/cart-item/update-quantity/id/' +
+      this.state.cartItem.map(c => c.id).toString() +
+      '/' +
+      this.state.quantity;
 
     fetch(url, {
       method: 'PUT',
@@ -72,10 +75,7 @@ export default class EditCartScreen extends Component {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        id: this.state.id,
-        quantity: this.state.quantity,
-      }),
+      body: JSON.stringify({}),
     })
       .then(response => {
         console.log(response);
@@ -88,7 +88,7 @@ export default class EditCartScreen extends Component {
       })
       .then(respondJson => {
         if (respondJson.affected > 0) {
-          Alert.alert('Record UPDATED for', this.state.quantity.toString());
+          Alert.alert('Item quantity updated!');
         } else {
           Alert.alert('Error in UPDATING');
         }
@@ -96,8 +96,6 @@ export default class EditCartScreen extends Component {
       .catch(error => {
         console.log(error);
       });
-    this.props.route.params.refresh();
-    this.props.navigation.goBack();
   }
 
   _remove() {
@@ -110,7 +108,7 @@ export default class EditCartScreen extends Component {
         text: 'Yes',
         onPress: () => {
           let url =
-            config.settings.serverPath + '/api/cart-item/' + this.state.id;
+            config.settings.serverPath + '/api/cart-item/' + this.state.cartItem.map(c => c.id).toString();
           console.log(url);
           fetch(url, {
             method: 'DELETE',
@@ -118,7 +116,7 @@ export default class EditCartScreen extends Component {
               Accept: 'application/json',
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({id: this.state.id}),
+            body: JSON.stringify({id: this.state.cartItem.map(c => c.id).toString()}),
           })
             .then(response => {
               if (!response.ok) {
@@ -130,6 +128,9 @@ export default class EditCartScreen extends Component {
             .then(responseJson => {
               if (responseJson.affected == 0) {
                 Alert.alert('Error in DELETING');
+              }
+              else{
+                Alert.alert('Item removed from your cart!');
               }
             })
             .catch(error => {
@@ -147,41 +148,45 @@ export default class EditCartScreen extends Component {
   }
 
   render() {
+    let path = this.state.cartItem.map(c => c.photo).toString();
+    console.log(path);
     return (
-      <View>
+      <View style={styles.container}>
         <FlatList
+          style={{marginBottom: 50}}
           refreshing={this.state.isFetching}
           onRefresh={this._loadbyID}
           data={this.state.cartItem}
           renderItem={({item}) => {
             return (
-              <ScrollView style={{flex: 1, margin: 5}}>
+              <ScrollView style={{marginBottom: 40, padding: 10}}>
                 <View style={{flexDirection: 'row', height: 150}}>
-                  {/* <View style={{flex: 1}}>
-                    <Image
-                      style={styles.image}
-                      source={{uri: this.state.cartItem.map(c => c.photo)}}></Image>
-                  </View> */}
+                  <View style={{flex: 1}}>
+                    <Image style={styles.image} source={{uri: path}}></Image>
+                  </View>
 
                   <View style={{flex: 2}}>
                     <Text style={styles.itemName}>
                       {this.state.cartItem.map(c => c.name)}
                     </Text>
                     <Text style={styles.itemPrice}>
-                      {this.state.cartItem.map(c => c.price)}
+                      RM {this.state.cartItem.map(c => c.price)}
                     </Text>
-                    <TextInput
-                      label={'Quantity'}
-                      placeholder={'Enter your quantity'}
-                      value={this.state.cartItem.map(c => c.quantity)}
-                      onChangeText={quantity => {
-                        this.setState({quantity});
-                      }}></TextInput>
                   </View>
                 </View>
               </ScrollView>
             );
           }}></FlatList>
+        <View style={styles.input}>
+          <Text> Quantity: {this.state.cartItem.map(c => c.quantity)}</Text>
+          <TextInput
+            style={{fontSize: 20}}
+            placeholder={'Enter your quantity'}
+            value={this.state.cartItem.map(c => c.quantity)}
+            onChangeText={quantity => {
+              this.setState({quantity: quantity});
+            }}></TextInput>
+        </View>
         <AppButton title={'SAVE'} onPress={this._update}></AppButton>
         <AppButton title={'REMOVE'} onPress={this._remove}></AppButton>
       </View>
@@ -190,48 +195,38 @@ export default class EditCartScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    paddingBottom: '15%',
+    marginBottom: '15%',
+    backgroundColor: 'pink',
+    padding: 16,
+  },
   image: {
-    height: 100,
-    width: 100,
+    height: 110,
+    width: 110,
     margin: 15,
   },
 
   itemName: {
-    margin: 15,
+    margin: 20,
     fontSize: 20,
     color: 'black',
   },
 
   itemPrice: {
     marginTop: -5,
-    margin: 15,
+    margin: 20,
     color: '#FF4023',
-    fontSize: 13.5,
+    fontSize: 18,
   },
-
-  itemQuantity: {
-    marginTop: -5,
-    margin: 15,
-    color: 'black',
-    fontSize: 13.5,
-  },
-
-  quantityButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 4,
-  },
-
-  removeButton: {
-    width: 65,
-    height: 30,
-    backgroundColor: '#FF9F00',
+  input: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 50,
+    color: '#FF4023',
     borderWidth: 1,
-    borderRadius: 5,
-    borderColor: 'black',
-    padding: 3,
-    marginTop: -10,
-    marginLeft: 40,
-    borderRadius: 4,
+    padding: 5,
+    marginHorizontal: 50,
+    backgroundColor: 'mistyrose',
   },
 });

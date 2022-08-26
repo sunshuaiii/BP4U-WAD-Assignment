@@ -363,7 +363,7 @@ def show_cart_item_in_cart(cart_item):
 def show_index_cart_item_in_cart(cart_item, cart_item_index):
     db = sqlite3.connect(DB)
     cursor = db.cursor()
-    cursor.execute('SELECT cart_item.ci_id, product_name, product_price, cart_item.ci_quantity, product_photo FROM product INNER JOIN cart_item ON product.product_id=cart_item.ci_product_id WHERE cart_item.ci_cart_id=? AND cart_item.ci_product_id=?', (str(cart_item), str(cart_item_index)))
+    cursor.execute('SELECT cart_item.ci_id, product_name, round(product.product_price*(1-product.product_discount_percent),2), cart_item.ci_quantity, product_photo FROM product INNER JOIN cart_item ON product.product_id=cart_item.ci_product_id WHERE cart_item.ci_cart_id=? AND cart_item.ci_product_id=?', (str(cart_item), str(cart_item_index)))
     rows = cursor.fetchall()
 
     print(rows)
@@ -448,6 +448,30 @@ def update_cart_item_quantity(cart_id, product_id):
 
     return jsonify(response), 201
 
+# using
+@app.route('/api/cart-item/update-quantity/id/<int:cart_item_id>/<int:quantity>', methods=['PUT'])
+def update_cart_item_quantity_use_id(cart_item_id, quantity):
+
+    update_cart_item = (
+        str(quantity),
+        str(cart_item_id),
+    )
+
+    db = sqlite3.connect(DB)
+    cursor = db.cursor()
+
+    cursor.execute('''
+        UPDATE cart_item SET ci_quantity=? WHERE ci_id=?
+    ''', update_cart_item)
+
+    db.commit()
+
+    response = {
+        'affected': db.total_changes,
+    }
+
+    return jsonify(response), 201
+
 
 @app.route('/api/cart-item/<int:cart_item>', methods=['PUT'])
 def update_cart_item(cart_item):
@@ -485,7 +509,7 @@ def update_cart_item(cart_item):
 
     return jsonify(response), 201
 
-
+# using
 @app.route('/api/cart-item/<int:cart_item>', methods=['DELETE'])
 def delete_cart_item(cart_item):
     if not request.json:

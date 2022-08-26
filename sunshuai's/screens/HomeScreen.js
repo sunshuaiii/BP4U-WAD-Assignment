@@ -252,11 +252,6 @@ export default class HomeScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'lightpink',
-    paddingBottom: '5%',
-    marginBottom: '5%',
-  },
   header: {
     justifyContent: 'center',
     alignItems: 'center',

@@ -67,7 +67,7 @@ export default class CartScreen extends Component {
           data={this.state.cartItem}
           renderItem={({item}) => {
             return (
-              <ScrollView style={{marginbottom: 100, paddingBottom: '10%'}}>
+              <ScrollView style={{paddingBottom: '10%'}}>
                 <View style={{flexDirection: 'row', height: 150}}>
                   <View style={{flex: 1}}>
                     <Image

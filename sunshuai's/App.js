@@ -135,7 +135,7 @@ const MyTab = () => {
         name="Cart"
         component={CartStack}
         options={{
-          tabBarBadge: this.state.cartQuantity.total,
+          tabBarBadge: 0,
           tabBarIcon: () => {
             return (
               <SimpleLineIcons
@@ -149,7 +149,7 @@ const MyTab = () => {
         name="History"
         component={HistoryScreen}
         options={{
-          tabBarBadge: this.state.historyQuantity.total,
+          tabBarBadge: 0,
           tabBarIcon: () => {
             return (
               <AntDesign
