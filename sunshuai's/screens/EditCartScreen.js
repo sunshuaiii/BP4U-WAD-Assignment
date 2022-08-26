@@ -185,7 +185,7 @@ export default class EditCartScreen extends Component {
               style={{fontSize: 20}}
               placeholder={'Enter your quantity'}
               value={this.state.cartItem.map(c => c.quantity)}
-              keyboardType={'numeric'}
+              keyboardTypw={'numeric'}
               onChangeText={quantity => {
                 this.setState({quantity: quantity});
               }}></TextInput>

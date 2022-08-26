@@ -22,7 +22,7 @@ export default class CartScreen extends Component {
     super(props);
     this.state = {
       cartItem: [],
-      cart_id: '60005',
+      cart_id: '60001',
       isFetching: false,
     };
     this._load = this._load.bind(this);
@@ -36,7 +36,7 @@ export default class CartScreen extends Component {
     console.log(url);
     this.setState({isFetching: true});
     fetch(url)
-      .then((response) => {
+      .then(response => {
         console.log(response);
         if (!response.ok) {
           Alert.alert('Error: ', response.status.toString());
@@ -59,10 +59,13 @@ export default class CartScreen extends Component {
   }
 
   render() {
-    if(this.state.cartItem.length == 0){
-      <Text style={styles.text}>No item in your cart. </Text>
-    }
-    else{
+    // if (this.state.cartItem.length == 0) {
+    //   return (
+    //     <View style={styles.container}>
+    //       <Text style={styles.text}>No item in your cart. </Text>
+    //     </View>
+    //   );
+    // } else {
       return (
         <View style={{backgroundColor: 'pink'}}>
           <FlatList
@@ -78,7 +81,7 @@ export default class CartScreen extends Component {
                         source={{uri: item.photo}}
                         style={styles.image}></Image>
                     </View>
-  
+
                     <View style={{flex: 2}}>
                       <Text style={styles.itemName}>{item.name}</Text>
                       <Text style={styles.itemPrice}>RM {item.price}</Text>
@@ -123,18 +126,22 @@ export default class CartScreen extends Component {
           </TouchableOpacity>
         </View>
       );
-    }
-    
+    // }
   }
 }
 
 const styles = StyleSheet.create({
-  text:{
-    flex: 1, 
+  container: {
+    backgroundColor: 'white',
     alignItems: 'center',
-    justifyContent: 'center', 
-    backgroundColor: 'pink'
-  }
+    justifyContent: 'center',
+  },
+  text: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'pink',
+  },
   image: {
     height: 110,
     width: 110,

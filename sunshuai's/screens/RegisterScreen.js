@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Component, useState } from 'react';
 import {
   View,
   Text,
@@ -11,261 +11,225 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   ToastAndroid,
-} from "react-native";
-import { TextInput } from "react-native-gesture-handler";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import SQLite from "react-native-sqlite-storage";
 
-let config = require("../Config");
+} from 'react-native';
+import { TextInput } from 'react-native-gesture-handler';
 
-const db = SQLite.openDatabase(
-  {
-    name: "bp4udb",
-    location: "~bp4u.sqlite",
-  },
-  () => {},
-  (error) => {
-    console.log(error);
+let common = require('../CommonData');
+let SQLite = require('react-native-sqlite-storage');
+
+export default class RegisterScreen extends Component<Props> {
+  constructor(props) {
+    super(props);
+    this.state = {
+      member_username: '',
+      member_first_name: '',
+      member_last_name: '',
+      member_password: '',
+      member_email: '',
+      member_address: '',
+    };
+    this._insert = this._insert.bind(this);
+    this.db = SQLite.openDatabase(
+      {
+        name: 'profile',
+      },
+      this.openCallback,
+      this.errorCallback,
+    );
   }
-);
 
-const RegisterScreen = ({ navigation }) => {
-  const [name, setUserName] = useState("");
-  const [password, setUserPassword] = useState("");
-  const [email, setUserEmail] = useState("");
-  const [address, setUserAddress] = useState("");
-  const [phone, setUserPhone] = useState("");
+  componentDidMount() {
+    this.props.navigation.setOptions({ headerTitle: 'Register' });
+  }
 
-  // const block =()=>{
-  //   return name != '' && password != '' && email != '' && address != '' && phone != '' &&
-  // }
-
-  let registration = () => {
-    console.log(name, password, email, address, phone);
-
-    if (!name) {
-      Alert.alert("Please fill name");
-      return;
-    }
-    if (!password) {
-      Alert.alert("Please fill password");
-      return;
-    }
-    if (!email) {
-      Alert.alert("Please fill email");
-      return;
-    }
-    if (!address) {
-      Alert.alert("Please fill address");
-      return;
-    }
-    if (!phone) {
-      Alert.alert("Please fill your phone number");
-      return;
-    }
-
-    db.transaction(function (tx) {
-      tx.executeSql(
-        "INSERT INTO table_user (name, password, email, address, phone) value (?,?,?,?,?)",
-        [name, password, email, address, phone],
+  _insert() {
+    this.db.transaction(tx => {
+      tx.executeSql('INSERT INTO member(member_username,member_first_name,member_last_name,member_password,member_email,member_phone,member_address) VALUES(?,?,?)', [
+        this.state.member_username,
+        this.state.member_first_name,
+        this.state.member_last_name,
+        this.state.member_password,
+        this.state.member_email,
+        this.state.member_phone,
+        this.state.member_address,
+      ],
         (tx, results) => {
-          console.log("Results", results.rowsAffected);
+          console.log('Results', results.rowsAffected);
           if (results.rowsAffected > 0) {
             Alert.alert(
-              "Success",
-              "You are Registered Successfully",
+              'Success',
+              'You are Registered Successfully',
               [
                 {
-                  text: "Ok",
-                  onPress: () => navigation.navigate("Profile"),
+                  text: 'Ok',
+                  onPress: () => navigation.navigate('Login'),
                 },
               ],
               { cancelable: false }
             );
-          } else alert("Registration Failed");
+          } else alert('Registration Failed');
         }
       );
     });
-  };
-  // const checkUserRegister = (email) =>{
-  //   db.transaction(txn =>{
-  //     txn.executeSQL(
-  //       "select * from member where email = (?)",
-  //       [email],
-  //       (sqlTxn, res) =>{
-  //         if(res.rows.length >= 1){
-  //           console.log(" account exist ")
-  //           // ToastAndroid.show("account exist",toastAndroid.SHORT);
-  //           Alert.alert('user exist')
-  //         }else{
-  //           try{
-  //             await db.transaction(async(tx)=>{
-  //               await tx.executeSql(
-  //                 "insert into member (name, password, email, address, phone) value (?,?,?,?,?)",
-  //                 [name,password,email,address,phone],
-  //               );
-  //             })
-  //             navigation.navigate('Home')
-  //           }catch(error){
-  //             console.log(error);
-  //           }
-  //         }
-  //           // error =>{console.log(error);
-  //         // }
-  //       }
-  //     )
-  //   })
-  // }
-  // const createUser = (name, password, email, address, phone)=>{
-  //   console.log(name + password + email + address + phone)
-  //   db.transaction(txn=>{
+    // this.props.route.params.refresh();
+    // this.props.navigation.goBack();
+  }
 
-  //     txn.executeSql(
-  //       "insert into member (name, password, email, address, phone) value (?,?,?,?,?)",
-  //       [name,password,email,address,phone],
-  //       (sqlTxn,res)=>{
-  //         console.log('data inserted')
-  //       },
-  //       error => {
-  //         console.log('## error user data not inserted ## ',error);
-  //       }
-  //     )
+  openCallback() {
+    console.log('database open successfully');
+  }
+  errorCallback(err) {
+    console.log('Error in opening the database: ' + err);
+  }
 
-  //   })
-  // }
+  render() {
+    let member = this.state.member;
 
-  return (
-    <ScrollView
-      keyboardShouldPersistTaps="handled"
-      contentContainerStyle={{
-        justifyContent: "center",
-        alignContent: "center",
-      }}
-    >
-      <KeyboardAvoidingView enabled>
-        <View style={styles.body}>
-          <Image
-            style={styles.logo}
-            source={require("../assets/icons/BP4U.png")}
-          />
-          <Text style={styles.txt}>BP4U</Text>
-          <TextInput
-            style={styles.input}
-            // onChangeText={(UserEmail) =>
-            //   setUserName(UserName)
-            // }
-            placeholder="Enter Username"
-            placeholderTextColor="#fffafa"
-            autoCapitalize="none"
-            keyboardType="default"
-            returnKeyType="next"
-            onChangeText={(value) => {
-              setUserName(value);
-            }}
-            // onSubmitEditing={() =>
-            //   passwordInputRef.current &&
-            //   passwordInputRef.current.focus()
-            // }
-            underlineColorAndroid="#f000"
-            blurOnSubmit={false}
-          />
-          <View style={styles.txt}>
-            <TextInput
-              style={styles.input2}
-              // onChangeText={(UserPassword) =>
-              //   setUserPassword(UserPassword)
-              // }
-              placeholder="Enter Password"
-              placeholderTextColor="#fffafa"
-              keyboardType="default"
-              onChangeText={(value) => setUserPassword(value)}
-              // ref={passwordInputRef}
-              // onSubmitEditing={Keyboard.dismiss}
-              blurOnSubmit={false}
-              secureTextEntry={true}
-              underlineColorAndroid="#f000"
-              returnKeyType="next"
+    return (
+      <ScrollView keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{
+          justifyContent: 'center',
+          alignContent: 'center',
+        }}>
+        <KeyboardAvoidingView enabled>
+          <View style={styles.body}>
+            <Image
+              style={styles.logo}
+              source={require('../assets/icons/BP4U.png')}
             />
-          </View>
-          <View style={styles.txt}>
+            <Text style={styles.txt}>BP4U</Text>
             <TextInput
-              style={styles.input2}
-              // onChangeText={(UserPassword) =>
-              //   setUserPassword(UserPassword)
-              // }
-              placeholder="Enter your Email-Address"
-              placeholderTextColor="#fffafa"
-              keyboardType="email-address"
-              onChangeText={(value) => setUserEmail(value)}
-              // ref={passwordInputRef}
-              // onSubmitEditing={Keyboard.dismiss}
+              style={styles.input}
+              placeholder={"Enter Username"}
+              placeholderTextColor={"#fffafa"}
+              autoCapitalize={"none"}
+              keyboardType={"default"}
+              returnKeyType={"next"}
+              underlineColorAndroid={"#f000"}
               blurOnSubmit={false}
-              secureTextEntry={false}
-              underlineColorAndroid="#f000"
-              returnKeyType="next"
-            />
-          </View>
-          <View style={styles.txt}>
-            <TextInput
-              style={styles.input2}
-              // onChangeText={(UserPassword) =>
-              //   setUserPassword(UserPassword)
-              // }
-              placeholder="Enter your Address"
-              placeholderTextColor="#fffafa"
-              keyboardType="default"
-              onChangeText={(value) => setUserAddress(value)}
-              // ref={passwordInputRef}
-              // onSubmitEditing={Keyboard.dismiss}
-              blurOnSubmit={false}
-              secureTextEntry={false}
-              underlineColorAndroid="#f000"
-              returnKeyType="next"
-            />
-          </View>
-          <View style={styles.txt}>
-            <TextInput
-              style={styles.input2}
-              // onChangeText={(UserPassword) =>
-              //   setUserPassword(UserPassword)
-              // }
-              placeholder="Enter your Phone Number"
-              placeholderTextColor="#fffafa"
-              keyboardType="numeric"
-              onChangeText={(value) => setUserPhone(value)}
-              // ref={passwordInputRef}
-              // onSubmitEditing={Keyboard.dismiss}
-              blurOnSubmit={false}
-              secureTextEntry={false}
-              underlineColorAndroid="#f000"
-              returnKeyType="next"
-            />
-          </View>
-          <View style={styles.bttn}>
-            <Button
-              loading={false}
-              title="Register"
-              // disabled={block() ? false : true}
-              // onPressFunction={setData}
-              // onPress={setData}
-              onPress={() => {
-                registration;
+              value={this.state.member_username}
+              onChangeText={member_username => {
+                this.setState({ member_username });
               }}
             />
+            <View style={styles.txt}>
+              <TextInput
+                style={styles.input2}
+                placeholder={"Enter your First Name"}
+                placeholderTextColor={"#fffafa"}
+                keyboardType={"default"}
+                blurOnSubmit={false}
+                secureTextEntry={false}
+                underlineColorAndroid={"#f000"}
+                returnKeyType={"next"}
+                value={this.state.member_first_name}
+                onChangeText={member_first_name => {
+                  this.setState({ member_first_name });
+                }}
+              />
+            </View>
+            <View style={styles.txt}>
+              <TextInput
+                style={styles.input2}
+                placeholder={"Enter your Last Name"}
+                placeholderTextColor={"#fffafa"}
+                keyboardType={"default"}
+                blurOnSubmit={false}
+                secureTextEntry={false}
+                underlineColorAndroid={"#f000"}
+                returnKeyType={"next"}
+                value={this.state.member_last_name}
+                onChangeText={member_last_name => {
+                  this.setState({ member_last_name });
+                }}
+              />
+            </View>
+
+            <View style={styles.txt}>
+              <TextInput
+                style={styles.input2}
+                placeholder={"Enter Password"}
+                placeholderTextColor={"#fffafa"}
+                keyboardType={"default"}
+                blurOnSubmit={false}
+                secureTextEntry={true}
+                underlineColorAndroid={"#f000"}
+                returnKeyType={"next"}
+                value={this.state.member_password}
+                onChangeText={member_password => {
+                  this.setState({ member_password });
+                }}
+              />
+            </View>
+            <View style={styles.txt}>
+              <TextInput
+                style={styles.input2}
+                placeholder={"Enter your Email-Address"}
+                placeholderTextColor={"#fffafa"}
+                keyboardType={"email-address"}
+                blurOnSubmit={false}
+                secureTextEntry={false}
+                underlineColorAndroid={"#f000"}
+                returnKeyType={"next"}
+                value={this.state.member_email}
+                onChangeText={member_email => {
+                  this.setState({ member_email });
+                }}
+              />
+            </View>
+            <View style={styles.txt}>
+              <TextInput
+                style={styles.input2}
+                placeholder={"Enter your Address"}
+                placeholderTextColor={"#fffafa"}
+                keyboardType={"default"}
+                blurOnSubmit={false}
+                secureTextEntry={false}
+                underlineColorAndroid={"#f000"}
+                returnKeyType={"next"}
+                value={this.state.member_address}
+                onChangeText={member_address => {
+                  this.setState({ member_address });
+                }}
+              />
+            </View>
+            <View style={styles.txt}>
+              <TextInput
+                style={styles.input2}
+                placeholder={"Enter your Phone Number"}
+                placeholderTextColor={"#fffafa"}
+                keyboardType={"numeric"}
+                blurOnSubmit={false}
+                secureTextEntry={false}
+                underlineColorAndroid={"#f000"}
+                returnKeyType={"next"}
+                value={this.state.member_phone}
+                onChangeText={member_phone => {
+                  this.setState({ member_phone });
+                }}
+              />
+            </View>
+            <View style={styles.bttn}>
+              <Button
+                style={styles.button}
+                title={'Register'}
+                onPress={this._insert}
+              />
+            </View>
           </View>
-        </View>
-      </KeyboardAvoidingView>
-    </ScrollView>
-  );
-};
+        </KeyboardAvoidingView>
+      </ScrollView>
 
-export default RegisterScreen;
 
+    );
+  }
+}
 const styles = StyleSheet.create({
   body: {
     flex: 1,
-    alignItems: "center",
-    backgroundColor: "#ff1493",
+    alignItems: 'center',
+    backgroundColor: '#ff1493',
   },
   logo: {
     width: 70,
@@ -274,16 +238,16 @@ const styles = StyleSheet.create({
   },
   txt: {
     fontSize: 25,
-    color: "#000000",
+    color: '#000000',
   },
   input: {
     width: 300,
     height: 40,
-    borderColor: "#000000",
+    borderColor: '#000000',
     borderWidth: 1,
     borderRadiius: 10,
-    backgroundColor: "#ffb6",
-    textAlign: "center",
+    backgroundColor: '#ffb6',
+    textAlign: 'center',
     frontSize: 20,
     marginTop: 20,
     marginBottom: 10,
@@ -292,28 +256,31 @@ const styles = StyleSheet.create({
   input2: {
     width: 300,
     height: 40,
-    borderColor: "#000000",
+    borderColor: '#000000',
     borderWidth: 1,
     borderRadiius: 10,
-    backgroundColor: "#ffb6",
-    textAlign: "center",
+    backgroundColor: '#ffb6',
+    textAlign: 'center',
     frontSize: 20,
     marginTop: 10,
     marginBottom: 10,
     borderRadius: 30,
   },
   bttn: {
-    width: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 30,
+    borderRadius: 2,
+    marginTop: 20,
   },
   registerTextStyle: {
-    color: "#FFFFFF",
-    textAlign: "center",
-    fontWeight: "bold",
+    color: '#FFFFFF',
+    textAlign: 'center',
+    fontWeight: 'bold',
     fontSize: 14,
-    alignSelf: "center",
+    alignSelf: 'center',
     padding: 10,
   },
 });
+

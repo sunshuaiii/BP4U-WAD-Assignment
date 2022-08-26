@@ -21,8 +21,8 @@ export default class ProductDetailsScreen extends Component {
     this.state = {
       productId: this.props.route.params.productId,
       product: [],
-      memberId: '10005',
-      cartId: '60005',
+      memberId: '10001',
+      cartId: '60001',
       total: 0,
       quantityInCart: 0,
       initialQuantity: '1',

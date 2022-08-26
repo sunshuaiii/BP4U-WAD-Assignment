@@ -89,6 +89,20 @@ const CartStack = () => {
   );
 };
 
+const HistoryStack = () => {
+  return (
+    <Stack.Navigator
+      initialRouteName={'History'}
+      screenOptions={{
+        headerShown: false,
+      }}>
+      <Stack.Screen name="History" component={HistoryScreen} />
+      <Stack.Screen name="OrderItem" component={OrderItemScreen} />
+      <Stack.Screen name="ProductDetails" component={ProductDetailsScreen}/>
+    </Stack.Navigator>
+  );
+};
+
 const MyTab = () => {
   return (
     <Tab.Navigator
@@ -100,19 +114,6 @@ const MyTab = () => {
         inactiveBackgroundColor: 'black',
         showLabel: false,
       }}>
-      <Tab.Screen
-        name="Menu"
-        component={ProfileScreen}
-        options={{
-          tabBarIcon: () => {
-            return (
-              <SimpleLineIcons
-                name="menu"
-                size={25}
-                color={'white'}></SimpleLineIcons>
-            );
-          },
-        }}></Tab.Screen>
       <Tab.Screen
         name="Profile"
         component={ProfileStack}
@@ -147,7 +148,7 @@ const MyTab = () => {
         }}></Tab.Screen>
       <Tab.Screen
         name="History"
-        component={HistoryScreen}
+        component={HistoryStack}
         options={{
           tabBarBadge: 0,
           tabBarIcon: () => {

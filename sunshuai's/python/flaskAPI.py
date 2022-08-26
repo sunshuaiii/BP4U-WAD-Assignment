@@ -25,6 +25,18 @@ def get_cart_item_in_cart_as_dict(row):
 
     return row_dict
 
+def get_cart_item_in_cart_weight_as_dict(row):
+    row_dict = {
+        'id': row[0],
+        'name': row[1],
+        'price': row[2],
+        'quantity': row[3],
+        'photo': row[4],
+        'weight': row[5],
+    }
+
+    return row_dict
+
 def get_cart_item_row_as_dict(row):
     row_dict = {
         'id': row[0],
@@ -114,6 +126,13 @@ def get_product_row_as_dict(row):
 
     return row_dict
 
+def get_order_last_row_as_dict(row):
+    row_dict = {
+        'id': row[0],
+    }
+
+    return row_dict
+
 def get_product_quantity_in_cart_as_dict(row):
     row_dict = {
         'quantity': row[0],
@@ -149,6 +168,21 @@ def show_cart_total(cart):
     db = sqlite3.connect(DB)
     cursor = db.cursor()
     cursor.execute('SELECT round(SUM(product.product_price*(1-product.product_discount_percent) * cart_item.ci_quantity),2) FROM product INNER JOIN cart_item ON product.product_id = cart_item.ci_product_id WHERE cart_item.ci_cart_id=?', (str(cart),))
+    row = cursor.fetchone()
+    db.close()
+
+    if row:
+        row_as_dict = get_cart_total_as_dict(row)
+        return jsonify(row_as_dict), 200
+    else:
+        return jsonify(None), 200
+
+# using
+@app.route('/api/cart/total-weight/<int:cart>', methods=['GET'])
+def show_cart_total_weight(cart):
+    db = sqlite3.connect(DB)
+    cursor = db.cursor()
+    cursor.execute('SELECT SUM(product.product_weight*cart_item.ci_quantity) FROM product INNER JOIN cart_item ON product.product_id = cart_item.ci_product_id WHERE cart_item.ci_cart_id=?', (str(cart),))
     row = cursor.fetchone()
     db.close()
 
@@ -359,6 +393,24 @@ def show_cart_item_in_cart(cart_item):
     return jsonify(rows_as_dict), 200
 
 # using
+@app.route('/api/cart-item/incart/weight/<int:cart_item>', methods=['GET'])
+def show_cart_item_in_cart_weight(cart_item):
+    db = sqlite3.connect(DB)
+    cursor = db.cursor()
+    cursor.execute('SELECT ci_product_id, product_name, round(product.product_price*(1-product.product_discount_percent),2),ci_quantity,product_photo,product_weight FROM product INNER JOIN cart_item ON product.product_id=cart_item.ci_product_id WHERE cart_item.ci_cart_id=?', (str(cart_item),))
+    rows = cursor.fetchall()
+    print(rows)
+
+    db.close()
+
+    rows_as_dict = []
+    for row in rows:
+        row_as_dict = get_cart_item_in_cart_weight_as_dict(row)
+        rows_as_dict.append(row_as_dict)
+
+    return jsonify(rows_as_dict), 200
+
+# using
 @app.route('/api/cart-item/incart/<int:cart_item>/<int:cart_item_index>', methods=['GET'])
 def show_index_cart_item_in_cart(cart_item, cart_item_index):
     db = sqlite3.connect(DB)
@@ -556,7 +608,7 @@ def index_member():
 
     return jsonify(rows_as_dict), 200
 
-
+# using
 @app.route('/api/member/<int:member>', methods=['GET'])
 def show_member(member):
     db = sqlite3.connect(DB)
@@ -698,6 +750,20 @@ def index_order():
 
     return jsonify(rows_as_dict), 200
 
+@app.route('/api/order/getId', methods=['GET'])
+def index_order_last():
+    db = sqlite3.connect(DB)
+    cursor = db.cursor()
+    cursor.execute('select seq from sqlite_sequence where name="order_details"')
+    row = cursor.fetchone()
+    db.close()
+
+    if row:
+        row_as_dict = get_order_last_row_as_dict(row)
+        return jsonify(row_as_dict), 200
+    else:
+        return jsonify(None), 200
+
 
 @app.route('/api/order/<int:order>', methods=['GET'])
 def show_order(order):
@@ -714,7 +780,7 @@ def show_order(order):
     else:
         return jsonify(None), 200
 
-
+# using
 @app.route('/api/order', methods=['POST'])
 def store_order():
     if not request.json:
@@ -723,7 +789,6 @@ def store_order():
     new_order = (
         request.json['member_id'],
         request.json['ship_address'],
-        request.json['courier'],
         request.json['ship_fee'],
         request.json['total'],
         request.json['status'],
@@ -733,8 +798,8 @@ def store_order():
     cursor = db.cursor()
 
     cursor.execute('''
-        INSERT INTO order(order_member_id,order_shipping_address,order_courier,order_shipping_fee,order_total,order_status)
-        VALUES(?,?,?,?,?,?)
+        INSERT INTO order_details(order_member_id,order_shipping_address,order_shipping_fee,order_total,order_status)
+        VALUES(?,?,?,?,?)
     ''', new_order)
 
     order_id = cursor.lastrowid
@@ -986,7 +1051,7 @@ def show_payment(payment):
     else:
         return jsonify(None), 200
 
-
+# using
 @app.route('/api/payment', methods=['POST'])
 def store_payment():
     if not request.json:
@@ -1004,7 +1069,7 @@ def store_payment():
 
     cursor.execute('''
         INSERT INTO payment(payment_order_id,payment_amount,payment_provider,payment_status)
-        VALUES(?,?,?,?,?,?,?,?)
+        VALUES(?,?,?,?)
     ''', new_payment)
 
     payment_id = cursor.lastrowid
