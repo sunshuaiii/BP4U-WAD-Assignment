@@ -15,11 +15,12 @@ import {
 import {TextInput} from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SQLite from 'react-native-sqlite-storage';
+
 let config = require('../Config');
 const db = SQLite.openDatabase(
   {
     name: 'bp4udb',
-    location: '~bp4u.sqlite',
+    createFromLocation : '~db.sqlite'
   },
   () => {},
   error => {

@@ -11,12 +11,11 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   ToastAndroid,
-
+  TextInput
 } from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
 
+let config = require('../Config');
 let common = require('../CommonData');
-let SQLite = require('react-native-sqlite-storage');
 
 export default class RegisterScreen extends Component<Props> {
   constructor(props) {
@@ -28,15 +27,9 @@ export default class RegisterScreen extends Component<Props> {
       member_password: '',
       member_email: '',
       member_address: '',
+      member_address: '',
     };
     this._insert = this._insert.bind(this);
-    this.db = SQLite.openDatabase(
-      {
-        name: 'profile',
-      },
-      this.openCallback,
-      this.errorCallback,
-    );
   }
 
   componentDidMount() {
@@ -44,36 +37,43 @@ export default class RegisterScreen extends Component<Props> {
   }
 
   _insert() {
-    this.db.transaction(tx => {
-      tx.executeSql('INSERT INTO member(member_username,member_first_name,member_last_name,member_password,member_email,member_phone,member_address) VALUES(?,?,?)', [
-        this.state.member_username,
-        this.state.member_first_name,
-        this.state.member_last_name,
-        this.state.member_password,
-        this.state.member_email,
-        this.state.member_phone,
-        this.state.member_address,
-      ],
-        (tx, results) => {
-          console.log('Results', results.rowsAffected);
-          if (results.rowsAffected > 0) {
-            Alert.alert(
-              'Success',
-              'You are Registered Successfully',
-              [
-                {
-                  text: 'Ok',
-                  onPress: () => navigation.navigate('Login'),
-                },
-              ],
-              { cancelable: false }
-            );
-          } else alert('Registration Failed');
+    let url = config.settings.serverPath + '/api/member';
+
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username: this.state.member_username,
+        fname: this.state.member_first_name,
+        lname: this.state.member_last_name,
+        password: this.state.member_password,
+        email: this.state.member_email,
+        phone: this.state.member_phone,
+        address: this.state.member_address,
+      }),
+    })
+      .then(response => {
+        console.log(response);
+        if (!response.ok) {
+          Alert.alert('Error:', response.status.toString());
+          throw Error('Error ' + response.status);
         }
-      );
-    });
-    // this.props.route.params.refresh();
-    // this.props.navigation.goBack();
+
+        return response.json();
+      })
+      .then(respondJson => {
+        if (respondJson.affected > 0) {
+          Alert.alert('Successfully registered as member! Welcome to BP4U!');
+        } else {
+          Alert.alert('Error in SAVING');
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 
   openCallback() {
@@ -230,6 +230,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     backgroundColor: '#ff1493',
+    paddingBottom: 25,
   },
   logo: {
     width: 70,
