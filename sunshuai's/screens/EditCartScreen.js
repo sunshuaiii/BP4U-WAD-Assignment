@@ -24,7 +24,7 @@ export default class EditCartScreen extends Component {
     this.state = {
       product_id: this.props.route.params.product_id,
       cart_id: this.props.route.params.cart_id,
-      cartItem: '',
+      cartItem: [],
       isFetching: false,
     };
     this._loadbyID = this._loadbyID.bind(this);
@@ -42,7 +42,7 @@ export default class EditCartScreen extends Component {
     console.log(url);
     this.setState({isFetching: true});
     fetch(url)
-      .then((response) => {
+      .then(response => {
         console.log(response);
         if (!response.ok) {
           Alert.alert('Error: ', response.status.toString());
@@ -147,7 +147,6 @@ export default class EditCartScreen extends Component {
   }
 
   render() {
-    console.log(this.state.cartItem);
     return (
       <View>
         <FlatList
@@ -158,23 +157,23 @@ export default class EditCartScreen extends Component {
             return (
               <ScrollView style={{flex: 1, margin: 5}}>
                 <View style={{flexDirection: 'row', height: 150}}>
-                  <View style={{flex: 1}}>
-                    <Image style={styles.image}>
-                      {this.state.cartItem.photo}
-                    </Image>
-                  </View>
+                  {/* <View style={{flex: 1}}>
+                    <Image
+                      style={styles.image}
+                      source={{uri: this.state.cartItem.map(c => c.photo)}}></Image>
+                  </View> */}
 
                   <View style={{flex: 2}}>
                     <Text style={styles.itemName}>
-                      {this.state.cartItem.name}
+                      {this.state.cartItem.map(c => c.name)}
                     </Text>
                     <Text style={styles.itemPrice}>
-                      {this.state.cartItem.price}
+                      {this.state.cartItem.map(c => c.price)}
                     </Text>
                     <TextInput
                       label={'Quantity'}
                       placeholder={'Enter your quantity'}
-                      value={this.state.cartItem.quantity}
+                      value={this.state.cartItem.map(c => c.quantity)}
                       onChangeText={quantity => {
                         this.setState({quantity});
                       }}></TextInput>
