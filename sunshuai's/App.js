@@ -33,6 +33,7 @@ import EditCartScreen from './screens/EditCartScreen.js';
 import PaymentScreen from './screens/PaymentScreen.js';
 import HistoryScreen from './screens/HistoryScreen.js';
 import SearchScreen from './screens/SearchScreen.js';
+import OrderItemScreen from './screens/OrderItemScreen.js';
 
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -136,7 +137,7 @@ const MyTab = () => {
         name="Cart"
         component={CartStack}
         options={{
-          tabBarBadge: 0,
+          // tabBarBadge: 0,
           tabBarIcon: () => {
             return (
               <SimpleLineIcons
@@ -150,7 +151,7 @@ const MyTab = () => {
         name="History"
         component={HistoryStack}
         options={{
-          tabBarBadge: 0,
+          // tabBarBadge: 0,
           tabBarIcon: () => {
             return (
               <AntDesign
