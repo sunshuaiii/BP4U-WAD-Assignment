@@ -59,70 +59,82 @@ export default class CartScreen extends Component {
   }
 
   render() {
-    return (
-      <View style={{backgroundColor: 'pink'}}>
-        <FlatList
-          refreshing={this.state.isFetching}
-          onRefresh={this._load}
-          data={this.state.cartItem}
-          renderItem={({item}) => {
-            return (
-              <ScrollView style={{paddingBottom: '10%'}}>
-                <View style={{flexDirection: 'row', height: 150}}>
-                  <View style={{flex: 1}}>
-                    <Image
-                      source={{uri: item.photo}}
-                      style={styles.image}></Image>
-                  </View>
-
-                  <View style={{flex: 2}}>
-                    <Text style={styles.itemName}>{item.name}</Text>
-                    <Text style={styles.itemPrice}>RM {item.price}</Text>
-                    <View style={{flexDirection: 'row'}}>
-                      <Text style={styles.itemQuantity}>
-                        Quantity: {item.quantity}
-                      </Text>
-                      <TouchableOpacity
-                        style={styles.editButton}
-                        onPress={() =>
-                          this.props.navigation.navigate('EditCart', {
-                            cart_id: this.state.cart_id,
-                            product_id: item.id, //cart_item_id
-                            refresh: this._load,
-                          })
-                        }>
-                        <Text
-                          style={{
-                            color: 'black',
-                            fontSize: 15,
-                          }}>
-                          Edit Cart
+    if(this.state.cartItem.length == 0){
+      <Text style={styles.text}>No item in your cart. </Text>
+    }
+    else{
+      return (
+        <View style={{backgroundColor: 'pink'}}>
+          <FlatList
+            refreshing={this.state.isFetching}
+            onRefresh={this._load}
+            data={this.state.cartItem}
+            renderItem={({item}) => {
+              return (
+                <ScrollView style={{paddingBottom: '10%'}}>
+                  <View style={{flexDirection: 'row', height: 150}}>
+                    <View style={{flex: 1}}>
+                      <Image
+                        source={{uri: item.photo}}
+                        style={styles.image}></Image>
+                    </View>
+  
+                    <View style={{flex: 2}}>
+                      <Text style={styles.itemName}>{item.name}</Text>
+                      <Text style={styles.itemPrice}>RM {item.price}</Text>
+                      <View style={{flexDirection: 'row'}}>
+                        <Text style={styles.itemQuantity}>
+                          Quantity: {item.quantity}
                         </Text>
-                      </TouchableOpacity>
+                        <TouchableOpacity
+                          style={styles.editButton}
+                          onPress={() =>
+                            this.props.navigation.navigate('EditCart', {
+                              cart_id: this.state.cart_id,
+                              product_id: item.id, //cart_item_id
+                              refresh: this._load,
+                            })
+                          }>
+                          <Text
+                            style={{
+                              color: 'black',
+                              fontSize: 15,
+                            }}>
+                            Edit Cart
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
                     </View>
                   </View>
-                </View>
-              </ScrollView>
-            );
-          }}></FlatList>
-        <TouchableOpacity
-          style={styles.checkoutButton}
-          onPress={() =>
-            this.props.navigation.navigate('Payment', {
-              id: this.state.cart_id,
-              refresh: this._load,
-            })
-          }>
-          <View style={styles.floatingButton}>
-            <Text style={{color: 'white'}}>CHECK OUT</Text>
-          </View>
-        </TouchableOpacity>
-      </View>
-    );
+                </ScrollView>
+              );
+            }}></FlatList>
+          <TouchableOpacity
+            style={styles.checkoutButton}
+            onPress={() =>
+              this.props.navigation.navigate('Payment', {
+                id: this.state.cart_id,
+                refresh: this._load,
+              })
+            }>
+            <View style={styles.floatingButton}>
+              <Text style={{color: 'white'}}>CHECK OUT</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+    
   }
 }
 
 const styles = StyleSheet.create({
+  text:{
+    flex: 1, 
+    alignItems: 'center',
+    justifyContent: 'center', 
+    backgroundColor: 'pink'
+  }
   image: {
     height: 110,
     width: 110,

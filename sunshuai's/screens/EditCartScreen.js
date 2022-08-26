@@ -108,7 +108,9 @@ export default class EditCartScreen extends Component {
         text: 'Yes',
         onPress: () => {
           let url =
-            config.settings.serverPath + '/api/cart-item/' + this.state.cartItem.map(c => c.id).toString();
+            config.settings.serverPath +
+            '/api/cart-item/' +
+            this.state.cartItem.map(c => c.id).toString();
           console.log(url);
           fetch(url, {
             method: 'DELETE',
@@ -116,7 +118,9 @@ export default class EditCartScreen extends Component {
               Accept: 'application/json',
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({id: this.state.cartItem.map(c => c.id).toString()}),
+            body: JSON.stringify({
+              id: this.state.cartItem.map(c => c.id).toString(),
+            }),
           })
             .then(response => {
               if (!response.ok) {
@@ -128,8 +132,7 @@ export default class EditCartScreen extends Component {
             .then(responseJson => {
               if (responseJson.affected == 0) {
                 Alert.alert('Error in DELETING');
-              }
-              else{
+              } else {
                 Alert.alert('Item removed from your cart!');
               }
             })
@@ -152,14 +155,14 @@ export default class EditCartScreen extends Component {
     console.log(path);
     return (
       <View style={styles.container}>
-        <FlatList
-          style={{marginBottom: 50}}
-          refreshing={this.state.isFetching}
-          onRefresh={this._loadbyID}
-          data={this.state.cartItem}
-          renderItem={({item}) => {
-            return (
-              <ScrollView style={{marginBottom: 40, padding: 10}}>
+        <ScrollView style={{padding: 10}}>
+          <FlatList
+            style={{marginBottom: 50}}
+            refreshing={this.state.isFetching}
+            onRefresh={this._loadbyID}
+            data={this.state.cartItem}
+            renderItem={({item}) => {
+              return (
                 <View style={{flexDirection: 'row', height: 150}}>
                   <View style={{flex: 1}}>
                     <Image style={styles.image} source={{uri: path}}></Image>
@@ -174,21 +177,21 @@ export default class EditCartScreen extends Component {
                     </Text>
                   </View>
                 </View>
-              </ScrollView>
-            );
-          }}></FlatList>
-        <View style={styles.input}>
-          <Text> Quantity: {this.state.cartItem.map(c => c.quantity)}</Text>
-          <TextInput
-            style={{fontSize: 20}}
-            placeholder={'Enter your quantity'}
-            value={this.state.cartItem.map(c => c.quantity)}
-            onChangeText={quantity => {
-              this.setState({quantity: quantity});
-            }}></TextInput>
-        </View>
-        <AppButton title={'SAVE'} onPress={this._update}></AppButton>
-        <AppButton title={'REMOVE'} onPress={this._remove}></AppButton>
+              );
+            }}></FlatList>
+          <View style={styles.input}>
+            <Text> Quantity: {this.state.cartItem.map(c => c.quantity)}</Text>
+            <TextInput
+              style={{fontSize: 20}}
+              placeholder={'Enter your quantity'}
+              value={this.state.cartItem.map(c => c.quantity)}
+              onChangeText={quantity => {
+                this.setState({quantity: quantity});
+              }}></TextInput>
+          </View>
+          <AppButton title={'SAVE'} onPress={this._update}></AppButton>
+          <AppButton title={'REMOVE'} onPress={this._remove}></AppButton>
+        </ScrollView>
       </View>
     );
   }
@@ -196,8 +199,6 @@ export default class EditCartScreen extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    paddingBottom: '15%',
-    marginBottom: '15%',
     backgroundColor: 'pink',
     padding: 16,
   },
@@ -220,6 +221,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   input: {
+    marginTop: 80,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 50,
