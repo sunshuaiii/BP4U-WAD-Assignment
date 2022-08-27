@@ -66,66 +66,66 @@ export default class CartScreen extends Component {
     //     </View>
     //   );
     // } else {
-      return (
-        <View style={{backgroundColor: 'pink'}}>
-          <FlatList
-            refreshing={this.state.isFetching}
-            onRefresh={this._load}
-            data={this.state.cartItem}
-            renderItem={({item}) => {
-              return (
-                <ScrollView style={{paddingBottom: '10%'}}>
-                  <View style={{flexDirection: 'row', height: 150}}>
-                    <View style={{flex: 1}}>
-                      <Image
-                        source={{uri: item.photo}}
-                        style={styles.image}></Image>
-                    </View>
+    return (
+      <View style={{backgroundColor: 'pink'}}>
+        <FlatList
+          refreshing={this.state.isFetching}
+          onRefresh={this._load}
+          data={this.state.cartItem}
+          renderItem={({item}) => {
+            return (
+              <ScrollView style={{paddingBottom: '10%'}}>
+                <View style={{flexDirection: 'row', height: 150}}>
+                  <View style={{flex: 1}}>
+                    <Image
+                      source={{uri: item.photo}}
+                      style={styles.image}></Image>
+                  </View>
 
-                    <View style={{flex: 2}}>
-                      <Text style={styles.itemName}>{item.name}</Text>
-                      <Text style={styles.itemPrice}>RM {item.price}</Text>
-                      <View style={{flexDirection: 'row'}}>
-                        <Text style={styles.itemQuantity}>
-                          Quantity: {item.quantity}
+                  <View style={{flex: 2}}>
+                    <Text style={styles.itemName}>{item.name}</Text>
+                    <Text style={styles.itemPrice}>RM {item.price}</Text>
+                    <View style={{flexDirection: 'row'}}>
+                      <Text style={styles.itemQuantity}>
+                        Quantity: {item.quantity}
+                      </Text>
+                      <TouchableOpacity
+                        style={styles.editButton}
+                        onPress={() =>
+                          this.props.navigation.navigate('EditCart', {
+                            cart_id: this.state.cart_id,
+                            product_id: item.id, //cart_item_id
+                            refresh: this._load,
+                          })
+                        }>
+                        <Text
+                          style={{
+                            color: 'black',
+                            fontSize: 15,
+                          }}>
+                          Edit Cart
                         </Text>
-                        <TouchableOpacity
-                          style={styles.editButton}
-                          onPress={() =>
-                            this.props.navigation.navigate('EditCart', {
-                              cart_id: this.state.cart_id,
-                              product_id: item.id, //cart_item_id
-                              refresh: this._load,
-                            })
-                          }>
-                          <Text
-                            style={{
-                              color: 'black',
-                              fontSize: 15,
-                            }}>
-                            Edit Cart
-                          </Text>
-                        </TouchableOpacity>
-                      </View>
+                      </TouchableOpacity>
                     </View>
                   </View>
-                </ScrollView>
-              );
-            }}></FlatList>
-          <TouchableOpacity
-            style={styles.checkoutButton}
-            onPress={() =>
-              this.props.navigation.navigate('Payment', {
-                id: this.state.cart_id,
-                refresh: this._load,
-              })
-            }>
-            <View style={styles.floatingButton}>
-              <Text style={{color: 'white'}}>CHECK OUT</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-      );
+                </View>
+              </ScrollView>
+            );
+          }}></FlatList>
+        <TouchableOpacity
+          style={styles.checkoutButton}
+          onPress={() =>
+            this.props.navigation.navigate('Payment', {
+              id: this.state.cart_id,
+              refresh: this._load,
+            })
+          }>
+          <View style={styles.floatingButton}>
+            <Text style={{color: 'white'}}>CHECK OUT</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+    );
     // }
   }
 }
@@ -157,7 +157,6 @@ const styles = StyleSheet.create({
   itemPrice: {
     marginTop: -5,
     margin: 15,
-    color: '#FF4023',
     fontSize: 18,
   },
 

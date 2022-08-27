@@ -76,10 +76,12 @@ export default class SearchScreen extends Component {
     const {spinnerVisibility} = this.state;
 
     const filtered = this.state.products.filter(entry => {
-      return entry.name.toUpperCase().includes(this.state.searchText.toUpperCase());
+      return entry.name
+        .toUpperCase()
+        .includes(this.state.searchText.toUpperCase());
     });
 
-    console.log("Searching for results...");
+    console.log('Searching for results...');
 
     return (
       <View style={styles.container}>
@@ -98,14 +100,16 @@ export default class SearchScreen extends Component {
             onChangeText={this.handleOnChangeText}
             onSearchPress={() => {
               this.props.navigation.navigate('Search', {
-              searchKeyword: this.state.searchText,
+                searchKeyword: this.state.searchText,
               });
             }}
           />
         </View>
 
         <ScrollView style={styles.content}>
-          <Text style={styles.title}>Search Results: {this.state.searchText}</Text>
+          <Text style={styles.title}>
+            Search Results: {this.state.searchText}
+          </Text>
           <Text style={styles.results}> Results found : {filtered.length}</Text>
           <ScrollViewProduct
             isFetching={this.state.isFetching}

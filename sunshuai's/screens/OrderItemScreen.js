@@ -81,7 +81,7 @@ export default class OrderItemScreen extends Component {
                   <Text style={styles.productDescription}>
                     {item.product_name}
                     {'\n'}
-                    {item.product_price} X {item.oi_quantity}
+                    RM {item.product_price} X {item.oi_quantity}
                   </Text>
                 </TouchableHighlight>
               </View>

@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, {Component, useState} from 'react';
 import {
   View,
   Text,
@@ -11,11 +11,10 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   ToastAndroid,
-  TextInput
+  TextInput,
 } from 'react-native';
 
 let config = require('../Config');
-let common = require('../CommonData');
 
 export default class RegisterScreen extends Component<Props> {
   constructor(props) {
@@ -33,7 +32,7 @@ export default class RegisterScreen extends Component<Props> {
   }
 
   componentDidMount() {
-    this.props.navigation.setOptions({ headerTitle: 'Register' });
+    this.props.navigation.setOptions({headerTitle: 'Register'});
   }
 
   _insert() {
@@ -87,7 +86,8 @@ export default class RegisterScreen extends Component<Props> {
     let member = this.state.member;
 
     return (
-      <ScrollView keyboardShouldPersistTaps="handled"
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
         contentContainerStyle={{
           justifyContent: 'center',
           alignContent: 'center',
@@ -101,47 +101,47 @@ export default class RegisterScreen extends Component<Props> {
             <Text style={styles.txt}>BP4U</Text>
             <TextInput
               style={styles.input}
-              placeholder={"Enter Username"}
-              placeholderTextColor={"#fffafa"}
-              autoCapitalize={"none"}
-              keyboardType={"default"}
-              returnKeyType={"next"}
-              underlineColorAndroid={"#f000"}
+              placeholder={'Enter Username'}
+              placeholderTextColor={'#fffafa'}
+              autoCapitalize={'none'}
+              keyboardType={'default'}
+              returnKeyType={'next'}
+              underlineColorAndroid={'#f000'}
               blurOnSubmit={false}
               value={this.state.member_username}
               onChangeText={member_username => {
-                this.setState({ member_username });
+                this.setState({member_username});
               }}
             />
             <View style={styles.txt}>
               <TextInput
                 style={styles.input2}
-                placeholder={"Enter your First Name"}
-                placeholderTextColor={"#fffafa"}
-                keyboardType={"default"}
+                placeholder={'Enter your First Name'}
+                placeholderTextColor={'#fffafa'}
+                keyboardType={'default'}
                 blurOnSubmit={false}
                 secureTextEntry={false}
-                underlineColorAndroid={"#f000"}
-                returnKeyType={"next"}
+                underlineColorAndroid={'#f000'}
+                returnKeyType={'next'}
                 value={this.state.member_first_name}
                 onChangeText={member_first_name => {
-                  this.setState({ member_first_name });
+                  this.setState({member_first_name});
                 }}
               />
             </View>
             <View style={styles.txt}>
               <TextInput
                 style={styles.input2}
-                placeholder={"Enter your Last Name"}
-                placeholderTextColor={"#fffafa"}
-                keyboardType={"default"}
+                placeholder={'Enter your Last Name'}
+                placeholderTextColor={'#fffafa'}
+                keyboardType={'default'}
                 blurOnSubmit={false}
                 secureTextEntry={false}
-                underlineColorAndroid={"#f000"}
-                returnKeyType={"next"}
+                underlineColorAndroid={'#f000'}
+                returnKeyType={'next'}
                 value={this.state.member_last_name}
                 onChangeText={member_last_name => {
-                  this.setState({ member_last_name });
+                  this.setState({member_last_name});
                 }}
               />
             </View>
@@ -149,64 +149,64 @@ export default class RegisterScreen extends Component<Props> {
             <View style={styles.txt}>
               <TextInput
                 style={styles.input2}
-                placeholder={"Enter Password"}
-                placeholderTextColor={"#fffafa"}
-                keyboardType={"default"}
+                placeholder={'Enter Password'}
+                placeholderTextColor={'#fffafa'}
+                keyboardType={'default'}
                 blurOnSubmit={false}
                 secureTextEntry={true}
-                underlineColorAndroid={"#f000"}
-                returnKeyType={"next"}
+                underlineColorAndroid={'#f000'}
+                returnKeyType={'next'}
                 value={this.state.member_password}
                 onChangeText={member_password => {
-                  this.setState({ member_password });
+                  this.setState({member_password});
                 }}
               />
             </View>
             <View style={styles.txt}>
               <TextInput
                 style={styles.input2}
-                placeholder={"Enter your Email-Address"}
-                placeholderTextColor={"#fffafa"}
-                keyboardType={"email-address"}
+                placeholder={'Enter your Email Address'}
+                placeholderTextColor={'#fffafa'}
+                keyboardType={'email-address'}
                 blurOnSubmit={false}
                 secureTextEntry={false}
-                underlineColorAndroid={"#f000"}
-                returnKeyType={"next"}
+                underlineColorAndroid={'#f000'}
+                returnKeyType={'next'}
                 value={this.state.member_email}
                 onChangeText={member_email => {
-                  this.setState({ member_email });
+                  this.setState({member_email});
                 }}
               />
             </View>
             <View style={styles.txt}>
               <TextInput
                 style={styles.input2}
-                placeholder={"Enter your Address"}
-                placeholderTextColor={"#fffafa"}
-                keyboardType={"default"}
+                placeholder={'Enter your Address'}
+                placeholderTextColor={'#fffafa'}
+                keyboardType={'default'}
                 blurOnSubmit={false}
                 secureTextEntry={false}
-                underlineColorAndroid={"#f000"}
-                returnKeyType={"next"}
+                underlineColorAndroid={'#f000'}
+                returnKeyType={'next'}
                 value={this.state.member_address}
                 onChangeText={member_address => {
-                  this.setState({ member_address });
+                  this.setState({member_address});
                 }}
               />
             </View>
             <View style={styles.txt}>
               <TextInput
                 style={styles.input2}
-                placeholder={"Enter your Phone Number"}
-                placeholderTextColor={"#fffafa"}
-                keyboardType={"numeric"}
+                placeholder={'Enter your Phone Number'}
+                placeholderTextColor={'#fffafa'}
+                keyboardType={'numeric'}
                 blurOnSubmit={false}
                 secureTextEntry={false}
-                underlineColorAndroid={"#f000"}
-                returnKeyType={"next"}
+                underlineColorAndroid={'#f000'}
+                returnKeyType={'next'}
                 value={this.state.member_phone}
                 onChangeText={member_phone => {
-                  this.setState({ member_phone });
+                  this.setState({member_phone});
                 }}
               />
             </View>
@@ -220,8 +220,6 @@ export default class RegisterScreen extends Component<Props> {
           </View>
         </KeyboardAvoidingView>
       </ScrollView>
-
-
     );
   }
 }
@@ -284,4 +282,3 @@ const styles = StyleSheet.create({
     padding: 10,
   },
 });
-

@@ -300,6 +300,10 @@ cursor.execute('''
     INSERT INTO payment(payment_order_id,payment_amount,payment_provider,payment_status)
     VALUES(30004, 475.00, 'VISA', 'ACCEPTED')
 ''')
+cursor.execute('''
+    INSERT INTO payment(payment_order_id,payment_amount,payment_provider,payment_status)
+    VALUES(30005, 164.99, 'VISA', 'ACCEPTED')
+''')
 
 
 # CART TABLE (TOTAL 5 RECORDS)

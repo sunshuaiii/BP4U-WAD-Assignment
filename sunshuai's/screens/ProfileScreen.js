@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, {Component, useState} from 'react';
 import {
   View,
   Text,
@@ -11,7 +11,7 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
 } from 'react-native';
-import { FlatList, TextInput } from 'react-native-gesture-handler';
+import {FlatList, TextInput} from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SQLite from 'react-native-sqlite-storage';
 
@@ -35,7 +35,7 @@ export default class ProfileScreen extends Component {
   _loadMemberDetails() {
     let url = config.settings.serverPath + '/api/member/' + this.state.memberid;
     console.log(url);
-    this.setState({ isFetching: true });
+    this.setState({isFetching: true});
     fetch(url)
       .then(response => {
         console.log(response);
@@ -43,11 +43,11 @@ export default class ProfileScreen extends Component {
           Alert.alert('Error: ', response.status.toString());
           throw Error('Error' + response.status);
         }
-        this.setState({ isFetching: false });
+        this.setState({isFetching: false});
         return response.json();
       })
       .then(member => {
-        this.setState({ member: member });
+        this.setState({member: member});
         console.log(member);
       })
       .catch(error => {
@@ -61,22 +61,39 @@ export default class ProfileScreen extends Component {
       <View style={styles.body}>
         <View style={styles.profileHeader}>
           <View style={styles.profileHeaderPicCircle}>
-            <Text style={{ fontSize: 35, color: 'black' }}>{username.charAt(0)}</Text>
+            <Text style={{fontSize: 35, color: 'black'}}>
+              {username.charAt(0)}
+            </Text>
           </View>
-          <Text style={styles.profileHeaderText}>{this.state.member.username}</Text>
+          <Text style={styles.profileHeaderText}>
+            {this.state.member.username}
+          </Text>
           <View style={styles.profileHeaderLine}></View>
-
         </View>
         <View>
           <Text style={styles.info}>
-            {"\n"}
-            Member ID:  {this.state.member.id}{"\n"}{"\n"}
-            First Name: {this.state.member.fname}{"\n"}{"\n"}
-            Last Name:  {this.state.member.lname}{"\n"}{"\n"}
-            Email    :  {this.state.member.email}{"\n"}{"\n"}
-            Phone No.:  {this.state.member.phone}{"\n"}{"\n"}
-            Address:    {this.state.member.address}{"\n"}{"\n"}
-            Reg. Date:  {this.state.member.reg_date}{"\n"}{"\n"}
+            {'\n'}
+            Member ID: {this.state.member.id}
+            {'\n'}
+            {'\n'}
+            First Name: {this.state.member.fname}
+            {'\n'}
+            {'\n'}
+            Last Name: {this.state.member.lname}
+            {'\n'}
+            {'\n'}
+            Email : {this.state.member.email}
+            {'\n'}
+            {'\n'}
+            Phone No.: {this.state.member.phone}
+            {'\n'}
+            {'\n'}
+            Address: {this.state.member.address}
+            {'\n'}
+            {'\n'}
+            Reg. Date: {this.state.member.reg_date}
+            {'\n'}
+            {'\n'}
           </Text>
           <View style={styles.buttonsContainer}>
             <Button
@@ -92,7 +109,7 @@ export default class ProfileScreen extends Component {
                 marginHorizontal: 50,
                 marginVertical: 10,
               }}
-              titleStyle={{ fontWeight: 'bold' }}
+              titleStyle={{fontWeight: 'bold'}}
               onPress={() => {
                 props.navigation.toggleDrawer();
                 Alert.alert(
@@ -113,7 +130,7 @@ export default class ProfileScreen extends Component {
                       },
                     },
                   ],
-                  { cancelable: false },
+                  {cancelable: false},
                 );
               }}
             />
@@ -154,7 +171,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     paddingHorizontal: 10,
     fontWeight: 'bold',
-    fontSize: 30
+    fontSize: 30,
   },
   profileHeaderLine: {
     height: 1,
@@ -166,7 +183,7 @@ const styles = StyleSheet.create({
   info: {
     fontSize: 15,
     backgroundColor: '#ffb6c1',
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginHorizontal: 20,
     color: 'black',
   },

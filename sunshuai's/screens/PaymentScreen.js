@@ -148,7 +148,7 @@ export default class PaymentScreen extends Component {
       body: JSON.stringify({
         member_id: this.state.memberid,
         ship_address: this.state.shippingAddress,
-        ship_fee: Math.ceil(this.state.totalWeight.total).toFixed(2),
+        ship_fee: Math.ceil(this.state.totalWeight.total).toFixed(2) * 5,
         total: this.state.total.total,
         status: 'PAID',
       }),
@@ -212,7 +212,6 @@ export default class PaymentScreen extends Component {
   _getOrderId() {
     let url = config.settings.serverPath + '/api/order/getId';
     console.log(url);
-    this.setState({isFetching: true});
     fetch(url)
       .then(response => {
         console.log(response);
@@ -220,7 +219,6 @@ export default class PaymentScreen extends Component {
           Alert.alert('Error: ', response.status.toString());
           throw Error('Error' + response.status);
         }
-        this.setState({isFetching: false});
         return response.json();
       })
       .then(orderId => {
@@ -304,7 +302,11 @@ export default class PaymentScreen extends Component {
 
   _removeCartItem(product_id) {
     let url =
-      config.settings.serverPath + '/api/cart-item/' + this.state.cart_id + '/' + product_id;
+      config.settings.serverPath +
+      '/api/cart-item/' +
+      this.state.cart_id +
+      '/' +
+      product_id;
     console.log(url);
     fetch(url, {
       method: 'DELETE',
@@ -337,19 +339,15 @@ export default class PaymentScreen extends Component {
       return;
     }
 
-    // this._saveOrderRecord();
+    this._saveOrderRecord();
     this._getOrderId();
-    // this.state.cartItem.map(item => {
-    //   this._saveOrderItemRecord(item.id, item.quantity);
-    // });
-    // this.state.cartItem.map(item => {
-    //   this._updateStock(item.id, item.quantity);
-    // });
+
+    this.state.cartItem.map(item => {
+      this._updateStock(item.id, item.quantity);
+    });
     this.state.cartItem.map(item => {
       this._removeCartItem(item.id);
     });
-    // console.log(this.state.orderId.id);
-    // this._savePaymentRecord();
   }
 
   componentDidMount() {
@@ -357,6 +355,15 @@ export default class PaymentScreen extends Component {
     this._loadOrderDetails();
     this._loadSubtotal();
     this._loadTotalWeight();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.orderId !== this.state.orderId) {
+      this.state.cartItem.map(item => {
+        this._saveOrderItemRecord(item.id, item.quantity);
+      });
+      this._savePaymentRecord();
+    }
   }
 
   render() {

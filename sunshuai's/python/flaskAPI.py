@@ -4,6 +4,7 @@ from argparse import ArgumentParser
 
 DB = 'bp4u.sqlite'
 
+
 def get_cart_row_as_dict(row):
     row_dict = {
         'id': row[0],
@@ -13,6 +14,7 @@ def get_cart_row_as_dict(row):
     }
 
     return row_dict
+
 
 def get_cart_item_in_cart_as_dict(row):
     row_dict = {
@@ -24,6 +26,7 @@ def get_cart_item_in_cart_as_dict(row):
     }
 
     return row_dict
+
 
 def get_cart_item_in_cart_weight_as_dict(row):
     row_dict = {
@@ -37,6 +40,7 @@ def get_cart_item_in_cart_weight_as_dict(row):
 
     return row_dict
 
+
 def get_cart_item_row_as_dict(row):
     row_dict = {
         'id': row[0],
@@ -47,12 +51,14 @@ def get_cart_item_row_as_dict(row):
 
     return row_dict
 
+
 def get_cart_total_as_dict(row):
     row_dict = {
         'total': row[0],
     }
 
     return row_dict
+
 
 def get_member_row_as_dict(row):
     row_dict = {
@@ -65,6 +71,22 @@ def get_member_row_as_dict(row):
         'phone': row[6],
         'address': row[7],
         'reg_date': row[8],
+    }
+
+    return row_dict
+
+
+def get_order_details_row_as_dict(row):
+    row_dict = {
+        'id': row[0],
+        'member_id': row[1],
+        'member_name': row[2],
+        'member_phone': row[3],
+        'ship_address': row[4],
+        'ship_fee': row[5],
+        'total': row[6],
+        'status': row[7],
+        'creation_date': row[8],
     }
 
     return row_dict
@@ -124,12 +146,14 @@ def get_product_row_as_dict(row):
 
     return row_dict
 
+
 def get_order_last_row_as_dict(row):
     row_dict = {
         'id': row[0],
     }
 
     return row_dict
+
 
 def get_product_quantity_in_cart_as_dict(row):
     row_dict = {
@@ -161,6 +185,8 @@ def index_cart():
     return jsonify(rows_as_dict), 200
 
 # using
+
+
 @app.route('/api/cart/cart-total/<int:cart>', methods=['GET'])
 def show_cart_total(cart):
     db = sqlite3.connect(DB)
@@ -176,6 +202,8 @@ def show_cart_total(cart):
         return jsonify(None), 200
 
 # using
+
+
 @app.route('/api/cart/total-weight/<int:cart>', methods=['GET'])
 def show_cart_total_weight(cart):
     db = sqlite3.connect(DB)
@@ -237,6 +265,7 @@ def store_cart():
 
     return jsonify(response), 201
 
+
 @app.route('/api/cart/update-total/<int:cart>', methods=['PUT'])
 def update_cart_total(cart):
     if not request.json:
@@ -270,6 +299,7 @@ def update_cart_total(cart):
     db.close()
 
     return jsonify(response), 201
+
 
 @app.route('/api/cart/<int:cart>', methods=['PUT'])
 def update_cart(cart):
@@ -355,6 +385,8 @@ def index_cart_item():
     return jsonify(rows_as_dict), 200
 
 # using
+
+
 @app.route('/api/cart-item/incart/total/<int:cart_item>', methods=['GET'])
 def show_cart_item_in_cart_total(cart_item):
     db = sqlite3.connect(DB)
@@ -373,6 +405,8 @@ def show_cart_item_in_cart_total(cart_item):
     return jsonify(rows_as_dict), 200
 
 # using
+
+
 @app.route('/api/cart-item/incart/<int:cart_item>', methods=['GET'])
 def show_cart_item_in_cart(cart_item):
     db = sqlite3.connect(DB)
@@ -391,6 +425,8 @@ def show_cart_item_in_cart(cart_item):
     return jsonify(rows_as_dict), 200
 
 # using
+
+
 @app.route('/api/cart-item/incart/weight/<int:cart_item>', methods=['GET'])
 def show_cart_item_in_cart_weight(cart_item):
     db = sqlite3.connect(DB)
@@ -409,6 +445,8 @@ def show_cart_item_in_cart_weight(cart_item):
     return jsonify(rows_as_dict), 200
 
 # using
+
+
 @app.route('/api/cart-item/incart/<int:cart_item>/<int:cart_item_index>', methods=['GET'])
 def show_index_cart_item_in_cart(cart_item, cart_item_index):
     db = sqlite3.connect(DB)
@@ -443,6 +481,8 @@ def show_cart_item(cart_item):
         return jsonify(None), 200
 
 # using
+
+
 @app.route('/api/cart-item', methods=['POST'])
 def store_cart_item():
     if not request.json:
@@ -475,6 +515,8 @@ def store_cart_item():
     return jsonify(response), 201
 
 # using
+
+
 @app.route('/api/cart-item/update-quantity/<int:cart_id>/<int:product_id>', methods=['PUT'])
 def update_cart_item_quantity(cart_id, product_id):
 
@@ -499,6 +541,8 @@ def update_cart_item_quantity(cart_id, product_id):
     return jsonify(response), 201
 
 # using
+
+
 @app.route('/api/cart-item/update-quantity/id/<int:cart_item_id>/<int:quantity>', methods=['PUT'])
 def update_cart_item_quantity_use_id(cart_item_id, quantity):
 
@@ -560,6 +604,8 @@ def update_cart_item(cart_item):
     return jsonify(response), 201
 
 # using
+
+
 @app.route('/api/cart-item/<int:cart_item>', methods=['DELETE'])
 def delete_cart_item(cart_item):
     if not request.json:
@@ -588,26 +634,19 @@ def delete_cart_item(cart_item):
     return jsonify(response), 201
 
 # using
+
+
 @app.route('/api/cart-item/<int:cart_id>/<int:product_id>', methods=['DELETE'])
-def delete_cart_item_product(cart_id,product_id):
-    if not request.json:
-        abort(400)
-
-    if 'id' not in request.json:
-        abort(400)
-
-    if int(request.json['id']) != cart_id:
-        abort(400)
-
+def delete_cart_item_product(cart_id, product_id):
     db = sqlite3.connect(DB)
     cursor = db.cursor()
 
-    cursor.execute('DELETE FROM cart_item WHERE ci_cart_id=? AND ci_product_id=?', (str(cart_id), str(product_id),))
+    cursor.execute('DELETE FROM cart_item WHERE ci_cart_id=? AND ci_product_id=?', (str(
+        cart_id), str(product_id),))
 
     db.commit()
 
     response = {
-        'id': cart_id,
         'affected': db.total_changes,
     }
 
@@ -635,6 +674,8 @@ def index_member():
     return jsonify(rows_as_dict), 200
 
 # using
+
+
 @app.route('/api/member/<int:member>', methods=['GET'])
 def show_member(member):
     db = sqlite3.connect(DB)
@@ -776,11 +817,34 @@ def index_order():
 
     return jsonify(rows_as_dict), 200
 
+# using
+
+
+@app.route('/api/order-details/<int:order_details>', methods=['GET'])
+def index_order_details(order_details):
+    db = sqlite3.connect(DB)
+    cursor = db.cursor()
+    cursor.execute('SELECT order_details.order_id, order_details.order_member_id, member.member_username, member.member_phone, order_details.order_shipping_address, order_details.order_shipping_fee, order_details.order_total, order_details.order_status, order_details.order_creation_date FROM order_details JOIN member ON order_details.order_member_id=member.member_id WHERE order_details.order_member_id=?', (str(order_details),))
+    rows = cursor.fetchall()
+
+    print(rows)
+
+    db.close()
+
+    rows_as_dict = []
+    for row in rows:
+        row_as_dict = get_order_details_row_as_dict(row)
+        rows_as_dict.append(row_as_dict)
+
+    return jsonify(rows_as_dict), 200
+
+
 @app.route('/api/order/getId', methods=['GET'])
 def index_order_last():
     db = sqlite3.connect(DB)
     cursor = db.cursor()
-    cursor.execute('select seq from sqlite_sequence where name="order_details"')
+    cursor.execute(
+        'select seq from sqlite_sequence where name="order_details"')
     row = cursor.fetchone()
     db.close()
 
@@ -807,6 +871,8 @@ def show_order(order):
         return jsonify(None), 200
 
 # using
+
+
 @app.route('/api/order', methods=['POST'])
 def store_order():
     if not request.json:
@@ -1077,6 +1143,8 @@ def show_payment(payment):
         return jsonify(None), 200
 
 # using
+
+
 @app.route('/api/payment', methods=['POST'])
 def store_payment():
     if not request.json:
@@ -1178,6 +1246,8 @@ def delete_payment(payment):
     return jsonify(response), 201
 
 # using
+
+
 @app.route('/api/product', methods=['GET'])
 def index_product():
     db = sqlite3.connect(DB)
@@ -1197,12 +1267,15 @@ def index_product():
     return jsonify(rows_as_dict), 200
 
 # using
+
+
 @app.route('/api/product/quantity-in-cart/<int:cart>/<int:product>', methods=['GET'])
 def get_product_quantity_in_cart(cart, product):
     db = sqlite3.connect(DB)
     cursor = db.cursor()
 
-    cursor.execute('SELECT COUNT(*) FROM cart_item WHERE ci_cart_id=? AND ci_product_id=?', (str(cart), str(product),))
+    cursor.execute(
+        'SELECT COUNT(*) FROM cart_item WHERE ci_cart_id=? AND ci_product_id=?', (str(cart), str(product),))
     row = cursor.fetchone()
     db.close()
 
@@ -1234,6 +1307,8 @@ def index_new_released_products():
     return jsonify(rows_as_dict), 200
 
 # using
+
+
 @app.route('/api/product/on-sales', methods=['GET'])
 def index_on_sales_products():
     db = sqlite3.connect(DB)
@@ -1254,6 +1329,8 @@ def index_on_sales_products():
     return jsonify(rows_as_dict), 200
 
 # using
+
+
 @app.route('/api/product/album', methods=['GET'])
 def index_product_album():
     db = sqlite3.connect(DB)
@@ -1274,6 +1351,8 @@ def index_product_album():
     return jsonify(rows_as_dict), 200
 
 # using
+
+
 @app.route('/api/product/magazine', methods=['GET'])
 def index_product_magazine():
     db = sqlite3.connect(DB)
@@ -1294,6 +1373,8 @@ def index_product_magazine():
     return jsonify(rows_as_dict), 200
 
 # using
+
+
 @app.route('/api/product/fashion', methods=['GET'])
 def index_product_fashion():
     db = sqlite3.connect(DB)
@@ -1349,6 +1430,8 @@ def index_product_search(productName):
     return jsonify(rows_as_dict), 200
 
 # using
+
+
 @app.route('/api/product', methods=['POST'])
 def store_product():
     if not request.json:
@@ -1387,6 +1470,8 @@ def store_product():
     return jsonify(response), 201
 
 # using
+
+
 @app.route('/api/product/<int:product>', methods=['PUT'])
 def update_product(product):
     if not request.json:

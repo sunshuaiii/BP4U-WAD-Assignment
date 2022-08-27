@@ -16,7 +16,6 @@ import {
   ActivityIndicator,
 } from 'react-native';
 
-
 import SearchBar from 'react-native-dynamic-search-bar';
 import {InputWithLabel, PickerWithLabel, AppButton} from '../UI';
 import {ScrollViewProduct} from '../components/ScrollViewProduct.js';
@@ -93,7 +92,7 @@ export default class HomeScreen extends Component {
             onChangeText={this.handleOnChangeText}
             onSearchPress={() => {
               this.props.navigation.navigate('Search', {
-              searchKeyword: this.state.searchText,
+                searchKeyword: this.state.searchText,
               });
             }}
           />

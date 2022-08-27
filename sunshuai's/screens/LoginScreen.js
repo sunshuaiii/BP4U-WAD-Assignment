@@ -20,7 +20,7 @@ let config = require('../Config');
 const db = SQLite.openDatabase(
   {
     name: 'bp4udb',
-    createFromLocation : '~db.sqlite'
+    createFromLocation: '~db.sqlite',
   },
   () => {},
   error => {

@@ -185,7 +185,7 @@ export default class EditCartScreen extends Component {
               style={{fontSize: 20}}
               placeholder={'Enter your quantity'}
               value={this.state.cartItem.map(c => c.quantity)}
-              keyboardTypw={'numeric'}
+              keyboardType={'numeric'}
               onChangeText={quantity => {
                 this.setState({quantity: quantity});
               }}></TextInput>
@@ -218,7 +218,6 @@ const styles = StyleSheet.create({
   itemPrice: {
     marginTop: -5,
     margin: 20,
-    color: '#FF4023',
     fontSize: 18,
   },
   input: {

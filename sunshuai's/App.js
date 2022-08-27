@@ -204,8 +204,8 @@ export default class App extends Component {
     this.state = {
       cartQuantity: '',
       historyQuantity: '',
-      cart_id: '60005',
-      member_id: '10005',
+      cart_id: '60001',
+      member_id: '10001',
       isFetching: false,
     };
     this._loadCartQuantity = this._loadCartQuantity.bind(this);
@@ -267,6 +267,15 @@ export default class App extends Component {
   componentDidMount(){
     this._loadCartQuantity();
     this._loadHistoryQuantity();
+  }
+
+  componentDidUpdate(prevProps, prevState){
+    if (prevState.cartQuantity !== this.state.cartQuantity){
+      this._loadCartQuantity();
+    }
+    if (prevState.historyQuantity !== this.state.historyQuantity){
+      this._loadHistoryQuantity();
+    }
   }
 
   render() {

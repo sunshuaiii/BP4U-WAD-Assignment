@@ -92,7 +92,7 @@ export default class HomeScreen extends Component {
             onChangeText={this.handleOnChangeText}
             onSearchPress={() => {
               this.props.navigation.navigate('Search', {
-              searchKeyword: this.state.searchText,
+                searchKeyword: this.state.searchText,
               });
             }}
           />
