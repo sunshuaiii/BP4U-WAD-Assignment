@@ -59,10 +59,10 @@ db.execute('''CREATE TABLE IF NOT EXISTS order_item(
 db.execute('DROP TABLE IF EXISTS payment')
 db.execute('''CREATE TABLE IF NOT EXISTS payment(
     payment_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    payment_order_id INTEGER NOT NULL DEFAULT 0,
+    payment_order_id INTEGER NOT NULL,
     payment_amount REAL NOT NULL,
     payment_provider TEXT NOT NULL,
-    payment_status TEXT CHECK( payment_status IN ('ACCEPTED','DECLINED') ) NOT NULL DEFAULT 'PENDING',
+    payment_status TEXT CHECK( payment_status IN ('ACCEPTED','DECLINED') ) NOT NULL,
     payment_creation_date DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
     FOREIGN KEY(payment_order_id) REFERENCES order_details(order_id)
 )''')

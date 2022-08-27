@@ -23,15 +23,9 @@ export default class HistoryScreen extends Component<Props> {
     super(props);
     this.state = {
       order_details: [],
+      member_id : '10001',
     };
-    this.db = SQLite.openDatabase(
-      {
-        name: 'order_details',
-        createFromLocation: '~bp4u.sqlite',
-      },
-      this.openCallback,
-      this.errorCallback,
-    );
+
     this._query = this._query.bind(this);
   }
   componentDidMount() {

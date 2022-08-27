@@ -75,12 +75,10 @@ def get_order_row_as_dict(row):
         'id': row[0],
         'member_id': row[1],
         'ship_address': row[2],
-        'courier': row[3],
-        'ship_fee': row[4],
-        'total': row[5],
-        'status': row[6],
-        'creation_date': row[7],
-        'payment_id': row[8],
+        'ship_fee': row[3],
+        'total': row[4],
+        'status': row[5],
+        'creation_date': row[6],
     }
 
     return row_dict
@@ -589,6 +587,34 @@ def delete_cart_item(cart_item):
 
     return jsonify(response), 201
 
+# using
+@app.route('/api/cart-item/<int:cart_id>/<int:product_id>', methods=['DELETE'])
+def delete_cart_item_product(cart_id,product_id):
+    if not request.json:
+        abort(400)
+
+    if 'id' not in request.json:
+        abort(400)
+
+    if int(request.json['id']) != cart_id:
+        abort(400)
+
+    db = sqlite3.connect(DB)
+    cursor = db.cursor()
+
+    cursor.execute('DELETE FROM cart_item WHERE ci_cart_id=? AND ci_product_id=?', (str(cart_id), str(product_id),))
+
+    db.commit()
+
+    response = {
+        'id': cart_id,
+        'affected': db.total_changes,
+    }
+
+    db.close()
+
+    return jsonify(response), 201
+
 
 @app.route('/api/member', methods=['GET'])
 def index_member():
@@ -829,7 +855,6 @@ def update_order(order):
 
     update_order = (
         request.json['ship_address'],
-        request.json['courier'],
         request.json['ship_fee'],
         request.json['total'],
         request.json['status'],
@@ -841,7 +866,7 @@ def update_order(order):
 
     cursor.execute('''
         UPDATE order_details SET
-            order_shipping_address=?,order_courier=?,order_shipping_fee=?,order_total=?,order_status=?
+            order_shipping_address=?,order_shipping_fee=?,order_total=?,order_status=?
         WHERE order_id=?
     ''', update_order)
 
@@ -1323,7 +1348,7 @@ def index_product_search(productName):
 
     return jsonify(rows_as_dict), 200
 
-
+# using
 @app.route('/api/product', methods=['POST'])
 def store_product():
     if not request.json:
@@ -1361,27 +1386,14 @@ def store_product():
 
     return jsonify(response), 201
 
-
+# using
 @app.route('/api/product/<int:product>', methods=['PUT'])
 def update_product(product):
     if not request.json:
         abort(400)
 
-    if 'id' not in request.json:
-        abort(400)
-
-    if int(request.json['id']) != product:
-        abort(400)
-
     update_product = (
-        request.json['name'],
-        request.json['price'],
-        request.json['weight'],
-        request.json['stock'],
-        request.json['discount'],
-        request.json['photo'],
-        request.json['desc'],
-        request.json['category'],
+        request.json['quantity'],
         str(product),
     )
 
@@ -1390,14 +1402,13 @@ def update_product(product):
 
     cursor.execute('''
         UPDATE product SET
-            product_name=?,product_price=?,product_weight=?,product_stock=?,product_discount_percent=?,product_photo=?,product_desc=?,product_category=?
+            product_stock=product_stock-?
         WHERE product_id=?
     ''', update_product)
 
     db.commit()
 
     response = {
-        'id': product,
         'affected': db.total_changes,
     }
 

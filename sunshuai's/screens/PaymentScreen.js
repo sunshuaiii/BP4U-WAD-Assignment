@@ -34,11 +34,15 @@ export default class PaymentScreen extends Component {
     };
     this._loadMemberDetails = this._loadMemberDetails.bind(this);
     this._loadOrderDetails = this._loadOrderDetails.bind(this);
-    this._saveOrderRecord = this._saveOrderRecord.bind(this);
     this._loadSubtotal = this._loadSubtotal.bind(this);
     this._loadTotalWeight = this._loadTotalWeight.bind(this);
     this.placeOrder = this.placeOrder.bind(this);
+    this._saveOrderRecord = this._saveOrderRecord.bind(this);
     this._getOrderId = this._getOrderId.bind(this);
+    this._saveOrderItemRecord = this._saveOrderItemRecord.bind(this);
+    this._updateStock = this._updateStock.bind(this);
+    this._removeCartItem = this._removeCartItem.bind(this);
+    this._savePaymentRecord = this._savePaymentRecord.bind(this);
   }
 
   _loadMemberDetails() {
@@ -144,7 +148,7 @@ export default class PaymentScreen extends Component {
       body: JSON.stringify({
         member_id: this.state.memberid,
         ship_address: this.state.shippingAddress,
-        ship_fee: (this.state.totalWeight.total * 5).toFixed(2),
+        ship_fee: Math.ceil(this.state.totalWeight.total).toFixed(2),
         total: this.state.total.total,
         status: 'PAID',
       }),
@@ -239,7 +243,8 @@ export default class PaymentScreen extends Component {
       },
       body: JSON.stringify({
         order_id: this.state.orderId.id,
-        amount: this.state.totalWeight.total * 5 + this.state.total.total,
+        amount:
+          Math.ceil(this.state.totalWeight.total) * 5 + this.state.total.total,
         provider: 'VISA',
         status: 'ACCEPTED',
       }),
@@ -264,27 +269,97 @@ export default class PaymentScreen extends Component {
       });
   }
 
+  _updateStock(product_id, quantity) {
+    let url = config.settings.serverPath + '/api/product/' + product_id;
+
+    fetch(url, {
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        quantity: quantity,
+      }),
+    })
+      .then(response => {
+        console.log(response);
+        if (!response.ok) {
+          Alert.alert('Error:', response.status.toString());
+          throw Error('Error ' + response.status);
+        }
+
+        return response.json();
+      })
+      .then(respondJson => {
+        if (respondJson.affected > 0) {
+        } else {
+          Alert.alert('Error in UPDATING');
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+
+  _removeCartItem(product_id) {
+    let url =
+      config.settings.serverPath + '/api/cart-item/' + this.state.cart_id + '/' + product_id;
+    console.log(url);
+    fetch(url, {
+      method: 'DELETE',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({}),
+    })
+      .then(response => {
+        if (!response.ok) {
+          Alert.alert('Error:', response.status.toString());
+          throw Error('Error ' + response.status);
+        }
+        return response.json();
+      })
+      .then(responseJson => {
+        if (responseJson.affected == 0) {
+          Alert.alert('Error in DELETING');
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+
   placeOrder() {
-    this._saveOrderRecord();
+    if (!this.state.shippingAddress.trim()) {
+      alert('Please Enter Shipping Address!');
+      return;
+    }
+
+    // this._saveOrderRecord();
     this._getOrderId();
+    // this.state.cartItem.map(item => {
+    //   this._saveOrderItemRecord(item.id, item.quantity);
+    // });
+    // this.state.cartItem.map(item => {
+    //   this._updateStock(item.id, item.quantity);
+    // });
     this.state.cartItem.map(item => {
-      this._saveOrderItemRecord(item.id, item.quantity);
+      this._removeCartItem(item.id);
     });
-    this._savePaymentRecord();
+    // console.log(this.state.orderId.id);
+    // this._savePaymentRecord();
   }
 
   componentDidMount() {
     this._loadMemberDetails();
-    this.setState({
-      shippingAddress: this.state.member.address,
-    });
     this._loadOrderDetails();
     this._loadSubtotal();
     this._loadTotalWeight();
   }
 
   render() {
-    console.log(this.state.cartItem);
     return (
       <View style={styles.container}>
         <ScrollView style={styles.infoContainer}>
@@ -293,9 +368,10 @@ export default class PaymentScreen extends Component {
           <Text style={styles.field}>Contact: {this.state.member.phone}</Text>
           <Text style={styles.field}>Shipping address: </Text>
           <TextInput
+            name="shipping"
             style={styles.input}
             onChangeText={shippingAddress => {
-              this.setState({shippingAddress});
+              this.setState({shippingAddress: shippingAddress});
             }}
             placeholder={this.state.member.address}
             underlineColorAndroid="#f000"
@@ -336,11 +412,13 @@ export default class PaymentScreen extends Component {
             Subtotal: RM {this.state.total.total}
           </Text>
           <Text style={styles.price}>
-            Shipping Fee: RM {(this.state.totalWeight.total * 5).toFixed(2)}
+            Shipping Fee: RM{' '}
+            {(Math.ceil(this.state.totalWeight.total) * 5).toFixed(2)}
           </Text>
           <Text style={styles.price}>
             Total Payment: RM{' '}
-            {this.state.totalWeight.total * 5 + this.state.total.total}
+            {Math.ceil(this.state.totalWeight.total) * 5 +
+              this.state.total.total}
           </Text>
 
           <AppButton title="Place Order" onPress={this.placeOrder} />
