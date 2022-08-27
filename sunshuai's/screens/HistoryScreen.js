@@ -82,7 +82,7 @@ export default class HistoryScreen extends Component {
         {/* Header */}
         <View style={styles.header}>
           <Image source={logo} style={styles.logo} />
-          <SearchBar
+          {/* <SearchBar
             height={50}
             fontSize={20}
             fontColor="#fdfdfd"
@@ -98,7 +98,7 @@ export default class HistoryScreen extends Component {
                 searchKeyword: this.state.searchText,
               });
             }}
-          />
+          /> */}
         </View>
         <ScrollView style={styles.content}>
           {/* Order History */}
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     width: 65,
     height: 65,
     padding: 5,
-    margin: 10,
+    margin: 20,
   },
   title: {
     width: '100%',

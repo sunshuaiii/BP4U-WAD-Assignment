@@ -33,8 +33,8 @@ const ScrollViewHistory = ({
                 });
               }}>
               <View style={styles.infoContainer}>
-                <Text style={styles.orderID}>{item.id}</Text>
                 <Text style={styles.status}>{item.status}</Text>
+                <Text style={styles.orderID}>{item.id}</Text>
                 <View style={styles.iconInline}>
                   <Ionicons name="local-shipping" size={22} color={'black'} />
                   <Text style={styles.iconText}>Shipping Information</Text>
@@ -46,10 +46,10 @@ const ScrollViewHistory = ({
                 <Text style={styles.infoText}>
                   Address: {item.ship_address}
                 </Text>
-                <Text style={styles.iconText}>{'\n\n\n'}Summary Amount</Text>
+                <Text style={styles.iconText}>{'\n\n'}Summary Amount</Text>
                 <Text style={styles.infoText}>Subtotal: RM {item.total}</Text>
                 <Text style={styles.infoText}>
-                  Shipping fee: RM {item.ship_fee}
+                  Shipping fee: RM {item.ship_fee.toFixed(2)}
                 </Text>
                 <Text style={styles.infoText}>
                   Order Total: RM {item.total + item.ship_fee}
@@ -65,11 +65,6 @@ const ScrollViewHistory = ({
 export default ScrollViewHistory;
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'lightpink',
-    paddingBottom: '5%',
-    marginBottom: '5%',
-  },
   header: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -93,7 +88,7 @@ const styles = StyleSheet.create({
     marginLeft: '10%',
   },
   orderListContainer: {
-    padding: 16,
+    padding: 20,
   },
   card: {
     backgroundColor: 'mistyrose',
@@ -107,7 +102,7 @@ const styles = StyleSheet.create({
     },
   },
   infoContainer: {
-    padding: 16,
+    padding: 20,
   },
   orderID: {
     marginTop: 10,
@@ -116,8 +111,9 @@ const styles = StyleSheet.create({
   },
   status: {
     marginTop: 5,
-    fontSize: 15,
+    fontSize: 22,
     fontWeight: 'bold',
+    textAlign: 'right',
   },
   iconInline: {
     textAlign: 'row',
